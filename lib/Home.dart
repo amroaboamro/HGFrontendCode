@@ -1,28 +1,35 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
-import 'package:head_gasket/profile.dart';
 import 'package:head_gasket/profileDetails.dart';
-import 'package:head_gasket/services.dart';
-import 'package:head_gasket/test.dart';
+import 'package:head_gasket/ServicesScreen.dart';
+import 'package:head_gasket/HomePage.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+
+
+  Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
-int _page = 0;
-final List<Widget> _children = [
-  Test(),
-  Services(),
-  ProfileDetails(),
-  ProfileDetails(),
-  ProfileDetails(),
-];
-
 class _HomeState extends State<Home> {
+  int _page = 0;
+  late final List<Widget> _children;
+
+  @override
+  void initState() {
+    super.initState();
+    _children = [
+      HomePage(),
+      Services(),
+      ProfileDetails(),
+      ProfileDetails(),
+      ProfileDetails(),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

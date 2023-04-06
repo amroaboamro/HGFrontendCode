@@ -17,6 +17,14 @@ class ForgetPasswordState extends State<ForgetPassword> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mainColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text('Reset Password'),
+      ),
       body: Background(
         child: SingleChildScrollView(
           child: Stack(children: [
@@ -36,7 +44,7 @@ class ForgetPasswordState extends State<ForgetPassword> {
                           letterSpacing: 1.5),
                     ),
                   ),
-                  
+
 
                   SizedBox(
                      height: 50.0,
@@ -78,31 +86,23 @@ class ForgetPasswordState extends State<ForgetPassword> {
                             height: 50.0,
                           ),
                           Container(
-                            child: RaisedButton(
+                            child: ElevatedButton(
                               onPressed: () {},
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 50.0,
-                      width: size.width * 0.5,
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(80.0),
-                          gradient: new LinearGradient(
-                              colors: gradientColors
-                          )
-                      ),
-                      padding: const EdgeInsets.all(0),
-                      child: Text(
-                        "SEND EMAIL",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                padding: const EdgeInsets.all(0),
+                                textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                elevation: 0,
+                                minimumSize: Size(size.width * 0.5, 50.0),
+
+                                animationDuration: Duration(milliseconds: 300),
+                                side: BorderSide(color: Colors.white, width: 2),
+                              ),
+                              child: Text(
+                                "SEND EMAIL",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
                         ],
                       ),

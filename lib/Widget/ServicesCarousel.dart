@@ -1,8 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:head_gasket/Classes/service.dart';
+import 'package:head_gasket/Widget/background.dart';
+
+import '../ServiceScreen.dart';
 
 
-class ServiceCarousel extends StatelessWidget {
+class ServiceCarousel extends StatefulWidget {
+  final List services ;
+  final String name;
+
+  ServiceCarousel({required this.services ,required this.name});
+
+  @override
+  _ServiceCarouselState createState() => _ServiceCarouselState();
+}
+
+class _ServiceCarouselState extends State<ServiceCarousel> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -13,56 +26,52 @@ class ServiceCarousel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Emergency',
+               widget.name,
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                 ),
               ),
-              GestureDetector(
-                onTap: () => print('See All'),
-                child: Text(
-                  'See All',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ),
+
             ],
           ),
         ),
         Container(
-          height: 250.0,
+          height: 220.0,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: services.length,
+            itemCount: widget.services.length,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
-                // onTap: () => Navigator.push(
-                //   context,
-                //   // MaterialPageRoute(
-                //   //   builder: (_) => DestinationScreen(
-                //   //     destination: destination,
-                //   //   ),
-                //   // ),
-                // ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ServiceScreen(
+                      service: widget.services[index],
+                    ),
+                  ),
+                ),
                 child: Container(
-                  margin: EdgeInsets.all(10.0),
-                  width: 210.0,
+
+
+                  margin: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 18),
+
                   child: Stack(
+
                     alignment: Alignment.topCenter,
                     children: <Widget>[
                       Positioned(
                         top: 80.0,
+
                         child: Container(
+
+
+
                           height: 90.0,
-                          width: 140.0,
+
                           decoration: BoxDecoration(
-                            color: Colors.white,
+
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Padding(
@@ -72,19 +81,24 @@ class ServiceCarousel extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  services[index].name,
+                                    widget.services[index].name,
+
+                                    style: TextStyle(
+
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 1,
+                                    ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  ),
+                               
+                                Text(
+                                  widget.name,
                                   style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
+                                    color: Colors.grey,
                                   ),
                                 ),
-                                // Text(
-                                //   destination.description,
-                                //   style: TextStyle(
-                                //     color: Colors.grey,
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -106,12 +120,12 @@ class ServiceCarousel extends StatelessWidget {
                           children: <Widget>[
                             Hero(
                               tag: 'destination.imageUrl',
-                              child: ClipRRect(
+                              child:ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child: Image(
+                                child:Image(
                                   height: 120.0,
                                   width: 120.0,
-                                  image: AssetImage(services[index].imgUrl),
+                                  image: AssetImage(widget.services[index].imgUrl),
                                   fit: BoxFit.cover,
                                 ),
                               ),

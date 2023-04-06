@@ -157,31 +157,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(0, 40, 0, 10),
-              child: RaisedButton(
-                onPressed: () {
-                  addUser(name,email, password, phone,carModel);
-                },
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                textColor: Colors.white,
-                padding: const EdgeInsets.all(0),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  width: size.width * 0.5,
-                  decoration: new BoxDecoration(
-                      borderRadius: BorderRadius.circular(80.0),
-                      gradient: new LinearGradient(
-                          colors: gradientColors
-                      )
-                  ),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                   padding: const EdgeInsets.all(0),
-                  child: Text(
-                    "SIGN UP",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
+                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+
+                  elevation: 0,
+                  minimumSize: Size(size.width * 0.5, 50.0),
+
+                  animationDuration: Duration(milliseconds: 300),
+                  side: BorderSide(color: Colors.white, width: 2),
+                ),
+                child: Text(
+                  "Sign up",
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
