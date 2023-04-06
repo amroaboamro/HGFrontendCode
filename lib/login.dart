@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
       _errorMessage = '';
     });
-   await Future.delayed(Duration(seconds: 2),(){});
 
     try {
       final response = await http.post(
