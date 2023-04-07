@@ -11,6 +11,7 @@ import 'profileDetails.dart';
 import 'HomePage.dart';
 import 'ForgetPassword.dart';
 import 'ServicesScreen.dart';
+import 'productDetails.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,11 +25,11 @@ class MyApp extends StatelessWidget {
       title: 'Head Gasket',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch:Colors.blueGrey,
+        primarySwatch: Colors.blueGrey,
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:LoginScreen(),
+      home: SignUpScreen(),
     );
   }
 }
