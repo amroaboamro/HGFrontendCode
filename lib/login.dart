@@ -7,18 +7,34 @@ import 'package:head_gasket/sign_up.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
- class LoginScreen extends StatefulWidget{
+class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
+
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
-  String _errorMessage='';
-  String? _email;
-  String? _password;
-
+  String _errorMessage = '';
+  String _email = '';
+  String _password = '';
 
   Future<void> _signIn() async {
+    if (_email.isEmpty || _password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Email and password are required fields';
+      });
+      Fluttertoast.showToast(
+        msg: _errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -29,8 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Uri.parse(''),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'email':_email,
-          'password':_password ,
+          'email': _email,
+          'password': _password,
         }),
       );
 
@@ -48,9 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _errorMessage = 'An error occurred while signing in';
       });
-
-
-
     } finally {
       setState(() {
         _isLoading = false;
@@ -69,167 +82,139 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
-
-
-    @override
-    Widget build(BuildContext context){
-      Size size =MediaQuery.of(context).size;
-      return Scaffold(
-        body: Background(
-          child: Form(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Background(
+        child: Form(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Text(
+                  "SIGN IN",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: mainColor,
+                    fontSize: 35,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.1, vertical: 10),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.account_circle_outlined),
+                  ),
+                  onChanged: (value) {
+                    _email = value;
+                  },
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.1, vertical: 10),
+                child: TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.vpn_key_outlined),
+                  ),
+                  onChanged: (value) {
+                    _password = value;
+                  },
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: GestureDetector(
                   child: Text(
-                    "SIGN IN",
+                    "Forgot your pasword?",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color:mainColor,
-                        fontSize: 35,
-
+                      fontSize: 12,
+                      color: mainColor,
+                      fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.left,
                   ),
+                  onTap: () => {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgetPassword())),
+                  },
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: size.width*0.1, vertical: 10),
-                  child:
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon:  Icon(Icons.account_circle_outlined),
-
-                    ),
-
-
-                    onChanged: (value) {
-                      _email = value;
-                    },
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.fromLTRB(0, 40, 0, 10),
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _signIn,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(80.0)),
+                    padding: const EdgeInsets.all(0),
+                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                    elevation: 0,
+                    minimumSize: Size(size.width * 0.5, 50.0),
+                    animationDuration: Duration(milliseconds: 300),
+                    side: BorderSide(color: Colors.white, width: 2),
                   ),
-
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : Text('Sign In'),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: size.width*0.1, vertical: 10),
-                  child:   TextFormField(
-
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon:  Icon(Icons.vpn_key_outlined),
-
-                    ),
-
-                    onChanged: (value) {
-                      _password = value;
-                    },
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  child: GestureDetector(
-                    child: Text(
-                      "Forgot your pasword?",
-                      style: TextStyle(
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: GestureDetector(
+                  onTap: () => {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Don't Have an Account? ",
+                        style: TextStyle(
                           fontSize: 12,
-                          color:mainColor,
-                        fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
-
-                    ),
-                    onTap: ()=>{
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ForgetPassword())),
-                    },
-                  ),
-                ),
-
-
-
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.fromLTRB(0, 40, 0, 10),
-                  child:  ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                      padding: const EdgeInsets.all(0),
-                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-
-                      elevation: 0,
-                      minimumSize: Size(size.width * 0.5, 50.0),
-
-                      animationDuration: Duration(milliseconds: 300),
-                      side: BorderSide(color: Colors.white, width: 2),
-                    ),
-                    child: _isLoading
-                        ? CircularProgressIndicator()
-                        : Text('Sign In'),
-
-                  ),
-                ),
-
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  child: GestureDetector(
-                    onTap: () => {
-                    },
-
-                    child: Row(
-                      mainAxisAlignment:MainAxisAlignment.center ,
-                      children:<Widget> [
-                        Text(
-                          "Don't Have an Account? ",
-                          style: TextStyle(
-                            fontSize: 12,
-
-                            color: Colors.black,
-
-                          ),
-                        ),
-                        Container(
-                          child: GestureDetector(
-                            child: Text(
-                              "Sign up",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: mainColor,
-
-
-                              ),
-
+                      Container(
+                        child: GestureDetector(
+                          child: Text(
+                            "Sign up",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: mainColor,
                             ),
-                            onTap: ()=>{
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()))
-                            },
-
                           ),
-
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpScreen()))
+                          },
                         ),
-
-                      ],
-                    ),
-
+                      ),
+                    ],
                   ),
-                )
-
-
-
-
-
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
 }

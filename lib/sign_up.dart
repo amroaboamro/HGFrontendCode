@@ -12,14 +12,95 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String? _selectedCarType;
   var firstName, secondName, email, password, phone, carModel;
   List<String> _dropdownItems = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
-  Future<void> _signUp() async {
+  bool _validateFields() {
+    if (firstName == null || firstName!.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please enter your first name',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
 
+    if (secondName == null || secondName!.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please enter your second name',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+
+    if (email == null || email!.isEmpty) {
+
+      Fluttertoast.showToast(
+        msg: 'Please enter your email',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+
+    if (password == null || password!.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please enter your password',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+
+    if (phone == null || phone!.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please enter your phone number',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+
+    if (carModel== null || carModel!.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please select your car model',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> _signUp() async {
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -41,7 +122,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home(userId: email,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      userId: email,
+                    )));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid Information';
@@ -71,6 +156,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  bool _isFetchCalled = false;
+
   Future<List<String>> fetchDropdownItems() async {
     final response = await http.get(Uri.parse('https://example.com/api/dropdown-items'));
 
@@ -80,30 +167,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       throw Exception('Failed to fetch dropdown items');
     }
-   // return Future.delayed(Duration(seconds: 2), () {
-   //    return [
-   //      'Hyundai accent',
-   //      'Hyundai elantra',
-   //      'Seat leon ',
-   //      'BMW 320i',
-   //      'BMW m4',
-   //      'Skoda octavia',
-   //      'Skoda Combi',
-   //      'Skoda superb',
-   //      'volkswagen golf',
-   //      'volkswagen polo',
-   //      'volkswagen tiguan',
-   //      'Mercedes G-class',
-   //      'Mercedes Benz E350',
-   //      'Mercedes E350',
-   //      'Kia sportage',
-   //      'kia rio',
-   //    ];
-   //  });
-
+    // return Future.delayed(Duration(seconds: 2), () {
+    //   return [
+    //     'Hyundai accent',
+    //     'Hyundai elantra',
+    //     'Seat leon ',
+    //     'BMW 320i',
+    //     'BMW m4',
+    //     'Skoda octavia',
+    //     'Skoda Combi',
+    //     'Skoda superb',
+    //     'volkswagen golf',
+    //     'volkswagen polo',
+    //     'volkswagen tiguan',
+    //     'Mercedes G-class',
+    //     'Mercedes Benz E350',
+    //     'Mercedes E350',
+    //     'Kia sportage',
+    //     'kia rio',
+    //   ];
+    // });
   }
-
-
 
   @override
   void initState() {
@@ -207,8 +291,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 FutureBuilder<List<String>>(
-                  future: fetchDropdownItems(),
+                  future: _isFetchCalled ? null : fetchDropdownItems(),
                   builder: (context, snapshot) {
+                    if (!_isFetchCalled) {
+                      _isFetchCalled = true;
+                    }
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
@@ -228,11 +315,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             border: OutlineInputBorder(),
                           ),
                           child: DropdownButton<String>(
-                            value: _selectedCarType,
+                            value: carModel,
                             onChanged: (value) {
                               setState(() {
                                 carModel = value;
-                                print(carModel);
                               });
                             },
                             items: _dropdownItems.map((String value) {
@@ -251,7 +337,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(0, 40, 0, 10),
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signUp,
+                    onPressed:(){
+                      if(_validateFields()&&!_isLoading){
+                        _signUp();
+                      }
+                    },
+
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(80.0)),

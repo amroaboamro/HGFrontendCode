@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     // else {
     //   throw Exception('Failed to fetch user data');
     // }
-    return Future.delayed(Duration(seconds: 1), () {
+    return Future.delayed(Duration(seconds: 3), () {
       return json.decode('''
 {
   "0": {
