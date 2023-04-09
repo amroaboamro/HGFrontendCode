@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Home()));
+            MaterialPageRoute(builder: (context) => Home(userId: _email)));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';

@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:head_gasket/Widget/background.dart';
-
 import '../ServiceScreen.dart';
 
-
 class ServiceCarousel extends StatefulWidget {
-  final List services ;
+  final List services;
+
   final String name;
 
-  ServiceCarousel({required this.services ,required this.name});
+  ServiceCarousel({required this.services, required this.name});
 
   @override
   _ServiceCarouselState createState() => _ServiceCarouselState();
@@ -26,14 +23,13 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-               widget.name,
+                widget.name,
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                 ),
               ),
-
             ],
           ),
         ),
@@ -53,25 +49,15 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
                   ),
                 ),
                 child: Container(
-
-
-                  margin: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 18),
-
+                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 18),
                   child: Stack(
-
                     alignment: Alignment.topCenter,
                     children: <Widget>[
                       Positioned(
                         top: 80.0,
-
                         child: Container(
-
-
-
                           height: 90.0,
-
                           decoration: BoxDecoration(
-
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Padding(
@@ -81,18 +67,15 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                    widget.services[index].name,
-
-                                    style: TextStyle(
-
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1,
-                                    ),
+                                  widget.services[index].name,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  ),
-                               
+                                ),
                                 Text(
                                   widget.name,
                                   style: TextStyle(
@@ -120,12 +103,13 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
                           children: <Widget>[
                             Hero(
                               tag: 'destination.imageUrl',
-                              child:ClipRRect(
+                              child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child:Image(
+                                child: Image(
                                   height: 120.0,
                                   width: 120.0,
-                                  image: AssetImage(widget.services[index].imgUrl),
+                                  image:
+                                      AssetImage(widget.services[index].imgUrl),
                                   fit: BoxFit.cover,
                                 ),
                               ),

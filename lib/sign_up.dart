@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home(userId: email,)));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid Information';

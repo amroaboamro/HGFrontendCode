@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SignUpScreen(),
+      home: Home(userId: 'ggg'),
     );
   }
 }

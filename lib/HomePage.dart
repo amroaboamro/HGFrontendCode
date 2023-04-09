@@ -1,16 +1,52 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/ServicesScreen.dart';
+import 'package:head_gasket/Classes/service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
+  Map<String, dynamic> userData;
+
+  HomePage({required this.userData});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late Map<String, dynamic> services;
+
+  Future<Map<String, dynamic>> fetch5RandomServices() async {
+    // final response=await http.get(Uri.parse(''));
+    //
+    // if(response.statusCode == 200){
+    //   var data = json.decode(response.body);
+    //   return data.cast<String, dynamic>();
+    // }
+    // else {
+    //   throw Exception('Failed to fetch user data');
+    // }
+    return Future.delayed(Duration(seconds: 1), () {
+      return json.decode('''
+{
+  "0": {
+    "name": "Battery",
+    "img": "assets/images/battery.jpg",
+    "type": "Emergency"
+    
+  },
+  "1": {
+    "name": "Key",
+    "img": "assets/images/key.jpg",
+    "type": "care"
+  }
+}
+''');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -69,19 +105,7 @@ class _HomePageState extends State<HomePage> {
               ),
               onTap: () {},
             ),
-            ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.format_list_bulleted_sharp),
-                  Text(" My Orders"),
-                ],
-              ),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-              },
-            ),
+
             ListTile(
               title: Row(
                 children: [
@@ -136,12 +160,20 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(20),
               child: Container(
                 alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Hi,'+'username' +'!',
-                  style: TextStyle(
-                    fontSize: 35,
-                  ),
-                  textAlign: TextAlign.left,
+                child: Column(
+                  children: [
+                    Text(
+                      'Hi, ' + widget.userData['name'],
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      widget.userData['carModel'],
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -176,111 +208,131 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               height: 200.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: EServices.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    // onTap: () => Navigator.push(
-                    //   context,
-                    //   // MaterialPageRoute(
-                    //   //   builder: (_) => DestinationScreen(
-                    //   //     destination: destination,
-                    //   //   ),
-                    //   // ),
-                    // ),
-                    child: Container(
-                      margin: EdgeInsets.all(15.0),
-                      child: Stack(
-                        alignment: Alignment.topCenter,
-                        children: <Widget>[
-                          Positioned(
-                            top: 50.0,
-                            child: Container(
-                              height: 90.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Center(
-                                      child: Text(
-                                        EServices[index].name,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    // Text(
-                                    //   destination.description,
-                                    //   style: TextStyle(
-                                    //     color: Colors.grey,
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
+              child: FutureBuilder<Map<String, dynamic>>(
+                future: fetch5RandomServices(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    services = snapshot.data!;
+
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: services.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          // onTap: () => Navigator.push(
+                          //   context,
+                          //   // MaterialPageRoute(
+                          //   //   builder: (_) => DestinationScreen(
+                          //   //     destination: destination,
+                          //   //   ),
+                          //   // ),
+                          // ),
+                          child: Container(
+                            margin: EdgeInsets.all(15.0),
                             child: Stack(
+                              alignment: Alignment.topCenter,
                               children: <Widget>[
-                                Hero(
-                                  tag: 'destination.imageUrl',
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/gasPump.jpeg'),
+                                Positioned(
+                                  top: 100.0,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Center(
+                                          child: Text(
+                                           services[index.toString()]['name'],
+                                           style: TextStyle(
+                                             color: Colors.black,
+                                             fontSize: 16.0,
+                                             fontWeight: FontWeight.w600,
+                                             letterSpacing: 1,
+                                           ),
+                                            ),
+                                        ),
+                                        Text(
+                                          services[index.toString()]
+                                          ['type'],
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 1,
+                                          ),
+                                        ),
+                                        // Text(
+                                        //   destination.description,
+                                        //   style: TextStyle(
+                                        //     color: Colors.grey,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                // Positioned(
-                                //   left: 10.0,
-                                //   bottom: 10.0,
-                                //   child: Column(
-                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                //     children: <Widget>[
-                                //       // Text(
-                                //       //   'destination.city',
-                                //       //   style: TextStyle(
-                                //       //     color: Colors.black,
-                                //       //     fontSize: 18.0,
-                                //       //     fontWeight: FontWeight.w600,
-                                //       //     letterSpacing: 1.2,
-                                //       //   ),
-                                //       // ),
-                                //       // Row(
-                                //       //   children: <Widget>[
-                                //       //     Icon(
-                                //       //       Icons.location_on_outlined,
-                                //       //       size: 10.0,
-                                //       //       color: Colors.black,
-                                //       //     ),
-                                //       //     SizedBox(width: 5.0),
-                                //       //     Text(
-                                //       //       'destination.country',
-                                //       //       style: TextStyle(
-                                //       //         color: Colors.black,
-                                //       //       ),
-                                //       //     ),
-                                //       //   ],
-                                //       // ),
-                                //     ],
-                                //   ),
-                                // ),
+                                Container(
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Hero(
+                                        tag: 'destination.imageUrl',
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: AssetImage(
+                                              services[index.toString()]
+                                                  ['img']),
+                                        ),
+                                      ),
+                                      // Positioned(
+                                      //   left: 10.0,
+                                      //   bottom: 10.0,
+                                      //   child: Column(
+                                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                                      //     children: <Widget>[
+                                      //       // Text(
+                                      //       //   'destination.city',
+                                      //       //   style: TextStyle(
+                                      //       //     color: Colors.black,
+                                      //       //     fontSize: 18.0,
+                                      //       //     fontWeight: FontWeight.w600,
+                                      //       //     letterSpacing: 1.2,
+                                      //       //   ),
+                                      //       // ),
+                                      //       // Row(
+                                      //       //   children: <Widget>[
+                                      //       //     Icon(
+                                      //       //       Icons.location_on_outlined,
+                                      //       //       size: 10.0,
+                                      //       //       color: Colors.black,
+                                      //       //     ),
+                                      //       //     SizedBox(width: 5.0),
+                                      //       //     Text(
+                                      //       //       'destination.country',
+                                      //       //       style: TextStyle(
+                                      //       //         color: Colors.black,
+                                      //       //       ),
+                                      //       //     ),
+                                      //       //   ],
+                                      //       // ),
+                                      //     ],
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
