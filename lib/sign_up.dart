@@ -13,13 +13,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   String? _selectedCarType;
-  var firstName, secondName, email, password, phone, carModel;
+  var firstName, lastName, email, password, phone, carModel;
   List<String> _dropdownItems = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
   Future<void> _signUp() async {
-
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -27,11 +26,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(''),
+        Uri.parse('http://127.0.0.1:3000/signup'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'firstName': firstName,
-          'second': secondName,
+          'lastName': lastName,
           'email': email,
           'password': password,
           'phone': phone,
@@ -72,7 +71,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<List<String>> fetchDropdownItems() async {
-    final response = await http.get(Uri.parse('https://example.com/api/dropdown-items'));
+    final response =
+        await http.get(Uri.parse('https://example.com/api/dropdown-items'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
@@ -80,30 +80,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       throw Exception('Failed to fetch dropdown items');
     }
-   // return Future.delayed(Duration(seconds: 2), () {
-   //    return [
-   //      'Hyundai accent',
-   //      'Hyundai elantra',
-   //      'Seat leon ',
-   //      'BMW 320i',
-   //      'BMW m4',
-   //      'Skoda octavia',
-   //      'Skoda Combi',
-   //      'Skoda superb',
-   //      'volkswagen golf',
-   //      'volkswagen polo',
-   //      'volkswagen tiguan',
-   //      'Mercedes G-class',
-   //      'Mercedes Benz E350',
-   //      'Mercedes E350',
-   //      'Kia sportage',
-   //      'kia rio',
-   //    ];
-   //  });
-
+    // return Future.delayed(Duration(seconds: 2), () {
+    //    return [
+    //      'Hyundai accent',
+    //      'Hyundai elantra',
+    //      'Seat leon ',
+    //      'BMW 320i',
+    //      'BMW m4',
+    //      'Skoda octavia',
+    //      'Skoda Combi',
+    //      'Skoda superb',
+    //      'volkswagen golf',
+    //      'volkswagen polo',
+    //      'volkswagen tiguan',
+    //      'Mercedes G-class',
+    //      'Mercedes Benz E350',
+    //      'Mercedes E350',
+    //      'Kia sportage',
+    //      'kia rio',
+    //    ];
+    //  });
   }
-
-
 
   @override
   void initState() {
@@ -155,10 +152,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       horizontal: size.width * 0.1, vertical: 10),
                   child: TextField(
                     onChanged: (value) {
-                      secondName = value;
+                      lastName = value;
                     },
                     decoration: InputDecoration(
-                      labelText: "Second Name",
+                      labelText: "Last Name",
                       prefixIcon: Icon(Icons.account_circle_outlined),
                     ),
                   ),
