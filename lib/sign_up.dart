@@ -32,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return false;
     }
 
-    if (secondName == null || secondName!.isEmpty) {
+    if (lastName == null || lastName!.isEmpty) {
       Fluttertoast.showToast(
         msg: 'Please enter your second name',
         toastLength: Toast.LENGTH_SHORT,
