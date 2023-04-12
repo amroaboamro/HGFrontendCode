@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ServiceScreen.dart';
+import '../user/ServiceScreen.dart';
 
 class ServiceCarousel extends StatefulWidget {
   final List services;

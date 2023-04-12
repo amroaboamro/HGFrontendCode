@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/profileDetails.dart';
-import 'package:head_gasket/ServicesScreen.dart';
+import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/HomePage.dart';
 import 'package:head_gasket/user/EditProfile.dart';
 import 'package:head_gasket/user/MyOrders.dart';
