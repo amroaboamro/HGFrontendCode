@@ -13,7 +13,7 @@ import 'profileDetails.dart';
 import 'HomePage.dart';
 import 'ForgetPassword.dart';
 import 'ServicesScreen.dart';
-import 'productDetails.dart';
+// import 'productDetails.dart';
 
 void main() {
   runApp(MyApp());

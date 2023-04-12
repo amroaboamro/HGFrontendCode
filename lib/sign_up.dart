@@ -12,7 +12,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  var firstName, secondName, email, password, phone, carModel;
+  String? _selectedCarType;
+  var firstName, lastName, email, password, phone, carModel;
   List<String> _dropdownItems = [];
   bool _isLoading = false;
   String _errorMessage = '';
@@ -31,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return false;
     }
 
-    if (secondName == null || secondName!.isEmpty) {
+    if (lastName == null || lastName!.isEmpty) {
       Fluttertoast.showToast(
         msg: 'Please enter your second name',
         toastLength: Toast.LENGTH_SHORT,
@@ -108,11 +109,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(''),
+        Uri.parse('http://127.0.0.1:3000/signup'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'firstName': firstName,
-          'second': secondName,
+          'lastName': lastName,
           'email': email,
           'password': password,
           'phone': phone,
@@ -159,7 +160,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isFetchCalled = false;
 
   Future<List<String>> fetchDropdownItems() async {
-    final response = await http.get(Uri.parse(''));
+    final response =
+        await http.get(Uri.parse('https://example.com/api/dropdown-items'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
@@ -239,10 +241,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       horizontal: size.width * 0.1, vertical: 10),
                   child: TextField(
                     onChanged: (value) {
-                      secondName = value;
+                      lastName = value;
                     },
                     decoration: InputDecoration(
-                      labelText: "Second Name",
+                      labelText: "Last Name",
                       prefixIcon: Icon(Icons.account_circle_outlined),
                     ),
                   ),
