@@ -3,13 +3,17 @@ import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
+import 'package:head_gasket/login.dart';
+import 'package:head_gasket/user/ChangePass.dart';
+import 'package:head_gasket/user/profilePage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class HomePage extends StatefulWidget {
-  Map<String, dynamic> userData;
+final  Map<String, dynamic> userData;
 
-  HomePage({required this.userData});
+
+HomePage({required this.userData });
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -83,11 +87,14 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/profile.png'),
+                    // backgroundImage:"${global.userImage}"!=""?MemoryImage(base64Decode("${global.userImage}")):AssetImage('assets/images/profile.png') as ImageProvider,
+
+                  backgroundImage:  NetworkImage(
+                        'https://picsum.photos/200'),
                     radius: size.height * .08,
                   ),
                   Text(
-                    'username',
+                    widget.userData['name'],
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -103,7 +110,19 @@ class _HomePageState extends State<HomePage> {
                   Text(" Profile"),
                 ],
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfilePage(userData: {
+                      'firstName' : 'Amr',
+                      'secondName' : 'abo Amr',
+                      'email': 'amer.abuamer@gmail.com',
+                      'carModel' : 'Skoda octavia',
+                      'location' :'Nablus',
+                      'phoneNumber' :'+972599456603',
+                    },
+                    )));
+
+              },
             ),
 
             ListTile(
@@ -114,10 +133,12 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-              },
+                showDialog(
+                  context: context,
+                  builder: (_) => ChangePasswordPage(),
+                );
+
+              }
             ),
             ListTile(
               title: Row(
@@ -148,7 +169,10 @@ class _HomePageState extends State<HomePage> {
                   Text(" Logout"),
                 ],
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => LoginScreen() ));   }
             ),
           ],
         ),
@@ -160,19 +184,29 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(20),
               child: Container(
                 alignment: Alignment.bottomLeft,
-                child: Column(
+                child: Row(
                   children: [
-                    Text(
-                      'Hi, ' + widget.userData['name'],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          'https://picsum.photos/200'),
+                      radius: 30.0,
                     ),
-                    Text(
-                      widget.userData['carModel'],
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.bold),
-                    )
+                    SizedBox(width: 10,),
+                    Column(
+                      children: [
+                        Text(
+                          'Hi, ' + widget.userData['name'],
+                          style:
+                              TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(
+                          widget.userData['carModel'],
+                          style: TextStyle(
+                              color: Colors.grey, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ),

@@ -159,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isFetchCalled = false;
 
   Future<List<String>> fetchDropdownItems() async {
-    final response = await http.get(Uri.parse('https://example.com/api/dropdown-items'));
+    final response = await http.get(Uri.parse(''));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;

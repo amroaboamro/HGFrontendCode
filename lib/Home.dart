@@ -4,11 +4,15 @@ import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/profileDetails.dart';
 import 'package:head_gasket/ServicesScreen.dart';
 import 'package:head_gasket/HomePage.dart';
+import 'package:head_gasket/user/EditProfile.dart';
+import 'package:head_gasket/user/MyOrders.dart';
+import 'user/profilePage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   final userId;
+
 
 
   Home({Key? key,required this.userId}) : super(key: key);
@@ -18,6 +22,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   var  _userData;
   int _page = 0;
    final List<Widget> _children = [
@@ -25,11 +31,16 @@ class _HomeState extends State<Home> {
       'name' : '---',
       'email': '-----',
       'carModel' : '-----',
-    } ,),
+    } , ),
     Services(),
-    ProfileDetails(),
-    ProfileDetails(),
-  ];
+
+     MyOrders(),
+     MyOrders(),
+
+
+
+
+   ];
 
   Future <Map<String,dynamic>> fetchUserData(String userId) async {
   // final response=await http.get(Uri.parse('' + userId));
@@ -60,7 +71,7 @@ class _HomeState extends State<Home> {
      fetchUserData(widget.userId).then((data) {
       setState(() {
         _userData = data;
-        _children[0] = HomePage(userData: _userData,);
+        _children[0] = HomePage(userData: _userData);
       });
 
     }).catchError((error) {

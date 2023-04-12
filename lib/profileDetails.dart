@@ -58,8 +58,7 @@ class ProfileDetails extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     Container(
-                        height: 108,
-                        width: 101,
+
 
                         margin: const EdgeInsets.only(
                             left: 15.0, right: 15, top: 25, bottom: 5),
@@ -70,8 +69,10 @@ class ProfileDetails extends StatelessWidget {
                             borderRadius: BorderRadius.circular(140)),
                         child: CircleAvatar(
                           backgroundImage: AssetImage(
-                            "assets/images/main.png",
+                            "assets/images/profile.png",
+
                           ),
+                          radius: 50,
                         )),
                     Positioned(
                       bottom: 54,
