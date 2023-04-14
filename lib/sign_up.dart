@@ -137,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'An error occurred while signing in';
+        _errorMessage = 'An error occurred while signing up';
       });
     } finally {
       setState(() {

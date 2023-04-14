@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class HomePage extends StatefulWidget {
-  Map<String, dynamic> userData;
+  Map<Object, dynamic> userData;
 
   HomePage({required this.userData});
 
@@ -16,35 +16,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Map<String, dynamic> services;
+  late List<dynamic> services;
 
-  Future<Map<String, dynamic>> fetch5RandomServices() async {
-    // final response=await http.get(Uri.parse(''));
-    //
-    // if(response.statusCode == 200){
-    //   var data = json.decode(response.body);
-    //   return data.cast<String, dynamic>();
-    // }
-    // else {
-    //   throw Exception('Failed to fetch user data');
-    // }
-    return Future.delayed(Duration(seconds: 3), () {
-      return json.decode('''
-{
-  "0": {
-    "name": "Battery",
-    "img": "assets/images/battery.jpg",
-    "type": "Emergency"
-    
-  },
-  "1": {
-    "name": "Key",
-    "img": "assets/images/key.jpg",
-    "type": "care"
-  }
-}
-''');
-    });
+  Future<List<dynamic>> fetch5RandomServices() async {
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:3000/services'));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print(data);
+      return data;
+    } else {
+      throw Exception('Failed to fetch user data');
+    }
+//     return Future.delayed(Duration(seconds: 3), () {
+//       return json.decode('''
+// {
+//   "0": {
+//     "name": "Battery",
+//     "img": "assets/images/battery.jpg",
+//     "type": "Emergency"
+
+//   },
+//   "1": {
+//     "name": "Key",
+//     "img": "assets/images/key.jpg",
+//     "type": "care"
+//   }
+// }
+// ''');
+//     });
   }
 
   @override
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                     radius: size.height * .08,
                   ),
                   Text(
-                    'username',
+                    widget.userData['email'],
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -105,7 +106,6 @@ class _HomePageState extends State<HomePage> {
               ),
               onTap: () {},
             ),
-
             ListTile(
               title: Row(
                 children: [
@@ -163,7 +163,10 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Text(
-                      'Hi, ' + widget.userData['name'],
+                      'Hi, ' +
+                          widget.userData['firstName'] +
+                          " " +
+                          widget.userData['lastName'],
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
@@ -208,7 +211,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               height: 200.0,
-              child: FutureBuilder<Map<String, dynamic>>(
+              child: FutureBuilder<List<dynamic>>(
                 future: fetch5RandomServices(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -248,18 +251,17 @@ class _HomePageState extends State<HomePage> {
                                       children: <Widget>[
                                         Center(
                                           child: Text(
-                                           services[index.toString()]['name'],
-                                           style: TextStyle(
-                                             color: Colors.black,
-                                             fontSize: 16.0,
-                                             fontWeight: FontWeight.w600,
-                                             letterSpacing: 1,
-                                           ),
+                                            services[index]['serviceName'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 1,
                                             ),
+                                          ),
                                         ),
                                         Text(
-                                          services[index.toString()]
-                                          ['type'],
+                                          services[index]['serviceType'],
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14.0,
@@ -285,8 +287,7 @@ class _HomePageState extends State<HomePage> {
                                         child: CircleAvatar(
                                           radius: 50,
                                           backgroundImage: AssetImage(
-                                              services[index.toString()]
-                                                  ['img']),
+                                              services[index]['serviceImage']),
                                         ),
                                       ),
                                       // Positioned(
