@@ -35,14 +35,14 @@ class _MyOrdersState extends State<MyOrders> {
 
   final List<Order> orders = [
     Order(
-      name: 'Order 1',
-      price: '300',
-      image: 'https://img.freepik.com/premium-photo/auto-mechanic-checking-running-gear-automobile-service-station-male-worker-fixing-problem-with-car-vehicle-maintenance-concept_194143-3101.jpg',
-      details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      status: 'Finished',
-      service: 'Motor',
-      date: '05-1-2022'
-    ),
+        name: 'Order 1',
+        price: '300',
+        image:
+            'https://img.freepik.com/premium-photo/auto-mechanic-checking-running-gear-automobile-service-station-male-worker-fixing-problem-with-car-vehicle-maintenance-concept_194143-3101.jpg',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        status: 'Finished',
+        service: 'Motor',
+        date: '05-1-2022'),
     Order(
       name: 'Order 2',
       price: '20',
@@ -50,18 +50,17 @@ class _MyOrdersState extends State<MyOrders> {
       details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       status: 'Processing',
       service: 'Car Wash',
-        date: '20-7-2022',
-
+      date: '20-7-2022',
     ),
     Order(
       name: 'Order 3',
       price: '100',
-      image: 'https://www.nerdwallet.com/assets/blog/wp-content/uploads/2022/08/GettyImages-1379161182-1920x1152.jpg',
+      image:
+          'https://www.nerdwallet.com/assets/blog/wp-content/uploads/2022/08/GettyImages-1379161182-1920x1152.jpg',
       details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       status: 'Cancelled',
       service: 'Battery',
       date: '8-4-2023',
-
     ),
   ];
 
@@ -154,8 +153,6 @@ class _MyOrdersState extends State<MyOrders> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.0),
                     ),
-
-
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -163,101 +160,102 @@ class _MyOrdersState extends State<MyOrders> {
                         children: [
                           Column(
                             children: [
-
                               CircleAvatar(
-                                backgroundImage:NetworkImage(
+                                backgroundImage: NetworkImage(
                                   order.image,
-
-
                                 ),
                                 radius: 30,
-
                               ),
-                              SizedBox(height: 10,),
-
-
-                              Text(order.name,
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                order.name,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                ),),
+                                ),
+                              ),
                             ],
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                             children: [
-
                               SizedBox(
                                 height: 10,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-
-                                  Text('Paid :\$ '+order.price,style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.blueGrey,
-
-                                  ),),
-                                  SizedBox(width: 30,),
-                                  Text(order.date,style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.blueGrey,
-
-                                  ),),
-
-
-                              ],),
-                               SizedBox(
-                                 height: 15,
-                               ),
-
-
-
-                               Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-
-                                    Text(
-                                      order.status,
+                                  Text(
+                                    'Paid :\$ ' + order.price,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Text(
+                                    order.date,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    order.status,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: statusColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  ElevatedButton(
+                                    child: Text(
+                                      'Details',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: statusColor,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                    SizedBox(width: 30,),
-                                    ElevatedButton(
-                                      child: Text(
-                                        'Details',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-
-                                        ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.white, //background
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        side: BorderSide(
+                                            color: Colors.black, width: 2),
                                       ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                          side: BorderSide(color: Colors.black, width: 2),
-                                        ),
 
-                                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => OrderDetails(order: order)),
-                                        );
-                                      },
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 16),
                                     ),
-                                  ],
-                                ),
-
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderDetails(order: order)),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ],
