@@ -13,72 +13,65 @@ import 'package:http/http.dart' as http;
 class Home extends StatefulWidget {
   final userId;
 
-
-
-  Home({Key? key,required this.userId}) : super(key: key);
+  Home({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
-
-  var  _userData;
+  var _userData;
   int _page = 0;
-   final List<Widget> _children = [
-    HomePage(userData:{
-      'name' : '---',
-      'email': '-----',
-      'carModel' : '-----',
-    } , ),
+  final List<Widget> _children = [
+    HomePage(
+      userData: {
+        'firstName': '---',
+        'lastName': '---',
+        'email': '-----',
+        'carModel': '-----',
+      },
+    ),
     Services(),
+    ProfileDetails(),
+    ProfileDetails(),
+  ];
 
-     MyOrders(),
-     MyOrders(),
+  Future<Map<String, dynamic>> fetchUserData(String userId) async {
+    print(userId);
 
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:3000/userInfo/' + userId));
 
-
-
-   ];
-
-  Future <Map<String,dynamic>> fetchUserData(String userId) async {
-  // final response=await http.get(Uri.parse('' + userId));
-  //
-  // if(response.statusCode == 200){
-  //   var data = json.decode(response.body);
-  //   return data;
-  // }
-  // else {
-  //   // If unsuccessful, throw an error
-  //   throw Exception('Failed to fetch user data');
-  // }
-  return Future.delayed(Duration(seconds:5) , (){
-    return {
-      'name' : 'Amro',
-      'email': 'email@email.com',
-      'carModel' : 'Mercedes Benz E350',
-    };
-  });
-
-
-
-}
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print('hkhkhk');
+      print(data);
+      return data;
+    } else {
+      // If unsuccessful, throw an error
+      print("fffffffffffff");
+      throw Exception('Failed to fetch user data');
+    }
+    // return Future.delayed(Duration(seconds: 5), () {
+    //   return {
+    //     'name': 'Amro',
+    //     'email': 'email@email.com',
+    //     'carModel': 'Mercedes Benz E350',
+    //   };
+    // });
+  }
 
   @override
   void initState() {
     super.initState();
-     fetchUserData(widget.userId).then((data) {
+    fetchUserData(widget.userId).then((data) {
       setState(() {
         _userData = data;
         _children[0] = HomePage(userData: _userData);
       });
-
     }).catchError((error) {
       print(error);
     });
-
-
   }
 
   @override
@@ -116,7 +109,6 @@ class _HomeState extends State<Home> {
             color: Colors.white,
             size: 20,
           ),
-
         ],
       ),
     );
