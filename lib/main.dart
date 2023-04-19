@@ -3,17 +3,18 @@ import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/ResetPass.dart';
 import 'package:head_gasket/HomePage.dart';
 import 'package:head_gasket/test.dart';
+import 'package:head_gasket/user/JoinASProvider.dart';
 import 'package:head_gasket/user/MyOrders.dart';
+import 'package:head_gasket/user/Store.dart';
+import 'package:head_gasket/user/hireWorkerPage.dart';
+import 'package:head_gasket/user/map.dart';
 import 'package:head_gasket/user/profilePage.dart';
 import 'login.dart';
 import 'sign_up.dart';
 import 'package:head_gasket/Home.dart';
-import 'profile.dart';
-import 'profileDetails.dart';
 import 'HomePage.dart';
 import 'ForgetPassword.dart';
 import 'user/ServicesScreen.dart';
-// import 'productDetails.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(userId: ''),
+      home:Home(userId: 'amer.abuamer@email.com',),
     );
   }
 }

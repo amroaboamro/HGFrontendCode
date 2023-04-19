@@ -1,84 +1,80 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
-import 'package:head_gasket/profileDetails.dart';
+import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/HomePage.dart';
-import 'package:head_gasket/user/EditProfile.dart';
 import 'package:head_gasket/user/MyOrders.dart';
-import 'user/profilePage.dart';
+import 'package:head_gasket/user/Store.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   final userId;
 
-
-
-  Home({Key? key,required this.userId}) : super(key: key);
+  Home({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
-
-  var  _userData;
+  var _userData;
   int _page = 0;
-   final List<Widget> _children = [
-    HomePage(userData:{
-      'name' : '---',
-      'email': '-----',
-      'carModel' : '-----',
-    } , ),
+  final List<Widget> _children = [
+    HomePage(
+      userData: {
+        'firstName': '---',
+        'lastName': '---',
+        'email': '-----',
+        'carModel': '-----',
+      },
+    ),
     Services(),
+    CarStorePage(),
+    MyOrders(),
+  ];
 
-     MyOrders(),
-     MyOrders(),
+  Future<Map<String, dynamic>> fetchUserData(String userId) async {
+    // final response=await http.get(Uri.parse('' + userId));
+    //
+    // if(response.statusCode == 200){
+    //   var data = json.decode(response.body);
+    //   return data;
+    // }
+    // else {
+    //   // If unsuccessful, throw an error
+    //   throw Exception('Failed to fetch user data');
+    // }
+    return Future.delayed(Duration(seconds: 5), () {
+      return {
+        'firstName': 'Amro',
+        'lastName': 'abo Amro',
+        'email': 'email@email.com',
+        'carModel': 'Mercedes Benz E350',
+        'phoneNumber':'+972599456603',
+        'city':'',
+        'street':'gaga',
+        'latitude' :null,
+        'longitude':null,
 
-
-
-
-   ];
-
-  Future <Map<String,dynamic>> fetchUserData(String userId) async {
-  // final response=await http.get(Uri.parse('' + userId));
-  //
-  // if(response.statusCode == 200){
-  //   var data = json.decode(response.body);
-  //   return data;
-  // }
-  // else {
-  //   // If unsuccessful, throw an error
-  //   throw Exception('Failed to fetch user data');
-  // }
-  return Future.delayed(Duration(seconds:5) , (){
-    return {
-      'name' : 'Amro',
-      'email': 'email@email.com',
-      'carModel' : 'Mercedes Benz E350',
-    };
-  });
-
-
-
-}
+      };
+    });
+  }
 
   @override
   void initState() {
+    global.userEmail=widget.userId;
     super.initState();
-     fetchUserData(widget.userId).then((data) {
+    fetchUserData(widget.userId).then((data) {
+      global.userData=data;
       setState(() {
         _userData = data;
         _children[0] = HomePage(userData: _userData);
       });
-
     }).catchError((error) {
       print(error);
     });
-
-
   }
 
   @override
@@ -116,7 +112,6 @@ class _HomeState extends State<Home> {
             color: Colors.white,
             size: 20,
           ),
-
         ],
       ),
     );

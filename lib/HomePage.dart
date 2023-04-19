@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/login.dart';
@@ -10,10 +11,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class HomePage extends StatefulWidget {
-final  Map<String, dynamic> userData;
+  final Map<String, dynamic> userData;
 
-
-HomePage({required this.userData });
+  HomePage({required this.userData});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -89,12 +89,11 @@ class _HomePageState extends State<HomePage> {
                   CircleAvatar(
                     // backgroundImage:"${global.userImage}"!=""?MemoryImage(base64Decode("${global.userImage}")):AssetImage('assets/images/profile.png') as ImageProvider,
 
-                  backgroundImage:  NetworkImage(
-                        'https://picsum.photos/200'),
+                    backgroundImage: NetworkImage('https://picsum.photos/200'),
                     radius: size.height * .08,
                   ),
                   Text(
-                    widget.userData['name'],
+                    widget.userData['email'],
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -111,35 +110,43 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfilePage(userData: {
-                      'firstName' : 'Amr',
-                      'secondName' : 'abo Amr',
-                      'email': 'amer.abuamer@gmail.com',
-                      'carModel' : 'Skoda octavia',
-                      'location' :'Nablus',
-                      'phoneNumber' :'+972599456603',
-                    },
-                    )));
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        ProfilePage(userData: global.userData,
 
+                    ),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(0.5, 1.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
+
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
             ),
-
             ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.vpn_key),
-                  Text(" Change Password"),
-                ],
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => ChangePasswordPage(),
-                );
-
-              }
-            ),
+                title: Row(
+                  children: [
+                    Icon(Icons.vpn_key),
+                    Text(" Change Password"),
+                  ],
+                ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => ChangePasswordPage(),
+                  );
+                }),
             ListTile(
               title: Row(
                 children: [
@@ -148,9 +155,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
+
               },
             ),
             ListTile(
@@ -163,17 +168,17 @@ class _HomePageState extends State<HomePage> {
               onTap: () {},
             ),
             ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.logout),
-                  Text(" Logout"),
-                ],
-              ),
-              onTap: () {
-                Navigator.pop(context);
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context) => LoginScreen() ));   }
-            ),
+                title: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    Text(" Logout"),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                }),
           ],
         ),
       ),
@@ -187,17 +192,19 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://picsum.photos/200'),
+                      backgroundImage:
+                          NetworkImage('https://picsum.photos/200'),
                       radius: 30.0,
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Column(
                       children: [
                         Text(
-                          'Hi, ' + widget.userData['name'],
-                          style:
-                              TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          'Hi, ' + widget.userData['firstName'],
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.left,
                         ),
                         Text(
@@ -282,18 +289,17 @@ class _HomePageState extends State<HomePage> {
                                       children: <Widget>[
                                         Center(
                                           child: Text(
-                                           services[index.toString()]['name'],
-                                           style: TextStyle(
-                                             color: Colors.black,
-                                             fontSize: 16.0,
-                                             fontWeight: FontWeight.w600,
-                                             letterSpacing: 1,
-                                           ),
+                                            services[index.toString()]['name'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 1,
                                             ),
+                                          ),
                                         ),
                                         Text(
-                                          services[index.toString()]
-                                          ['type'],
+                                          services[index.toString()]['type'],
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14.0,

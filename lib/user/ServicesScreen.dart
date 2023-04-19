@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/Classes/service.dart';
 import '../Widget/ServicesCarousel.dart';
+import 'map.dart';
 
 class Services extends StatefulWidget {
   const Services({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _ServicesState extends State<Services> {
     }
   }
   Future<List<Service>> _fetchServices() async {
-    // final response = await http.get(Uri.parse('https://your-api-url.com/services'));
+    // final response = await http.get(Uri.parse('url'));
     // if (response.statusCode == 200) {
     //   final List<dynamic> jsonList = json.decode(response.body);
     //   final services = jsonList.map((json) => Service.fromJson(json)).toList().cast<Service>();
@@ -46,7 +47,7 @@ class _ServicesState extends State<Services> {
     // } else {
     //   throw Exception('Failed to load services');
     // }
-   return Future.delayed(Duration(seconds: 3),(){
+   return Future.delayed(Duration(seconds: 1),(){
       final List<dynamic> jsonList = json.decode(
           '''[  {    "imgUrl": "assets/images/flatTire.jpg",    "name": "Flat Tire",    "type": "Emergency"  },
           {    "imgUrl": "assets/images/gasPump.jpeg",    "name": "Fuel",    "type": "Emergency"  },
@@ -69,6 +70,7 @@ class _ServicesState extends State<Services> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -81,7 +83,6 @@ class _ServicesState extends State<Services> {
               padding: const EdgeInsets.all(8.0),
               child: IconButton(
                 onPressed: () {
-                  // Toggle the boolean variable when the search button is clicked
                   setState(() {
                     _searchClicked = !_searchClicked;
                   });
@@ -92,7 +93,6 @@ class _ServicesState extends State<Services> {
                 ),
               ),
             ),
-            // Conditionally show/hide the TextField based on the boolean variable
             if (_searchClicked)
               Expanded(
                 child: TextField(

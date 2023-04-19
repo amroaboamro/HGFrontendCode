@@ -102,7 +102,7 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
                         child: Stack(
                           children: <Widget>[
                             Hero(
-                              tag: 'destination.imageUrl',
+                              tag: widget.services[index].imgUrl,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
                                 child: Image(

@@ -29,8 +29,8 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  Future<void> postData(Map<String, dynamic> data) async {
-    var url = ''; // replace with your API endpoint
+  Future<void> updateData(Map<String, dynamic> data) async {
+    var url = '';
     var headers = {'Content-Type': 'application/json'};
     var body = json.encode(data);
 
@@ -39,7 +39,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           await http.post(Uri.parse(url), headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        // success
         print('Data posted successfully');
         Navigator.pop(context);
         Fluttertoast.showToast(
@@ -61,7 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        // failure
+
         print('Failed to post data');
         print(response.statusCode);
       }
@@ -189,13 +188,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (_phoneNumber != null) {
                   widget.userData['phoneNumber'] = _phoneNumber;
                 }
-                postData({
+                updateData({
                   'firstName': _firstName,
                   'secondName': _secondName,
                   'email': _email,
-
                   'location': _location,
-                  'phoneNumber': _phoneNumber,
+                  'phoneNumber': _phoneNumber
                 });
                 print(widget.userData);
               }

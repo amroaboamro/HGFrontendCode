@@ -46,7 +46,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (email == null || email!.isEmpty) {
-
       Fluttertoast.showToast(
         msg: 'Please enter your email',
         toastLength: Toast.LENGTH_SHORT,
@@ -85,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return false;
     }
 
-    if (carModel== null || carModel!.isEmpty) {
+    if (carModel == null || carModel!.isEmpty) {
       Fluttertoast.showToast(
         msg: 'Please select your car model',
         toastLength: Toast.LENGTH_SHORT,
@@ -339,12 +338,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(0, 40, 0, 10),
                   child: ElevatedButton(
-                    onPressed:(){
-                      if(_validateFields()&&!_isLoading){
+                    onPressed: () {
+                      if (_validateFields() && !_isLoading) {
                         _signUp();
                       }
                     },
-
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(80.0)),
