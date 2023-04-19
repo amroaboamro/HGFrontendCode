@@ -32,6 +32,11 @@ class _HomePageState extends State<HomePage> {
     } else {
       throw Exception('Failed to fetch user data');
     }
+
+    //[
+
+    //]
+
 //     return Future.delayed(Duration(seconds: 3), () {
 //       return json.decode('''
 // {
@@ -115,12 +120,13 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                         builder: (context) => ProfilePage(
                               userData: {
-                                'firstName': 'Amr',
-                                'secondName': 'abo Amr',
-                                'email': 'amer.abuamer@gmail.com',
-                                'carModel': 'Skoda octavia',
-                                'location': 'Nablus',
-                                'phoneNumber': '+972599456603',
+                                'firstName': widget.userData['firstName'],
+                                'lastName': widget.userData['lastName'],
+                                'email': widget.userData['email'],
+                                'carModel': widget.userData['carModel'],
+                                
+                                'phone':
+                                    '0599933333', //widget.userData['phone']
                               },
                             )));
               },
@@ -321,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                         child: CircleAvatar(
                                           radius: 50,
                                           backgroundImage: AssetImage(
-                                              services[index]['serviceImage']),
+                                              'assets/images/battery'), //services[index]['serviceImage']
                                         ),
                                       ),
                                       // Positioned(

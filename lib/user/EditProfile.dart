@@ -30,13 +30,14 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> postData(Map<String, dynamic> data) async {
-    var url = ''; // replace with your API endpoint
+    var url = 'http://127.0.0.1:3000/updateUser/' +
+        widget.userData['email']; // replace with your API endpoint
     var headers = {'Content-Type': 'application/json'};
     var body = json.encode(data);
 
     try {
       var response =
-          await http.post(Uri.parse(url), headers: headers, body: body);
+          await http.patch(Uri.parse(url), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         // success
@@ -88,22 +89,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse('');
+    // var uri = Uri.parse('');
 
-    var request = new http.MultipartRequest("POST", uri);
+    var request = new http.MultipartRequest("POST",
+        Uri.parse('http://127.0.0.1:3000/addImage' + 'mostafa234567@com'));
     var multipartFile = new http.MultipartFile('upload', stream, length,
         filename: Path.basename(imageFile.path));
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      'token': global.token
+      // 'token': global.token
     };
-    request.headers["token"] = global.token;
+    // request.headers["token"] = global.token;
     request.headers["Content-Type"] = 'application/json; charset=UTF-8';
 
     request.headers.addAll(headers);
 
     request.files.add(multipartFile);
     var response = await request.send();
+    print(response);
     response.stream.transform(utf8.decoder).listen((value) {});
     Navigator.push(
       context,
@@ -123,42 +126,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<List<String>> fetchDropdownItems() async {
-    // final response = await http.get(Uri.parse('https://example.com/api/dropdown-items'));
-    //
-    // if (response.statusCode == 200) {
-    //   final data = json.decode(response.body) as List<dynamic>;
-    //   return List<String>.from(data);
-    // } else {
-    //   throw Exception('Failed to fetch dropdown items');
-    // }
-    return Future.delayed(Duration(seconds: 2), () {
-      return [
-        'Hyundai accent',
-        'Hyundai elantra',
-        'Seat leon ',
-        'BMW 320i',
-        'BMW m4',
-        'Skoda octavia',
-        'Skoda Combi',
-        'Skoda superb',
-        'volkswagen golf',
-        'volkswagen polo',
-        'volkswagen tiguan',
-        'Mercedes G-class',
-        'Mercedes Benz E350',
-        'Mercedes E350',
-        'Kia sportage',
-        'kia rio',
-      ];
-    });
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:3000/carModels'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as List<dynamic>;
+      return List<String>.from(data);
+    } else {
+      throw Exception('Failed to fetch dropdown items');
+    }
+    // return Future.delayed(Duration(seconds: 2), () {
+    //   return [
+    //     'Hyundai accent',
+    //     'Hyundai elantra',
+    //     'Seat leon ',
+    //     'BMW 320i',
+    //     'BMW m4',
+    //     'Skoda octavia',
+    //     'Skoda Combi',
+    //     'Skoda superb',
+    //     'volkswagen golf',
+    //     'volkswagen polo',
+    //     'volkswagen tiguan',
+    //     'Mercedes G-class',
+    //     'Mercedes Benz E350',
+    //     'Mercedes E350',
+    //     'Kia sportage',
+    //     'kia rio',
+    //   ];
+    // });
   }
 
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
-  String? _secondName;
+  String? _lastName;
   String? _email;
   String? _location;
-  String? _phoneNumber;
+  String? _phone;
   bool _isFetchCalled = false;
 
   @override
@@ -176,26 +180,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 if (_firstName != null) {
                   widget.userData['firstName'] = _firstName;
                 }
-                if (_secondName != null) {
-                  widget.userData['secondName'] = _secondName;
+                if (_lastName != null) {
+                  widget.userData['lastName'] = _lastName;
                 }
                 if (_email != null) {
-                  widget.userData['email'] = _email;
+                  widget.userData['email'] =
+                      _email; // i think its wrong to update
                 }
                 if (_location != null) {
                   widget.userData['location'] = _location;
                 }
 
-                if (_phoneNumber != null) {
-                  widget.userData['phoneNumber'] = _phoneNumber;
+                if (_phone != null) {
+                  widget.userData['phone'] = _phone;
                 }
                 postData({
                   'firstName': _firstName,
-                  'secondName': _secondName,
+                  'lastName': _lastName,
                   'email': _email,
-
-                  'location': _location,
-                  'phoneNumber': _phoneNumber,
+                  'phone': _phone,
                 });
                 print(widget.userData);
               }
@@ -248,16 +251,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Second Name'),
-                  initialValue: widget.userData['secondName'],
+                  decoration: InputDecoration(hintText: 'last Name'),
+                  initialValue: widget.userData['lastName'],
                   validator: (value) {
                     if (value?.isEmpty ?? false) {
-                      return 'Please enter your second name';
+                      return 'Please enter your last name';
                     }
                     return null;
                   },
                   onSaved: (value) {
-                    _secondName = value;
+                    _lastName = value;
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -336,7 +339,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 SizedBox(height: 16.0),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'Phone'),
-                  initialValue: widget.userData['phoneNumber'],
+                  initialValue: widget.userData['phone'],
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value?.isEmpty ?? false) {
@@ -345,7 +348,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     return null;
                   },
                   onSaved: (value) {
-                    _phoneNumber = value;
+                    _phone = value;
                   },
                 ),
                 SizedBox(height: 100.0),
