@@ -8,12 +8,9 @@ import 'package:head_gasket/user/profilePage.dart';
 import 'login.dart';
 import 'sign_up.dart';
 import 'package:head_gasket/Home.dart';
-import 'profile.dart';
-import 'profileDetails.dart';
 import 'HomePage.dart';
 import 'ForgetPassword.dart';
 import 'user/ServicesScreen.dart';
-// import 'productDetails.dart';
 
 void main() {
   runApp(MyApp());

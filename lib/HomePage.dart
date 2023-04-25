@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/login.dart';
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<dynamic>> fetch5RandomServices() async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:3000/services'));
+        await http.get(Uri.parse(global.ip+'/services'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -115,20 +116,28 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfilePage(
-                              userData: {
-                                'firstName': widget.userData['firstName'],
-                                'lastName': widget.userData['lastName'],
-                                'email': widget.userData['email'],
-                                'carModel': widget.userData['carModel'],
-                                
-                                'phone':
-                                    '0599933333', //widget.userData['phone']
-                              },
-                            )));
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        ProfilePage(
+                      userData: global.userData,
+                    ),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(0.5, 1.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
+
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
             ),
             ListTile(
@@ -151,11 +160,7 @@ class _HomePageState extends State<HomePage> {
                   Text(" Join as Service Provider"),
                 ],
               ),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-              },
+              onTap: () {},
             ),
             ListTile(
               title: Row(

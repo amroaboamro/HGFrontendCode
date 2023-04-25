@@ -84,14 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            'Product Designer',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 15.0,
-                            ),
-                          ),
                         ],
                       ),
                     ],
@@ -114,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Text(
-                        'Location: ' + widget.userData['location'],
+                        'Location: ', //+ widget.userData['city']+','+ widget.userData['street'],
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 16.0,
@@ -138,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Text(
-                        'Phone: ' + widget.userData['phone'],
+                        'Phone: ' + widget.userData['phone'].toString(),
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 16.0,
@@ -151,40 +143,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(height: 16.0),
-          Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'My Skills',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Row(
-                    children: <Widget>[
-                      Chip(
-                        label: Text('UI Design'),
-                      ),
-                      SizedBox(width: 8.0),
-                      Chip(
-                        label: Text('UX Design'),
-                      ),
-                      SizedBox(width: 8.0),
-                      Chip(
-                        label: Text('Mobile App Design'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );

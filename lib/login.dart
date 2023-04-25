@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:head_gasket/ForgetPassword.dart';
 import 'package:head_gasket/Home.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
 import 'package:head_gasket/sign_up.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:3000/signin'),
+        Uri.parse(global.ip+'/signin'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': _email,

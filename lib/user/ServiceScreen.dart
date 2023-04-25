@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
+import 'package:head_gasket/user/map.dart';
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../Classes/service.dart';
 import '../Classes/Worker.dart';
+import 'package:http/http.dart' as http;
+
+import 'WorkerProfile.dart';
 
 class ServiceScreen extends StatefulWidget {
   final Service service;
@@ -13,17 +20,118 @@ class ServiceScreen extends StatefulWidget {
 }
 
 class _ServiceScreenState extends State<ServiceScreen> {
-  Text _buildRatingStars(int rating) {
-    String stars = '';
-    for (int i = 0; i < rating; i++) {
-      stars += '⭐ ';
-    }
-    stars.trim();
-    return Text(stars);
+  late Future<List<Worker>> _workers;
+  List<Worker>? workers;
+  String _searchQuery = '';
+  bool _showSearchBar = false;
+  var userLat = global.userData['latitude']; // User's latitude
+  var userLng = global.userData['longitude']; // User's longitude
+
+  Future<List<Worker>> _fetchWorkersList() async {
+    // final response = await http.get(Uri.parse('https://example.com/api/workers'));
+    // if (response.statusCode == 200) {
+    //   final data = jsonDecode(response.body) as List;
+    //   List<Worker> workers = data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+    //   workers.sort((a, b) => a.distanceTo(userLat, userLng).compareTo(b.distanceTo(userLat, userLng)));
+    //   return workers;
+    // } else {
+    //   throw Exception('Failed to load workers');
+    // }
+    return Future.delayed(Duration(seconds: 1), () {
+      final data = jsonDecode(
+          '''[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "major": "Plumber",
+    "rating": 4.5,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-1234",
+    "email": "johndoe@example.com",
+    "city": "Miami",
+    "street": "123 Main St",
+    "latitude": 25.7743,
+    "longitude": -80.1937,
+    "bio": "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!"
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "major": "Electrician",
+    "rating": 4.8,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-5678",
+    "email": "janesmith@example.com",
+    "city": "Miami",
+    "street": "456 Oak Ave",
+    "latitude": 25.7821,
+    "longitude": -80.2395,
+    "bio": "Need an electrician? Look no further! I'm here to help with all your electrical needs."
+  },
+  {
+    "firstName": "Mark",
+    "lastName": "Johnson",
+    "major": "Carpenter",
+    "rating": 4.2,
+    "imageUrl": "assets/images/key.jpgg",
+    "phone": "555-9012",
+    "email": "markjohnson@example.com",
+    "city": "Miami",
+    "street": "789 Elm St",
+    "latitude": 25.7617,
+    "longitude": -80.1918,
+    "bio": "I'm a skilled carpenter with a passion for building things. Let me help bring your vision to life!"
+  },
+  {
+    "firstName": "Sarah",
+    "lastName": "Lee",
+    "major": "Handyman",
+    "rating": 4.1,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-3456",
+    "email": "sarahlee@example.com",
+    "city": "Miami",
+    "street": "321 Pine St",
+    "latitude": 25.7751,
+    "longitude": -80.1937,
+    "bio": "Need help with odd jobs around the house? I'm your gal! From painting to plumbing, I can do it all."
+  },
+  {
+    "firstName": "David",
+    "lastName": "Brown",
+    "major": "Gardener",
+    "rating": 4.6,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-6789",
+    "email": "davidbrown@example.com",
+    "city": "Miami",
+    "street": "543 Maple Ave",
+    "latitude": 25.7528,
+    "longitude": -80.2229,
+    "bio": "Love your lawn and garden again! I'll make sure your yard looks beautiful year-round."
+  }
+]
+
+
+''') as List;
+      List<Worker> workers = data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+       workers.sort((a, b) => a.distanceTo(userLat, userLng).compareTo(b.distanceTo(userLat, userLng)));
+return workers;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _workers = _fetchWorkersList();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (global.userData['latitude'] == null ) {
+      return MapScreen();
+    }
+
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -32,7 +140,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
           Stack(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height*0.4,
+                height: MediaQuery.of(context).size.height * 0.4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.0),
                   boxShadow: [
@@ -58,16 +166,12 @@ class _ServiceScreenState extends State<ServiceScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
                 child: Row(
-
-
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: <Widget>[
                     IconButton(
                       icon: Icon(Icons.arrow_back),
                       iconSize: 30.0,
                       color: Colors.white,
-
                       onPressed: () => Navigator.pop(context),
                     ),
                     Row(
@@ -76,10 +180,12 @@ class _ServiceScreenState extends State<ServiceScreen> {
                           icon: Icon(Icons.search),
                           iconSize: 30.0,
                           color: Colors.white,
-
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _showSearchBar = !_showSearchBar;
+                            });
+                          },
                         ),
-
                       ],
                     ),
                   ],
@@ -100,147 +206,200 @@ class _ServiceScreenState extends State<ServiceScreen> {
                         letterSpacing: 1.2,
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.location_on,
-                          size: 15.0,
-                          color: Colors.white70,
-                        ),
-                        SizedBox(width: 5.0),
-                        Text(
-                          'Nablus',
-                          style: TextStyle(
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MapScreen(users: workers,)));
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.location_on,
+                            size: 20.0,
+
                             color: Colors.white70,
-                            fontSize: 20.0,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 5.0),
+                          Text(
+                            global.userData['city'],
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-
             ],
           ),
-          // Expanded(
-          //   child: ListView.builder(
-          //     padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
-          //     itemCount: widget.service.workers.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //      Worker worker = widget.service.workers[index];
-          //       return Stack(
-          //         children: <Widget>[
-          //           Container(
-          //             margin: EdgeInsets.fromLTRB(40.0, 5.0, 20.0, 5.0),
-          //             height: 170.0,
-          //             width: double.infinity,
-          //             decoration: BoxDecoration(
-          //               color: Colors.white,
-          //               borderRadius: BorderRadius.circular(20.0),
-          //             ),
-          //             child: Padding(
-          //               padding: EdgeInsets.fromLTRB(100.0, 20.0, 20.0, 20.0),
-          //               child: Column(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: <Widget>[
-          //                   Row(
-          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     children: <Widget>[
-          //                       Container(
-          //                         width: 120.0,
-          //                         child: Text(
-          //                           worker.name,
-          //                           style: TextStyle(
-          //                             fontSize: 18.0,
-          //                             fontWeight: FontWeight.w600,
-          //                           ),
-          //                           overflow: TextOverflow.ellipsis,
-          //                           maxLines: 2,
-          //                         ),
-          //                       ),
-          //                       // Column(
-          //                       //   children: <Widget>[
-          //                       //     Text(
-          //                       //       '\$${activity.price}',
-          //                       //       style: TextStyle(
-          //                       //         fontSize: 22.0,
-          //                       //         fontWeight: FontWeight.w600,
-          //                       //       ),
-          //                       //     ),
-          //                       //     Text(
-          //                       //       'per pax',
-          //                       //       style: TextStyle(
-          //                       //         color: Colors.grey,
-          //                       //       ),
-          //                       //     ),
-          //                       //   ],
-          //                       // ),
-          //                     ],
-          //                   ),
-          //                   Text(
-          //                     worker.major,
-          //                     style: TextStyle(
-          //                       color: Colors.grey,
-          //                     ),
-          //                   ),
-          //                   _buildRatingStars(worker.rating),
-          //                   SizedBox(height: 10.0),
-          //                   // Row(
-          //                   //   children: <Widget>[
-          //                   //     Container(
-          //                   //       padding: EdgeInsets.all(5.0),
-          //                   //       width: 70.0,
-          //                   //       decoration: BoxDecoration(
-          //                   //         color: Theme.of(context).accentColor,
-          //                   //         borderRadius: BorderRadius.circular(10.0),
-          //                   //       ),
-          //                   //       alignment: Alignment.center,
-          //                   //       child: Text(
-          //                   //         activity.startTimes[0],
-          //                   //       ),
-          //                   //     ),
-          //                   //     SizedBox(width: 10.0),
-          //                   //     Container(
-          //                   //       padding: EdgeInsets.all(5.0),
-          //                   //       width: 70.0,
-          //                   //       decoration: BoxDecoration(
-          //                   //         color: Theme.of(context).accentColor,
-          //                   //         borderRadius: BorderRadius.circular(10.0),
-          //                   //       ),
-          //                   //       alignment: Alignment.center,
-          //                   //       child: Text(
-          //                   //         activity.startTimes[1],
-          //                   //       ),
-          //                   //     ),
-          //                   //   ],
-          //                   // )
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //           Positioned(
-          //             left: 20.0,
-          //             top: 15.0,
-          //             bottom: 15.0,
-          //             child: ClipRRect(
-          //               borderRadius: BorderRadius.circular(20.0),
-          //               child: Image(
-          //                 width: 110.0,
-          //                 image: AssetImage(
-          //                   worker.imageUrl,
-          //                 ),
-          //                 fit: BoxFit.cover,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       );
-          //     },
-          //   ),
-          // ),
+          SizedBox(
+            height: 10,
+          ),
+          if (_showSearchBar)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (query) {
+                  setState(() {
+                    _searchQuery = query;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search for workers',
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 13.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      width: 0.5,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          FutureBuilder<List<Worker>>(
+            future: _workers,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                 workers = snapshot.data!;
+                List<Worker> _filteredWorkers = [];
+                if (_searchQuery.isNotEmpty) {
+                  _filteredWorkers = workers!
+                      .where((worker) => worker.name
+                          .toLowerCase()
+                          .contains(_searchQuery.toLowerCase()))
+                      .toList();
+                } else {
+                  _filteredWorkers = workers!;
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                    itemCount: _filteredWorkers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Worker worker = _filteredWorkers[index];
+                      return Stack(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => WorkerProfilePage(worker: worker),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    var begin = Offset(0.0, 1.0);
+                                    var end = Offset.zero;
+                                    var curve = Curves.ease;
+
+                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+
+
+
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              elevation: 4.0,
+                              child: Container(
+                                padding: EdgeInsets.all(15.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: AssetImage(worker.imageUrl),
+                                      radius: 50.0,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              worker.name,
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5.0),
+                                            Text(
+                                              worker.major,
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.0),
+                                            SmoothStarRating(
+                                              rating: worker.rating ?? 0.0,
+                                              size: 20,
+                                              filledIconData: Icons.star,
+                                              halfFilledIconData: Icons.star_half,
+                                              defaultIconData: Icons.star_border,
+                                              starCount: 5,
+                                              allowHalfRating: false,
+                                              color: Colors.yellow,
+                                              borderColor: Colors.grey,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

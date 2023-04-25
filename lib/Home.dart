@@ -1,12 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
-import 'package:head_gasket/profileDetails.dart';
+import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/HomePage.dart';
-import 'package:head_gasket/user/EditProfile.dart';
 import 'package:head_gasket/user/MyOrders.dart';
-import 'user/profilePage.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -29,23 +28,21 @@ class _HomeState extends State<Home> {
         'lastName': '---',
         'email': '-----',
         'carModel': '-----',
-        'phone':'----'
       },
     ),
     Services(),
-    ProfileDetails(),
-    ProfileDetails(),
+    MyOrders(),
+    MyOrders(),
   ];
 
   Future<Map<String, dynamic>> fetchUserData(String userId) async {
     print(userId);
 
-    final response =
-        await http.get(Uri.parse('http://127.0.0.1:3000/userInfo/' + userId));
+    final response = await http
+        .get(Uri.parse(global.ip+'/userInfo/mostafa234567@com'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      print('hkhkhk');
       print(data);
       return data;
     } else {
@@ -64,8 +61,11 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    global.userEmail = widget.userId;
     super.initState();
     fetchUserData(widget.userId).then((data) {
+      global.userData = data;
+      print(global.userData);
       setState(() {
         _userData = data;
         _children[0] = HomePage(userData: _userData);

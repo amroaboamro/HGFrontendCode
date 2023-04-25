@@ -40,7 +40,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           await http.patch(Uri.parse(url), headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        // success
         print('Data posted successfully');
         Navigator.pop(context);
         Fluttertoast.showToast(
@@ -62,7 +61,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        // failure
+
         print('Failed to post data');
         print(response.statusCode);
       }
@@ -161,7 +160,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _firstName;
   String? _lastName;
   String? _email;
-  String? _location;
+  String? _carModel;
   String? _phone;
   bool _isFetchCalled = false;
 
@@ -187,8 +186,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   widget.userData['email'] =
                       _email; // i think its wrong to update
                 }
-                if (_location != null) {
-                  widget.userData['location'] = _location;
+                if (_carModel != null) {
+                  widget.userData['carModel'] = _carModel;
                 }
 
                 if (_phone != null) {
@@ -198,7 +197,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   'firstName': _firstName,
                   'lastName': _lastName,
                   'email': _email,
-                  'phone': _phone,
+                  'carModel': _carModel,
+                  'phone': _phone
                 });
                 print(widget.userData);
               }
@@ -278,20 +278,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _email = value;
                   },
                 ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Location'),
-                  initialValue: widget.userData['location'],
-                  validator: (value) {
-                    if (value?.isEmpty ?? false) {
-                      return 'Please enter your location';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _location = value;
-                  },
-                ),
+                
                 SizedBox(height: 16.0),
                 FutureBuilder<List<String>>(
                   future: _isFetchCalled ? null : fetchDropdownItems(),
@@ -321,7 +308,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             value: widget.userData['carModel'],
                             onChanged: (value) {
                               setState(() {
-                                widget.userData['carModel'] = value;
+                                _carModel = value;
                               });
                             },
                             items: _dropdownItems.map((String value) {
