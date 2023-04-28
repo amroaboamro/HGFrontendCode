@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+
 import '../global.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -81,19 +83,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   List<String> _dropdownItems = [];
 
+  Uint8List webImage = Uint8List(8);
   String imageTest = "";
-  late File imagepicker;
+  late File imagepicker = File('zz');
+
   Future Upload(File imageFile) async {
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
 
-    // var uri = Uri.parse('');
+    var uri = Uri.parse('http://127.0.0.1:3000/addImage' + 'mostafa234567@com');
+    var request = new http.MultipartRequest("POST", uri);
 
-    var request = new http.MultipartRequest("POST",
-        Uri.parse('http://127.0.0.1:3000/addImage' + 'mostafa234567@com'));
     var multipartFile = new http.MultipartFile('upload', stream, length,
         filename: Path.basename(imageFile.path));
+
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       // 'token': global.token
@@ -105,7 +109,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     request.files.add(multipartFile);
     var response = await request.send();
-    print(response);
+
+    if (response.statusCode == 200) {
+      print("Image Uploaded");
+    } else {
+      print("Upload Failed");
+    }
+
     response.stream.transform(utf8.decoder).listen((value) {});
     Navigator.push(
       context,
@@ -115,13 +125,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future getImageFromGallery() async {
-    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(() {
-      imagepicker = File(image!.path);
+    //mobile
+    if (!kIsWeb) {
+      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      getFileImageString(imagepicker);
-      Upload(imagepicker);
-    });
+      if (image != null) {
+        var selected = File(image.path);
+
+        setState(() {
+          imagepicker = selected;
+          getFileImageString(imagepicker);
+
+          Upload(imagepicker);
+        });
+      } else {
+        print("No file selected");
+      }
+      // setState(() {
+      //   imagepicker = File(image!.path);
+      //   print('hhhttthhhh99999999999999999');
+      //   print(imagepicker);
+
+      //   getFileImageString(imagepicker);
+
+      //   // Upload(imagepicker);
+      // });
+    }
+    // WEB
+    else if (kIsWeb) {
+      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        print(image);
+        var f = await image.readAsBytes();
+        setState(() {
+          webImage = f;
+          imagepicker = File(image.path);
+        });
+      } else {
+        print("No file selected");
+      }
+    }
   }
 
   Future<List<String>> fetchDropdownItems() async {
@@ -218,12 +261,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundImage: imageTest != ""
-                          ? MemoryImage(base64Decode(imageTest))
-                          : AssetImage('assets/images/profile.png')
-                              as ImageProvider,
+                      backgroundImage: imagepicker.path == 'zz'
+                          ? AssetImage('assets/images/profile.png')
+                          : (kIsWeb)
+                              ? MemoryImage(webImage.buffer.asUint8List())
+                              : MemoryImage(base64Decode(imageTest))
+                                  as ImageProvider,
                       radius: 100,
                     ),
+                    // imagepicker.path == 'zz' //it means no image selected
+                    //     ? Image.asset('assets/images/profile.png')
+                    //     : (kIsWeb)
+                    //         ? Image.memory(webImage.buffer.asUint8List())
+                    //         : Image.file(imagepicker),
+                    // CircleAvatar(
+                    //   backgroundImage: imageTest != ""
+                    //       ? MemoryImage(base64Decode(imageTest))
+                    //       : AssetImage('assets/images/profile.png')
+                    //           as ImageProvider,
+                    //   radius: 100,
+                    // ),
                     IconButton(
                       icon: Icon(
                         Icons.edit,
@@ -278,7 +335,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _email = value;
                   },
                 ),
-                
                 SizedBox(height: 16.0),
                 FutureBuilder<List<String>>(
                   future: _isFetchCalled ? null : fetchDropdownItems(),

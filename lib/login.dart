@@ -43,8 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(global.ip+'/signin'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse(global.ip + '/signin'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: json.encode({
           'email': _email,
           'password': _password,
@@ -52,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data['token']);
+        global.token = data['token'];
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Home(userId: _email)));
       } else if (response.statusCode == 401) {

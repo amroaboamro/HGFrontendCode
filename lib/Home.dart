@@ -37,9 +37,17 @@ class _HomeState extends State<Home> {
 
   Future<Map<String, dynamic>> fetchUserData(String userId) async {
     print(userId);
+    print(global.token);
 
-    final response = await http
-        .get(Uri.parse(global.ip+'/userInfo/mostafa234567@com'));
+    final response = await http.get(
+      Uri.parse(global.ip + '/userInfo/mostafa234567@com'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${global.token}'
+      },
+    );
+
+    // final response = await http.get(Uri.parse(global.ip+'/userInfo/mostafa234567@com'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
