@@ -39,8 +39,9 @@ class _HomeState extends State<Home> {
     print(userId);
     print(global.token);
 
+
     final response = await http.get(
-      Uri.parse(global.ip + '/userInfo/mostafa234567@com'),
+      Uri.parse(global.ip + '/userInfo/'+global.userEmail),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${global.token}'

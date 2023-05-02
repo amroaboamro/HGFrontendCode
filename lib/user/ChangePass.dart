@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:head_gasket/global.dart';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -13,8 +13,9 @@ class ChangePasswordPage extends StatefulWidget {
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _currentPassword;
-  String ?_newPassword;
+  String? _newPassword;
   String? _confirmPassword;
+  String _errorMessage = "";
 
   String? _validatePasswords(String? newPassword, String? confirmPassword) {
     if (newPassword == null || newPassword.isEmpty) {
@@ -29,41 +30,48 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     return null;
   }
 
-  Future<void> changePassword(
-      String currentPassword, String newPassword, String confirmPassword) async {
-    final url = Uri.parse('');
-    final headers = {'Content-Type': 'application/json'};
+  Future<void> changePassword(String currentPassword, String newPassword,
+      String confirmPassword) async {
+    final url = Uri.parse(global.ip + '/changePassword/mostafa234567@com');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${global.token}'
+    };
+
     final body = json.encode({
       'current_password': currentPassword,
       'new_password': newPassword,
-      'confirm_password': confirmPassword,
     });
 
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.patch(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
       return;
-    } else if (response.statusCode == 400) {
-      final error = json.decode(response.body)['error'];
-      throw Exception('Failed to change password: $error');
+    } else if (response.statusCode == 401) {
+      final error = json.decode(response.body);
+      _errorMessage =
+          "Failed to change password: Your current password is in correct";
+      throw Exception('Failed to change password:');
     } else {
-      throw Exception('Failed to change password. Status code: ${response.statusCode}');
+      _errorMessage = "Failed to change password";
+      throw Exception(
+          'Failed to change password. Status code: ${response.statusCode}');
     }
   }
 
-
   void _changePassword() async {
-    if (_formKey.currentState?.validate()??false) {
+    if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
       final error = _validatePasswords(_newPassword, _confirmPassword);
       if (error == null) {
         try {
-          await changePassword(_currentPassword!, _newPassword!, _confirmPassword!);
+          await changePassword(
+              _currentPassword!, _newPassword!, _confirmPassword!);
           Fluttertoast.showToast(msg: 'Password changed successfully');
           Navigator.pop(context);
         } catch (e) {
           Fluttertoast.showToast(
-            msg: e.toString(),
+            msg: _errorMessage,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -71,12 +79,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-
         }
 
         Navigator.pop(context);
-      }
-      else {
+      } else {
         Fluttertoast.showToast(
           msg: error,
           toastLength: Toast.LENGTH_SHORT,
@@ -86,10 +92,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-
-
       }
-
     }
   }
 
@@ -125,67 +128,69 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text('Change Password'),
-    content: SingleChildScrollView(
-    child:  Container(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Current Password',
+      title: Text('Change Password'),
+      content: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Current Password',
+                  ),
+                  onSaved: (value) => _currentPassword = value,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your current password';
+                    }
+                    // Add your own validation logic here if needed
+                    return null;
+                  },
                 ),
-                onSaved: (value) => _currentPassword = value,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your current password';
-                  }
-                  // Add your own validation logic here if needed
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'New Password',
+                SizedBox(height: 16.0),
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'New Password',
+                  ),
+                  onSaved: (value) => {
+                    _newPassword = value,
+                    print(_newPassword! + "  from save")
+                  },
+                  validator: (value) {
+                    return _isValidPassword(value!)
+                        ? null
+                        : 'Please enter a new password';
+                  },
                 ),
-                onSaved: (value) => {_newPassword = value,
-                print( _newPassword!+"  from save")
-                },
-                validator: (value) {
-
-                  return _isValidPassword(value!) ? null : 'Please enter a new password';
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
+                SizedBox(height: 16.0),
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                  ),
+                  onSaved: (value) => _confirmPassword = value,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your new password';
+                    }
+                    return null;
+                  },
                 ),
-                onSaved: (value) => _confirmPassword = value,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your new password';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 32.0),
-              ElevatedButton(
-                onPressed: _changePassword,
-                child: Text('Change Password'),
-              ),
-            ],
+                SizedBox(height: 32.0),
+                ElevatedButton(
+                  onPressed: _changePassword,
+                  child: Text('Change Password'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

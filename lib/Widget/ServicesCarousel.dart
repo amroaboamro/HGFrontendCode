@@ -67,7 +67,7 @@ class _ServiceCarouselState extends State<ServiceCarousel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  widget.services[index].name,
+                                  widget.services[index].serviceName,
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600,

@@ -23,8 +23,7 @@ class _HomePageState extends State<HomePage> {
   late List<dynamic> services;
 
   Future<List<dynamic>> fetch5RandomServices() async {
-    final response =
-        await http.get(Uri.parse(global.ip+'/services'));
+    final response = await http.get(Uri.parse(global.ip + '/services'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -331,8 +330,7 @@ class _HomePageState extends State<HomePage> {
                                         tag: 'destination.imageUrl',
                                         child: CircleAvatar(
                                           radius: 50,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/battery'), //services[index]['serviceImage']
+                                          backgroundImage: AssetImage(services[index]['imgUrl']), //services[index]['serviceImage']
                                         ),
                                       ),
                                       // Positioned(

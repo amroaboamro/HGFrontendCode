@@ -1,23 +1,16 @@
 class Service {
   String imgUrl;
-  String name;
-  String type;
+  String serviceName;
+  String serviceType;
 
-
-
-  Service(this.imgUrl,
-      this.name,this.type
-      );
+  Service(this.imgUrl, this.serviceName, this.serviceType);
   factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
       json['imgUrl'],
-      json['name'],
-      json['type'],
+      json['serviceName'],
+      json['serviceType'],
     );
   }
-
-
-
 }
 
 // List <Worker> workers=[

@@ -38,8 +38,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     //   throw Exception('Failed to load workers');
     // }
     return Future.delayed(Duration(seconds: 1), () {
-      final data = jsonDecode(
-          '''[
+      final data = jsonDecode('''[
   {
     "firstName": "John",
     "lastName": "Doe",
@@ -114,9 +113,12 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
 
 ''') as List;
-      List<Worker> workers = data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-       workers.sort((a, b) => a.distanceTo(userLat, userLng).compareTo(b.distanceTo(userLat, userLng)));
-return workers;
+      List<Worker> workers =
+          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+      workers.sort((a, b) => a
+          .distanceTo(userLat, userLng)
+          .compareTo(b.distanceTo(userLat, userLng)));
+      return workers;
     });
   }
 
@@ -128,7 +130,7 @@ return workers;
 
   @override
   Widget build(BuildContext context) {
-    if (global.userData['latitude'] == null ) {
+    if (global.userData['latitude'] == null) {
       return MapScreen();
     }
 
@@ -198,7 +200,7 @@ return workers;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.service.name,
+                      widget.service.serviceName,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 35.0,
@@ -207,19 +209,20 @@ return workers;
                       ),
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MapScreen(users: workers,)));
+                                builder: (context) => MapScreen(
+                                      users: workers,
+                                    )));
                       },
                       child: Row(
                         children: <Widget>[
                           Icon(
                             Icons.location_on,
                             size: 20.0,
-
                             color: Colors.white70,
                           ),
                           SizedBox(width: 5.0),
@@ -293,7 +296,7 @@ return workers;
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else {
-                 workers = snapshot.data!;
+                workers = snapshot.data!;
                 List<Worker> _filteredWorkers = [];
                 if (_searchQuery.isNotEmpty) {
                   _filteredWorkers = workers!
@@ -316,13 +319,17 @@ return workers;
                             onTap: () {
                               Navigator.of(context).push(
                                 PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => WorkerProfilePage(worker: worker),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      WorkerProfilePage(worker: worker),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
                                     var begin = Offset(0.0, 1.0);
                                     var end = Offset.zero;
                                     var curve = Curves.ease;
 
-                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
 
                                     return SlideTransition(
                                       position: animation.drive(tween),
@@ -331,9 +338,6 @@ return workers;
                                   },
                                 ),
                               );
-
-
-
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
@@ -343,18 +347,23 @@ return workers;
                               child: Container(
                                 padding: EdgeInsets.all(15.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CircleAvatar(
-                                      backgroundImage: AssetImage(worker.imageUrl),
+                                      backgroundImage:
+                                          AssetImage(worker.imageUrl),
                                       radius: 50.0,
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.0),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               worker.name,
@@ -376,8 +385,10 @@ return workers;
                                               rating: worker.rating ?? 0.0,
                                               size: 20,
                                               filledIconData: Icons.star,
-                                              halfFilledIconData: Icons.star_half,
-                                              defaultIconData: Icons.star_border,
+                                              halfFilledIconData:
+                                                  Icons.star_half,
+                                              defaultIconData:
+                                                  Icons.star_border,
                                               starCount: 5,
                                               allowHalfRating: false,
                                               color: Colors.yellow,
