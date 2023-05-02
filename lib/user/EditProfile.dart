@@ -32,16 +32,32 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> postData(Map<String, dynamic> data) async {
-    var url = 'http://127.0.0.1:3000/updateUser/' +
-        widget.userData['email']; // replace with your API endpoint
+    var url = global.ip +'/updateUser/'+
+        global.userEmail;
     var headers = {'Content-Type': 'application/json'};
     var body = json.encode(data);
 
     try {
       var response =
           await http.patch(Uri.parse(url), headers: headers, body: body);
-
       if (response.statusCode == 200) {
+        if (_firstName != null) {
+          widget.userData['firstName'] = _firstName;
+        }
+        if (_lastName != null) {
+          widget.userData['lastName'] = _lastName;
+        }
+        if (_email != null) {
+          widget.userData['email'] =
+              _email; // i think its wrong to update
+        }
+        if (_carModel != null) {
+          widget.userData['carModel'] = _carModel;
+        }
+
+        if (_phone != null) {
+          widget.userData['phone'] = _phone;
+        }
         print('Data posted successfully');
         Navigator.pop(context);
         Fluttertoast.showToast(
@@ -53,6 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+
       } else {
         Fluttertoast.showToast(
           msg: "Failed to Save data",
@@ -169,7 +186,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<List<String>> fetchDropdownItems() async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:3000/carModels'));
+        await http.get(Uri.parse(global.ip+'/carModels'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
@@ -206,6 +223,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _carModel;
   String? _phone;
   bool _isFetchCalled = false;
+  @override
+  void initState() {
+    super.initState();
+   _carModel=widget.userData['carModel'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,23 +241,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             onPressed: () {
               if (_formKey.currentState?.validate() ?? false) {
                 _formKey.currentState?.save();
-                if (_firstName != null) {
-                  widget.userData['firstName'] = _firstName;
-                }
-                if (_lastName != null) {
-                  widget.userData['lastName'] = _lastName;
-                }
-                if (_email != null) {
-                  widget.userData['email'] =
-                      _email; // i think its wrong to update
-                }
-                if (_carModel != null) {
-                  widget.userData['carModel'] = _carModel;
-                }
 
-                if (_phone != null) {
-                  widget.userData['phone'] = _phone;
-                }
                 postData({
                   'firstName': _firstName,
                   'lastName': _lastName,
@@ -361,7 +367,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             border: OutlineInputBorder(),
                           ),
                           child: DropdownButton<String>(
-                            value: widget.userData['carModel'],
+                            value: _carModel,
                             onChanged: (value) {
                               setState(() {
                                 _carModel = value;
