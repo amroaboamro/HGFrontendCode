@@ -261,7 +261,7 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0), backgroundColor: mainColor,
+                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0), primary: mainColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),

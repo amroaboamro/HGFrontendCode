@@ -100,7 +100,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
+                        primary: mainColor,
                         padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16.0),
@@ -146,7 +146,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                     ElevatedButton(
                       onPressed: _count > 1 ? _decreaseCount : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
+                        primary: Colors.grey[300],
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.0,
                           vertical: 8.0,
@@ -172,7 +172,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                     ElevatedButton(
                       onPressed: _increaseCount,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
+                        primary: mainColor,
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.0,
                           vertical: 8.0,

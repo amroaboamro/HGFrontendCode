@@ -222,7 +222,7 @@ class _ServiceFormState extends State<ServiceForm> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: mainColor,
+                      primary: mainColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
