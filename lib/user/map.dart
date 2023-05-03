@@ -76,14 +76,13 @@ class _MapScreenState extends State<MapScreen> {
     print(street);
     print(_currentLocation);
     print(global.userEmail);
-    final response = await http.post(
-      Uri.parse('https://example.com/api/users'),
+    final response = await http.patch(
+      Uri.parse(global.ip+'updateLocation'+global.userEmail),
       body: json.encode({
         'latitude': _currentLocation!.latitude,
         'longitude': _currentLocation!.longitude,
         'city': city,
         'street': street,
-        'userEmail':global.userEmail,
       }),
       headers: {
         'Content-Type': 'application/json',

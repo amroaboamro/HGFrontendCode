@@ -32,8 +32,7 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> postData(Map<String, dynamic> data) async {
-    var url = global.ip +'/updateUser/'+
-        global.userEmail;
+    var url = global.ip + '/userUpdate/' + global.userEmail;
     var headers = {'Content-Type': 'application/json'};
     var body = json.encode(data);
 
@@ -48,8 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           widget.userData['lastName'] = _lastName;
         }
         if (_email != null) {
-          widget.userData['email'] =
-              _email; // i think its wrong to update
+          widget.userData['email'] = _email; // i think its wrong to update
         }
         if (_carModel != null) {
           widget.userData['carModel'] = _carModel;
@@ -58,7 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (_phone != null) {
           widget.userData['phone'] = _phone;
         }
-        print('Data posted successfully');
+        print('Data updated successfully');
         Navigator.pop(context);
         Fluttertoast.showToast(
           msg: "Saved",
@@ -69,7 +67,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-
       } else {
         Fluttertoast.showToast(
           msg: "Failed to Save data",
@@ -185,8 +182,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<List<String>> fetchDropdownItems() async {
-    final response =
-        await http.get(Uri.parse(global.ip+'/carModels'));
+    final response = await http.get(Uri.parse(global.ip + '/carModels'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
@@ -226,7 +222,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-   _carModel=widget.userData['carModel'];
+    _carModel = widget.userData['carModel'];
   }
 
   @override
