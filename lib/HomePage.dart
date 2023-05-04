@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
+import 'package:head_gasket/user/JoinASProvider.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/login.dart';
@@ -159,7 +160,10 @@ class _HomePageState extends State<HomePage> {
                   Text(" Join as Service Provider"),
                 ],
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ServiceForm()));
+              },
             ),
             ListTile(
               title: Row(

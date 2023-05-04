@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'amr@amr.com'; //mostafa234567@com
+                    _email = 'email@gmail.com';
                   },
                 ),
               ),
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.vpn_key_outlined),
                   ),
                   onChanged: (value) {
-                    _password = '1234'; //ggg134 //123123
+                    _password = '1111'; //ggg134
                   },
                 ),
               ),

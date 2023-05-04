@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
 
 class OrderPage extends StatefulWidget {
  final String serviceType;
@@ -20,18 +21,14 @@ class _OrderPageState extends State<OrderPage> {
   String? _serviceType;
   String? _note;
 
-  // Function to load data from API and populate the form fields
   void _loadDataFromAPI() {
-    // You can implement the API call and data loading logic here
-    // and update the _firstName, _lastName, _email, etc. variables
-    // with the fetched values.
-    // For this example, we'll just hardcode some sample values:
-    _firstName = 'John';
-    _lastName = 'Doe';
-    _email = 'johndoe@example.com';
-    _phone = '555-1234';
-    _location = 'New York, NY';
-    _carModel = 'Toyota Camry';
+
+    _firstName = global.userData['firstName'];
+    _lastName = global.userData['lastName'];
+    _email = global.userData['email'];
+    _phone = global.userData['phone'];
+    _location = global.userData['city']+','+global.userData['street'];
+    _carModel = global.userData['carModel'];
     _note = '';
   }
 

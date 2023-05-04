@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:head_gasket/user/order.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../Classes/Worker.dart';
 // import 'hireWorkerPage.dart';
@@ -205,10 +206,10 @@ class WorkerProfilePage extends StatelessWidget {
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => HireWorkerPage(worker: worker)));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderPage(serviceType: worker.major,)));
                         },
                         style: ElevatedButton.styleFrom(
                           // primary: Colors.black, backgroundColor: Colors.white,
