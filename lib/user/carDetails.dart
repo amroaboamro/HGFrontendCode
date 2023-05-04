@@ -61,7 +61,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -119,6 +119,15 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                 ),
                 SizedBox(height: 8.0),
                 Text(
+                  'In Stock: ${widget.product.quantity}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Text(
                   'Price: \$${totalPrice.toString()}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -126,6 +135,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                     color: mainColor,
                   ),
                 ),
+
                 SizedBox(height: 16.0),
                 Text(
                   'Description:',
@@ -170,7 +180,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                     ),
                     SizedBox(width: 16.0),
                     ElevatedButton(
-                      onPressed: _increaseCount,
+                      onPressed: _count < widget.product.quantity ? _increaseCount : null,
                       style: ElevatedButton.styleFrom(
                         primary: mainColor,
                         padding: EdgeInsets.symmetric(
