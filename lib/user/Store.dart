@@ -27,14 +27,10 @@ class _StorePageState extends State<StorePage> {
     'Tesla',
   ];
   List<String> _colors = [
-    'Red',
-    'Blue',
-    'Silver',
-    'Black',
-    'Yellow',
-    'Green',
-    'White',
-    'Gray',
+    'Body',
+    'Mechanical',
+    'Electrical',
+    'accessories',
   ];
   String? _selectedBrand;
   String? _selectedColor;
@@ -58,80 +54,54 @@ class _StorePageState extends State<StorePage> {
     // }
     return Future.delayed(Duration(seconds: 1),(){
       List<dynamic> data = json.decode('''
-      [
+     [
   {
     "id": 1,
-    "brand": "BMW",
-    "model": "X5",
+    "brand": "WeatherTech",
+    "model": "Floor Mats",
     "color": "Black",
-    "price": 50000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
+    "price": 99,
+    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+    "quantity": 10
   },
   {
     "id": 2,
-    "brand": "Mercedes",
-    "model": "C-Class",
-    "color": "White",
-    "price": 45000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
+    "brand": "Bosch",
+    "model": "Icon Wiper Blades",
+    "color": "Black",
+    "price": 25,
+    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+    "quantity": 15
   },
   {
     "id": 3,
-    "brand": "Audi",
-    "model": "A6",
-    "color": "Silver",
-    "price": 55000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
+    "brand": "K&N",
+    "model": "Air Filter",
+    "color": "Red",
+    "price": 50,
+    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+    "quantity": 20
   },
   {
     "id": 4,
-    "brand": "Toyota",
-    "model": "Camry",
-    "color": "Gray",
-    "price": 25000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
+    "brand": "Mobil 1",
+    "model": "Synthetic Motor Oil",
+    "color": "Gold",
+    "price": 40,
+    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+    "quantity": 25
   },
   {
     "id": 5,
-    "brand": "Honda",
-    "model": "Accord",
+    "brand": "Meguiar's",
+    "model": "Car Wash and Wax Kit",
     "color": "Blue",
-    "price": 30000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
-  },
-  {
-    "id": 6,
-    "brand": "Lexus",
-    "model": "RX",
-    "color": "Black",
-    "price": 45000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
-  },
-  {
-    "id": 7,
-    "brand": "Ford",
-    "model": "Mustang",
-    "color": "Red",
-    "price": 40000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
-  },
-  {
-    "id": 8,
-    "brand": "Chevrolet",
-    "model": "Camaro",
-    "color": "Yellow",
-    "price": 35000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
-  },
-  {
-    "id": 9,
-    "brand": "Tesla",
-    "model": "Model S",
-    "color": "White",
-    "price": 80000,
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_960_720.jpg"
+    "price": 30,
+    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+    "quantity": 30
   }
-  ]
+]
+
       
       ''');
         List<Product> products = data.map((json) => Product.fromJson(json)).toList();

@@ -5,8 +5,9 @@ class Product {
   final String color;
   final int price;
   final String imageUrl;
+  int quantity;
 
-  Product({required this.id, required this.brand, required this.model, required this.color, required this.price, required this.imageUrl});
+  Product({required this.id, required this.brand, required this.model, required this.color, required this.price, required this.imageUrl, this.quantity = 1,});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -16,6 +17,7 @@ class Product {
       color: json['color'],
       price: json['price'],
       imageUrl: json['imageUrl'],
+      quantity: json['quantity'],
     );
   }
 
@@ -26,6 +28,7 @@ class Product {
     'color': color,
     'price': price,
     'imageUrl': imageUrl,
+    'quantity':quantity,
   };
 
   // Description method

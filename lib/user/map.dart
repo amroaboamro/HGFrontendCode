@@ -72,37 +72,50 @@ class _MapScreenState extends State<MapScreen> {
 
   // Send the user's location, city and street to the API
   void _sendUserLocation() async {
-    print(city);
-    print(street);
-    print(_currentLocation);
-    print(global.userEmail);
-    final response = await http.patch(
-      Uri.parse(global.ip+'/updateLocation/'+global.userEmail),
-      body: json.encode({
-        'latitude': _currentLocation!.latitude,
-        'longitude': _currentLocation!.longitude,
-        'city': city,
-        'street': street,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
 
-    if (response.statusCode == 200) {
-      Fluttertoast.showToast(
-        msg: 'User location sent successfully',
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
+    try {
+      print(city);
+      print(street);
+      print(_currentLocation);
+      print(global.userEmail);
+      final response = await http.patch(
+        Uri.parse(global.ip + '/updateLocation/' + global.userEmail),
+        body: json.encode({
+          'latitude': _currentLocation!.latitude,
+          'longitude': _currentLocation!.longitude,
+          'city': city,
+          'street': street,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
-    } else {
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: 'User location sent successfully',
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Failed to send user location',
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+        );
+      }
+    }
+    catch(e){
       Fluttertoast.showToast(
-        msg: 'Failed to send user location',
+        msg: e.toString(),
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
       );
+
     }
   }
+
 
   // Fetch users from the API based on the user's location
 

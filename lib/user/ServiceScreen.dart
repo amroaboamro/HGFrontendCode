@@ -28,15 +28,15 @@ class _ServiceScreenState extends State<ServiceScreen> {
   var userLng = global.userData['longitude']; // User's longitude
 
   Future<List<Worker>> _fetchWorkersList() async {
-    // final response = await http.get(Uri.parse('https://example.com/api/workers'));
-    // if (response.statusCode == 200) {
-    //   final data = jsonDecode(response.body) as List;
-    //   List<Worker> workers = data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-    //   workers.sort((a, b) => a.distanceTo(userLat, userLng).compareTo(b.distanceTo(userLat, userLng)));
-    //   return workers;
-    // } else {
-    //   throw Exception('Failed to load workers');
-    // }
+    final response = await http.get(Uri.parse('https://example.com/api/workers'+widget.service.serviceName));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as List;
+      List<Worker> workers = data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+      workers.sort((a, b) => a.distanceTo(userLat, userLng).compareTo(b.distanceTo(userLat, userLng)));
+      return workers;
+    } else {
+      throw Exception('Failed to load workers');
+    }
     return Future.delayed(Duration(seconds: 1), () {
       final data = jsonDecode('''[
   {
