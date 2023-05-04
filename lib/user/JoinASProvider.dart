@@ -15,7 +15,6 @@ class _ServiceFormState extends State<ServiceForm> {
   List<String> _services = [];
 
   String? _serviceName;
-  String _location = '';
   String? _carBrand;
   String _aboutWorker = '';
   List<String> carBrands = [];
@@ -45,10 +44,9 @@ class _ServiceFormState extends State<ServiceForm> {
   Future<void> _submitForm() async {
 
     try {
-      final url = Uri.parse('https://example.com/api/service-providers');
+      final url = Uri.parse('');
       final response = await http.post(url, body: {
         'service_name': _serviceName,
-        'location': _location,
         'car_brand': _carBrand,
         'about_worker': _aboutWorker,
       });
@@ -56,7 +54,6 @@ class _ServiceFormState extends State<ServiceForm> {
       final responseData = json.decode(response.body);
       print(responseData);
 
-      // Show a confirmation message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Service provider account created successfully'),
@@ -65,7 +62,6 @@ class _ServiceFormState extends State<ServiceForm> {
 
       setState(() {
         _serviceName = '';
-        _location = '';
         _carBrand = '';
         _aboutWorker = '';
       });
@@ -136,21 +132,7 @@ class _ServiceFormState extends State<ServiceForm> {
                       });
                     },
                   ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Location',
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a location';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _location = value;
-                    },
-                  ),
+
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
                     decoration: InputDecoration(
@@ -195,7 +177,6 @@ class _ServiceFormState extends State<ServiceForm> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         if (_serviceName!.isEmpty ||
-                            _location.isEmpty ||
                             _carBrand!.isEmpty ||
                             _aboutWorker.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
