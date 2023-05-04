@@ -77,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
     print(_currentLocation);
     print(global.userEmail);
     final response = await http.patch(
-      Uri.parse(global.ip+'updateLocation'+global.userEmail),
+      Uri.parse(global.ip+'/updateLocation/'+global.userEmail),
       body: json.encode({
         'latitude': _currentLocation!.latitude,
         'longitude': _currentLocation!.longitude,

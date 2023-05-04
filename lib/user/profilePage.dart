@@ -106,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Text(
-                        'Location: ', //+ widget.userData['city']+','+ widget.userData['street'],
+                        'Location: ' + widget.userData['city'] +', ' +widget.userData['street'],
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 16.0,

@@ -106,7 +106,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse('http://127.0.0.1:3000/addImage' + 'mostafa234567@com');
+    var uri = Uri.parse(global.ip+'/addImage/' + global.userEmail);
     var request = new http.MultipartRequest("POST", uri);
 
     var multipartFile = new http.MultipartFile('upload', stream, length,
