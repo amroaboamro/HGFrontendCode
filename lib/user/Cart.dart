@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/user/Checkout.dart';
 import '../Classes/CartManager.dart';
 
 class CartPage extends StatefulWidget {
@@ -9,12 +12,15 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late CartManager _cartManager;
+  final _razorpayService = RazorpayService();
+
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _initCartManager();
+    _razorpayService.initialize();
   }
 
   void _initCartManager() async {
@@ -94,7 +100,6 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
           );
-
         },
       ),
       bottomNavigationBar: BottomAppBar(
@@ -106,7 +111,8 @@ class _CartPageState extends State<CartPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Total: \$${_cartManager.items.fold<int>(0, (sum, item) => sum + (item.product.price)*item.quantity)}',
+                'Total: \$${_cartManager.items.fold<int>(0, (sum, item) => sum +
+                    (item.product.price) * item.quantity)}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.0,
@@ -114,12 +120,21 @@ class _CartPageState extends State<CartPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // TODO: implement checkout functionality
-                },
+                  String amount = _cartManager.items.fold<int>(
+                      0, (sum, item) => sum +
+                      (item.product.price) * item.quantity).toString();
+                  if (int.parse(amount) > 0){
+                  _razorpayService.pay(amount);
+                  _onClearCartPressed();
+                  }
+
+
+                  },
                 child: Text('Checkout'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
-                  padding: EdgeInsets.symmetric(horizontal:16.0, vertical: 16.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.0,
@@ -131,7 +146,8 @@ class _CartPageState extends State<CartPage> {
                 child: Text('Clear cart'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.0,

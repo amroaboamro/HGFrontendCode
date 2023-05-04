@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:head_gasket/global.dart';
 import 'Home.dart';
 import 'login.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -124,9 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Home(
-                      userId: email,
-                    )));
+                builder: (context) => LoginScreen()));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid Information';
@@ -160,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<List<String>> fetchDropdownItems() async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:3000/carModels'));
+        await http.get(Uri.parse(global.ip+'/carModels'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

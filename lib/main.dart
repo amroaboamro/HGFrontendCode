@@ -3,6 +3,7 @@ import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/ResetPass.dart';
 import 'package:head_gasket/HomePage.dart';
 import 'package:head_gasket/test.dart';
+import 'package:head_gasket/user/Checkout.dart';
 import 'package:head_gasket/user/MyOrders.dart';
 import 'package:head_gasket/user/Store.dart';
 import 'package:head_gasket/user/profilePage.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:LoginScreen(),
+      home:StorePage(),
     );
   }
 }
