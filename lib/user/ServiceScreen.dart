@@ -38,6 +38,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
       workers.sort((a, b) => a
           .distanceTo(userLat, userLng)
           .compareTo(b.distanceTo(userLat, userLng)));
+      print(workers);
       return workers;
     } else {
       throw Exception('Failed to load workers');
@@ -358,7 +359,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                                   children: [
                                     CircleAvatar(
                                       backgroundImage:
-                                          AssetImage(worker.imageUrl),
+                                          AssetImage('assets/images/key.jpg'),
                                       radius: 50.0,
                                     ),
                                     Expanded(

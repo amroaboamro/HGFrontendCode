@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:head_gasket/global.dart';
+import 'package:head_gasket/login.dart';
 import 'package:http/http.dart' as http;
 
 import '../Widget/background.dart';
@@ -55,15 +56,15 @@ class _ServiceFormState extends State<ServiceForm> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Service provider account created successfully'),
+          content: Text(responseData['success']),
         ),
       );
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen()));
 
-      setState(() {
-        _serviceName = '';
-        _carBrand = '';
-        _aboutWorker = '';
-      });
+
     } catch (error) {
       Fluttertoast.showToast(
         msg: 'Failed to create service provider account',

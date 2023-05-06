@@ -46,9 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (_lastName != null) {
           widget.userData['lastName'] = _lastName;
         }
-        if (_email != null) {
-          widget.userData['email'] = _email; // i think its wrong to update
-        }
+
         if (_carModel != null) {
           widget.userData['carModel'] = _carModel;
         }
@@ -95,6 +93,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<Map<String, dynamic>> fetchImage() async {
+    final response = await http.get(Uri.parse(global.ip + "/getImage/"+global.userEmail));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Failed to fetch image');
+    }
+  }
+
   List<String> _dropdownItems = [];
 
   Uint8List webImage = Uint8List(8);
@@ -131,11 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     response.stream.transform(utf8.decoder).listen((value) {});
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => EditProfilePage(userData: widget.userData)),
-    );
+
   }
 
   Future getImageFromGallery() async {
@@ -215,7 +220,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
   String? _lastName;
-  String? _email;
   String? _carModel;
   String? _phone;
   bool _isFetchCalled = false;
@@ -223,10 +227,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     _carModel = widget.userData['carModel'];
+    fetchImage().then((value){
+    setState(() {
+      imageTest=value['image'];
+
+    });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(imageTest);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -241,7 +253,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 postData({
                   'firstName': _firstName,
                   'lastName': _lastName,
-                  'email': _email,
                   'carModel': _carModel,
                   'phone': _phone
                 });
@@ -262,6 +273,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
                     CircleAvatar(
                       backgroundImage: imagepicker.path == 'zz'
                           ? AssetImage('assets/images/profile.png')
@@ -322,21 +334,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _lastName = value;
                   },
                 ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(hintText: 'Email'),
-                  initialValue: widget.userData['email'],
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value?.isEmpty ?? false) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _email = value;
-                  },
-                ),
+
                 SizedBox(height: 16.0),
                 FutureBuilder<List<String>>(
                   future: _isFetchCalled ? null : fetchDropdownItems(),
