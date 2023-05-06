@@ -334,7 +334,9 @@ class _HomePageState extends State<HomePage> {
                                         tag: 'destination.imageUrl',
                                         child: CircleAvatar(
                                           radius: 50,
-                                          backgroundImage: AssetImage(services[index]['imgUrl']), //services[index]['serviceImage']
+                                          backgroundImage: AssetImage(services[
+                                                  index][
+                                              'imgUrl']), //services[index]['serviceImage']
                                         ),
                                       ),
                                       // Positioned(
