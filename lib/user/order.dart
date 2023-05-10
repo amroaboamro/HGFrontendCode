@@ -31,6 +31,8 @@ class _OrderPageState extends State<OrderPage> {
     _note = '';
   }
 
+
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,12 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Order'),
+        centerTitle: true,
+        backgroundColor: mainColor,
+
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
