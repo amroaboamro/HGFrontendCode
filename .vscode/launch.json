@@ -9,12 +9,12 @@
             "request": "launch",
             "program": "lib/main.dart",//lib/main.dart
             "name": "Launch Chrome against localhost",
-           // "url": "http://localhost:8080",
+            "url": "http://localhost:8080",
             "args": [
                 "-d",
                 "chrome"
             ],        
-          //  "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

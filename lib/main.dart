@@ -8,7 +8,7 @@ import 'package:head_gasket/user/JoinASProvider.dart';
 import 'package:head_gasket/user/MyOrders.dart';
 import 'package:head_gasket/user/Store.dart';
 import 'package:head_gasket/user/profilePage.dart';
-import 'Worker/Home.dart';
+// import 'Worker/Home.dart';
 import 'login.dart';
 import 'sign_up.dart';
 import 'package:head_gasket/Home.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blueGrey.shade50,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:LoginScreen(),
+      home: LoginScreen(),
     );
   }
 }

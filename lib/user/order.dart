@@ -3,8 +3,8 @@ import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
 
 class OrderPage extends StatefulWidget {
- final String serviceType;
- OrderPage({required this.serviceType});
+  final String serviceType;
+  OrderPage({required this.serviceType});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -22,12 +22,11 @@ class _OrderPageState extends State<OrderPage> {
   String? _note;
 
   void _loadDataFromAPI() {
-
     _firstName = global.userData['firstName'];
     _lastName = global.userData['lastName'];
     _email = global.userData['email'];
     _phone = global.userData['phone'];
-    _location = global.userData['city']+','+global.userData['street'];
+    _location = global.userData['city'] + ',' + global.userData['street'];
     _carModel = global.userData['carModel'];
     _note = '';
   }
@@ -36,7 +35,7 @@ class _OrderPageState extends State<OrderPage> {
   void initState() {
     super.initState();
     _loadDataFromAPI();
-    _serviceType=widget.serviceType;
+    _serviceType = widget.serviceType;
   }
 
   @override
@@ -73,7 +72,6 @@ class _OrderPageState extends State<OrderPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
                 ),
                 SizedBox(height: 16.0),
                 Text(
@@ -94,7 +92,6 @@ class _OrderPageState extends State<OrderPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
                 ),
                 SizedBox(height: 16.0),
                 Text(
@@ -102,7 +99,7 @@ class _OrderPageState extends State<OrderPage> {
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8.0),
-                TextFormField( 
+                TextFormField(
                   readOnly: true,
                   style: TextStyle(fontSize: 16.0),
                   decoration: InputDecoration(
@@ -115,7 +112,6 @@ class _OrderPageState extends State<OrderPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
                 ),
                 SizedBox(height: 16.0),
                 Text(
@@ -136,7 +132,6 @@ class _OrderPageState extends State<OrderPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
                 ),
                 SizedBox(height: 16.0),
                 Text(
@@ -144,7 +139,6 @@ class _OrderPageState extends State<OrderPage> {
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-
                   ),
                 ),
                 SizedBox(height: 8.0),
@@ -161,15 +155,13 @@ class _OrderPageState extends State<OrderPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
                 ),
-
-                SizedBox(height: 16.0),Text(
+                SizedBox(height: 16.0),
+                Text(
                   'Car Model',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-
                   ),
                 ),
                 SizedBox(height: 8.0),
@@ -190,19 +182,17 @@ class _OrderPageState extends State<OrderPage> {
                     _carModel = value;
                   },
                 ),
-
-                SizedBox(height: 16.0),Text(
+                SizedBox(height: 16.0),
+                Text(
                   'Service Type',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-
                   ),
                 ),
                 SizedBox(height: 8.0),
                 TextFormField(
                   readOnly: true,
-
                   style: TextStyle(fontSize: 16.0),
                   decoration: InputDecoration(
                     hintText: _serviceType,
@@ -215,15 +205,13 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                   ),
                 ),
-
-                SizedBox(height: 16.0),Text(
+                SizedBox(height: 16.0),
+                Text(
                   'Note',
                   style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: mainColor
-
-                  ),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: mainColor),
                 ),
                 SizedBox(height: 8.0),
                 TextFormField(
@@ -242,7 +230,6 @@ class _OrderPageState extends State<OrderPage> {
                     _note = value;
                   },
                 ),
-
                 SizedBox(height: 16.0),
                 Center(
                   child: Padding(
@@ -258,7 +245,9 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0), primary: mainColor,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 32.0, vertical: 16.0),
+                        primary: mainColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),
@@ -267,7 +256,6 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
