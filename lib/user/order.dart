@@ -4,7 +4,8 @@ import 'package:head_gasket/global.dart';
 
 class OrderPage extends StatefulWidget {
  final String serviceType;
- OrderPage({required this.serviceType});
+ final String workerEmail;
+ OrderPage({required this.serviceType,required this.workerEmail});
 
   @override
   _OrderPageState createState() => _OrderPageState();

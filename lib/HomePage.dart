@@ -7,9 +7,13 @@ import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/login.dart';
 import 'package:head_gasket/user/ChangePass.dart';
+import 'package:head_gasket/user/WorkerProfile.dart';
 import 'package:head_gasket/user/profilePage.dart';
 import 'package:http/http.dart' as http;
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'dart:convert';
+
+import 'Classes/Worker.dart';
 
 class HomePage extends StatefulWidget {
   Map<Object, dynamic> userData;
@@ -55,6 +59,109 @@ class _HomePageState extends State<HomePage> {
 // }
 // ''');
 //     });
+  }
+  Future<List<Worker>> _fetchWorkersList() async {
+
+    // final response = await http.get(
+    //     Uri.parse(global.ip + '/getRankingWorkers/'));
+    // if (response.statusCode == 200) {
+    //   final data = jsonDecode(response.body) as List;
+    //   List<Worker> workers =
+    //   data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+    //   return workers;
+    // } else {
+    //   throw Exception('Failed to load workers');
+    // }
+    return Future.delayed(Duration(seconds: 1), () {
+      final data = jsonDecode('''[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+
+    "major": "Plumber",
+    "rating": 4.5,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-1234",
+    "email": "johndoe@example.com",
+    "city": "Miami",
+    "street": "123 Main St",
+    "latitude": 25.7743,
+    "longitude": -80.1937,
+    "bio": "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!"
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "major": "Electrician",
+    "rating": 4.8,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-5678",
+    "email": "janesmith@example.com",
+    "city": "Miami",
+    "street": "456 Oak Ave",
+    "latitude": 25.7821,
+    "longitude": -80.2395,
+    "bio": "Need an electrician? Look no further! I'm here to help with all your electrical needs."
+  },
+  {
+    "firstName": "Mark",
+    "lastName": "Johnson",
+    "major": "Carpenter",
+    "rating": 4.2,
+    "imageUrl": "assets/images/key.jpgg",
+    "phone": "555-9012",
+    "email": "markjohnson@example.com",
+    "city": "Miami",
+    "street": "789 Elm St",
+    "latitude": 25.7617,
+    "longitude": -80.1918,
+    "bio": "I'm a skilled carpenter with a passion for building things. Let me help bring your vision to life!"
+  },
+  {
+    "firstName": "Sarah",
+    "lastName": "Lee",
+    "major": "Handyman",
+    "rating": 4.1,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-3456",
+    "email": "sarahlee@example.com",
+    "city": "Miami",
+    "street": "321 Pine St",
+    "latitude": 25.7751,
+    "longitude": -80.1937,
+    "bio": "Need help with odd jobs around the house? I'm your gal! From painting to plumbing, I can do it all."
+  },
+  {
+    "firstName": "David",
+    "lastName": "Brown",
+    "major": "Gardener",
+    "rating": 4.6,
+    "imageUrl": "assets/images/key.jpg",
+    "phone": "555-6789",
+    "email": "davidbrown@example.com",
+    "city": "Miami",
+    "street": "543 Maple Ave",
+    "latitude": 25.7528,
+    "longitude": -80.2229,
+    "bio": "Love your lawn and garden again! I'll make sure your yard looks beautiful year-round."
+  }
+]
+
+
+''') as List;
+      List<Worker> workers =
+      data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+
+      return workers;
+    });
+  }
+
+  late Future<List<Worker>> _workers;
+  List<Worker>? workers;
+  @override
+  void initState() {
+    super.initState();
+    _workers = _fetchWorkersList();
   }
 
   @override
@@ -392,7 +499,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Best Selling',
+                    'Top Workers',
                     style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
@@ -415,105 +522,135 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 15),
-            Container(
-              height: size.height * 0.6,
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: 20,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        width: size.width * 0.9,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30.0),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  blurRadius: 15,
-                                  offset: Offset(5, 5))
-                            ]),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
+            FutureBuilder<List<Worker>>(
+                future: _workers,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    workers = snapshot.data!;
+
+                  }
+                  return Container(
+                    height:size.height *0.4 ,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                      itemCount: workers?.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Worker worker = workers![index];
+                        return Stack(
                           children: <Widget>[
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Hero(
-                                    tag: 'destination.imageUrl',
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      child: Image(
-                                        height: 100.0,
-                                        width: 100.0,
-                                        image: AssetImage(
-                                            'assets/images/flatTire.jpg'),
-                                        fit: BoxFit.cover,
-                                      ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) =>
+                                        WorkerProfilePage(worker: worker),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      var begin = Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
+
+                                      var tween = Tween(begin: begin, end: end)
+                                          .chain(CurveTween(curve: curve));
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Theme(
+                                data: ThemeData(
+                                  cardTheme: CardTheme(
+                                    color: Colors.blueGrey.shade50,
+                                    elevation: 4.0, // Set the card elevation
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Product Name',
-                                        style: TextStyle(
-                                          fontSize: 20,
+                                child: Card(
+
+                                  elevation: 4.0,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage:
+                                          AssetImage('assets/images/key.jpg'),
+                                          radius: 50.0,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.folder_open_rounded),
-                                          SizedBox(
-                                            width: 10.0,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  worker.name,
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5.0),
+                                                Text(
+                                                  worker.major,
+                                                  style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10.0),
+                                                SmoothStarRating(
+                                                  rating: worker.rating ?? 0.0,
+                                                  size: 20,
+                                                  filledIconData: Icons.star,
+                                                  halfFilledIconData:
+                                                  Icons.star_half,
+                                                  defaultIconData:
+                                                  Icons.star_border,
+                                                  starCount: 5,
+                                                  allowHalfRating: false,
+                                                  color: Colors.yellow,
+                                                  borderColor: Colors.grey,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          Text('BMW'),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.attach_money),
-                                          SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text(
-                                            '150',
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.end,
-                            //   children: <Widget>[
-                            //     TextButton(
-                            //       child: const Text('BUY TICKETS'),
-                            //       onPressed: () {/* ... */},
-                            //     ),
-                            //     const SizedBox(width: 8),
-                            //   ],
-                            // ),
                           ],
-                        ),
-                      ),
-                    );
-                  }),
+                        );
+                      },
+                    ),
+                  );
+                }
             ),
+
           ],
         ),
       ),
