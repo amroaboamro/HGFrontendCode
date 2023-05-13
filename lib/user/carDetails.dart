@@ -87,7 +87,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.product.model,
+                      widget.product.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24.0,

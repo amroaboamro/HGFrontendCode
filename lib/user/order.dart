@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
+import 'package:head_gasket/user/ServicesScreen.dart';
+import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
   final String serviceType;
@@ -31,8 +37,6 @@ class _OrderPageState extends State<OrderPage> {
     _note = '';
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -47,7 +51,6 @@ class _OrderPageState extends State<OrderPage> {
         title: Text('Order'),
         centerTitle: true,
         backgroundColor: mainColor,
-
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

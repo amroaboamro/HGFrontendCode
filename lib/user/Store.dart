@@ -27,10 +27,12 @@ class _StorePageState extends State<StorePage> {
     'Tesla',
   ];
   List<String> _colors = [
-    'Body',
+    'Body',//mirrors,door,bonnet,
     'Mechanical',
-    'Electrical',
-    'accessories',
+    'Electrical',//battery ,sensor,cables
+    'accessories',//lights,air condition,steering,wheels,brakes,car seat covers
+    'Oils & Fluids',
+
   ];
   String? _selectedBrand;
   String? _selectedColor;
@@ -131,14 +133,14 @@ class _StorePageState extends State<StorePage> {
 
     if (_selectedColor != null) {
       filteredProducts =
-          filteredProducts.where((product) => product.color == _selectedColor).toList();
+          filteredProducts.where((product) => product.type == _selectedColor).toList();
     }
 
     if (_searchQuery.isNotEmpty) {
       filteredProducts = filteredProducts
           .where((product) =>
       product.brand.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          product.model.toLowerCase().contains(_searchQuery.toLowerCase()))
+          product.name.toLowerCase().contains(_searchQuery.toLowerCase()))
           .toList();
     }
 
@@ -322,7 +324,7 @@ class _StorePageState extends State<StorePage> {
                                 ),
                               ),
                               Text(
-                                products[index].model,
+                                products[index].name,
                                 style: TextStyle(
                                   color: Colors.grey[500],
                                 ),

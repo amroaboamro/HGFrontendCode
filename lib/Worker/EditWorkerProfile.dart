@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 import '../global.dart';
@@ -485,7 +486,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   margin: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.1,
                     vertical: 10,
-                  ),
+                  ), 
                   child: DropdownButtonFormField(
                     value: _carBrand,
                     decoration: InputDecoration(
