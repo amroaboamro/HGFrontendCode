@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:head_gasket/Widget/background.dart';
+import 'package:http/http.dart' as http;
 import '../Classes/Order.dart';
 import '../user/OrderDetails.dart';
 import 'AcceptWOrderDetailes.dart';
@@ -10,39 +14,56 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
+  Future<void> _updateOrderStatus(String id ,String status) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://aasa.com/orders/$id'),
+        body: jsonEncode({'status': status}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {});
+        Fluttertoast.showToast(
+          msg: 'Order status updated successfully!',
+          backgroundColor: Colors.green,
+        );
+        Navigator.of(context).pop();
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Failed to update order status. Please try again later.',
+          backgroundColor: Colors.red,
+        );
+      }
+    }
+    catch(e){
+      Fluttertoast.showToast(
+        msg: 'Failed to update order status. Please try again later.',
+        backgroundColor: Colors.red,
+      );
+
+    }
+  }
+
+  Future<List<Order>> _fetchOrders() async {
+    // final response =
+    //     await http.get(Uri.parse('https://your-api-url.com/orders'));
+    // if (response.statusCode == 200) {
+    //   final jsonList = jsonDecode(response.body) as List<dynamic>;
+    //   return jsonList.map((json) => Order.fromJson(json)).toList();
+    // } else {
+    //   throw Exception('Failed to fetch orders');
+    // }
+    return Future.delayed(Duration(seconds: 2),(){
+      final jsonList = jsonDecode('''[  {    "_id": "1",    "orderNumber": "10100",    "serviceName": "Car Wash",    "price": 50.0,    "note": "Please use only eco-friendly products",    "status": "Requested",    "date": "2023-05-13",    "user": "John Doe",    "worker": "Jane Smith",    "street": "123 Main St.",    "city": "Anytown",    "carModel": "Honda Civic"  },  {    "_id": "2",    "orderNumber": "1056",    "serviceName": "Oil Change",    "price": 80.0,    "note": "Please check the brake pads as well",    "status": "Processing",    "date": "2023-05-14",    "user": "Alice Johnson",    "worker": "Bob Brown",    "street": "456 Oak Ave.",    "city": "Somecity",    "carModel": "Toyota Camry"  },  {    "_id": "3",    "orderNumber": "11200",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Completed",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "4",    "orderNumber": "1050",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Waiting",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "5",    "orderNumber": "1000",    "serviceName": "Tire Rotation",    "price": 60.0,    "note": "Please make sure to rotate all 4 tires",    "status": "Canceled",    "date": "2023-05-16",    "user": "Mark Davis",    "worker": "Lisa Kim",    "street": "1010 Elm St.",    "city": "Anothercity",    "carModel": "Nissan Altima"  }]
+
+''') as List<dynamic>;
+      return jsonList.map((json) => Order.fromJson(json)).toList();
+    });
+  }
+
   List<Order> _orders = [
-    Order(
-      name: 'Order 1',
-      price: '100',
-      note: 'Details for Order 1',
-      status: 'Requested',
-      service: 'Service for Order 1',
-      date: '2022-05-13',
-    ),
-    Order(
-      name: 'Order 2',
-      price: '200',
-      note: 'Details for Order 2',
-      status: 'Waiting',
-      service: 'Service for Order 2',
-      date: '2022-05-14',
-    ),
-    Order(
-      name: 'Order 3',
-      price: '300',
-      note: 'Details for Order 3',
-      status: 'Processing',
-      service: 'Service for Order 3',
-      date: '2022-05-15',
-    ),
-    Order(
-      name: 'Order 4',
-      price: '400',
-      note: 'Details for Order 4',
-      status: 'Finished',
-      service: 'Service for Order 4',
-      date: '2022-05-16',
-    ),
+
   ];
 
   String _selectedStatus = 'All';
@@ -52,6 +73,7 @@ class _OrdersPageState extends State<OrdersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Orders'),
+        backgroundColor: mainColor,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -70,19 +92,32 @@ class _OrdersPageState extends State<OrdersPage> {
               height: 30,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: _orders.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final order = _orders[index];
-                  if (_selectedStatus != 'All' &&
-                      order.status != _selectedStatus) {
-                    return SizedBox.shrink();
+              child: FutureBuilder<List<Order>>(
+                future: _fetchOrders(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    _orders = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: _orders.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final order = _orders[index];
+                        if (_selectedStatus != 'All' && order.status != _selectedStatus) {
+                          return SizedBox.shrink();
+                        }
+                        return _buildOrderCard(order);
+                      },
+                    );
                   }
 
-                  return _buildOrderCard(order);
+                  return Container();
                 },
               ),
             ),
+
           ],
         ),
       ),
@@ -91,7 +126,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
   Widget _buildFilterChips() {
     return Wrap(
-      spacing: 8.0,
+      spacing: 10.0,
       children: [
         ChoiceChip(
           label: Text('All'),
@@ -101,6 +136,7 @@ class _OrdersPageState extends State<OrdersPage> {
               _selectedStatus = 'All';
             });
           },
+          selectedColor: mainColor,
         ),
         ChoiceChip(
           label: Text('Requested'),
@@ -110,6 +146,7 @@ class _OrdersPageState extends State<OrdersPage> {
               _selectedStatus = 'Requested';
             });
           },
+          selectedColor: Colors.blue.shade200,
         ),
         ChoiceChip(
           label: Text('Waiting'),
@@ -119,6 +156,7 @@ class _OrdersPageState extends State<OrdersPage> {
               _selectedStatus = 'Waiting';
             });
           },
+          selectedColor: Colors.orange.shade200,
         ),
         ChoiceChip(
           label: Text('Processing'),
@@ -128,19 +166,34 @@ class _OrdersPageState extends State<OrdersPage> {
               _selectedStatus = 'Processing';
             });
           },
+          selectedColor: Colors.yellow.shade200,
         ),
         ChoiceChip(
-          label: Text('Finished'),
-          selected: _selectedStatus == 'Finished',
+          label: Text('Completed'),
+          selected: _selectedStatus == 'Completed',
           onSelected: (selected) {
             setState(() {
-              _selectedStatus = 'Finished';
+              _selectedStatus = 'Completed';
             });
           },
+            selectedColor: Colors.green.shade200,
+
+        ),
+        ChoiceChip(
+          label: Text('Canceled'),
+          selected: _selectedStatus == 'Canceled',
+          onSelected: (selected) {
+            setState(() {
+              _selectedStatus = 'Canceled';
+            });
+          },
+          selectedColor: Colors.red.shade200,
+
         ),
       ],
     );
   }
+
 
   Widget _buildOrderCard(Order order) {
     final Color statusColor = _getStatusColor(order.status);
@@ -166,15 +219,14 @@ class _OrdersPageState extends State<OrdersPage> {
               child: CircleAvatar(
                 radius: 32.0,
                 backgroundColor: Colors.grey[200],
-                backgroundImage:
-                AssetImage('assets/images/order.png'),
+                backgroundImage: AssetImage('assets/images/order.png'),
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: CircleAvatar(
                     radius: 30.0,
                     backgroundColor: Colors.white,
                     child: Icon(
-                      Icons.shopping_cart,
+                      Icons.car_repair_rounded,
                       size: 32.0,
                     ),
                   ),
@@ -187,16 +239,24 @@ class _OrdersPageState extends State<OrdersPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Order ${order.name}',
+                    'Order ${order.serviceName}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 8.0),
-                  Text('Car: ${order.note}'),
+                  Text('Car: ${order.carModel}'),
                   SizedBox(height: 8.0),
-                  Text('Service: ${order.service}'),
-                  SizedBox(height: 16.0),
+                  Text('Service: ${order.serviceName}'),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Status: ${order.status}',
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
                   if (order.status == 'Requested')
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -210,17 +270,17 @@ class _OrdersPageState extends State<OrdersPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Order Details'),
                                       content: SingleChildScrollView(
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
-                                            OrderDetailsWidget(order: order,)
+                                            OrderDetailsWidget(
+                                              order: order,
+                                            )
                                           ],
                                         ),
                                       ),
-
                                     );
                                   },
                                 );
@@ -238,7 +298,34 @@ class _OrdersPageState extends State<OrdersPage> {
                           SizedBox(width: 16.0),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirm Deny'),
+                                      content: Text(
+                                          'Are you sure you want to deny this order?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('Cancel'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('Confirm'),
+                                          onPressed: () async {
+                                            // Send status to API and show toast
+                                            await _updateOrderStatus(order.id,'Canceled');
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                               child: Text('Deny'),
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.red,
@@ -252,16 +339,48 @@ class _OrdersPageState extends State<OrdersPage> {
                         ],
                       ),
                     ),
-                  if (order.status != 'Requested')
-                    Text(
-                      'Status: ${order.status}',
-                      style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
+                  SizedBox(height: 8.0),
+                  if (order.status == 'Processing')
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: false,
+                        onChanged: (value) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Mark as Completed'),
+                                content: Text(
+                                    'Are you sure the order is completed?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Confirm'),
+                                    onPressed: () async {
+                                      // Send status to API and show toast
+                                      await _updateOrderStatus(order.id,'Completed');
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                        },
                       ),
-                    ),
+                      Text('Mark as Completed'),
+                    ],
+                  ),
                 ],
               ),
+
             ),
           ],
         ),
@@ -272,14 +391,16 @@ class _OrdersPageState extends State<OrdersPage> {
   Color _getStatusColor(String status) {
     switch (status) {
       case ''
-          '':
+          'Requested':
         return Colors.blue;
       case 'Waiting':
         return Colors.orange;
       case 'Processing':
         return Colors.yellow;
-      case 'Finished':
+      case 'Completed':
         return Colors.green;
+        case 'Canceled':
+        return Colors.red;
       default:
         return Colors.grey;
     }

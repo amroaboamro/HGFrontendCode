@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:head_gasket/Classes/Order.dart';
+import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/user/CheckoutOrder.dart';
 import 'package:http/http.dart' as http;
 
 class OrderOptions extends StatefulWidget {
-  final int price;
+  final Order order;
 
-  OrderOptions({required this.price});
+  OrderOptions({required this.order});
 
   @override
   _OrderOptionsState createState() => _OrderOptionsState();
@@ -16,7 +18,7 @@ class OrderOptions extends StatefulWidget {
 
 class _OrderOptionsState extends State<OrderOptions> {
   final _razorpayService = RazorpayService();
-  late int _price;
+  late double _price;
   String _subject1OptionSelected = 'Recovery vehicle';
 
   String _subject3OptionSelected = 'Visa Card';
@@ -43,18 +45,19 @@ class _OrderOptionsState extends State<OrderOptions> {
   @override
   void initState() {
     super.initState();
-    _price = widget.price + 20;
+    _price = widget.order.price + 20;
     _razorpayService.initialize();
   }
 
   // Method to send the selected options for each subject to an API
   Future<void> _sendOrder() async {
-    final url = Uri.parse('');
+    final url = Uri.parse(''+widget.order.id);
 
     final orderData = {
       'delivery': _subject1OptionSelected,
       'payment': _subject3OptionSelected,
       'price' : _price,
+      'status': 'Processing'
     };
     print(orderData);
 
@@ -70,6 +73,7 @@ class _OrderOptionsState extends State<OrderOptions> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
         msg: 'Error sending order',
@@ -88,6 +92,7 @@ class _OrderOptionsState extends State<OrderOptions> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Options'),
+        backgroundColor: mainColor,
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
@@ -172,6 +177,112 @@ class _OrderOptionsState extends State<OrderOptions> {
                 ),
               ],
             ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Service',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.order.serviceName,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Location',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.order.city +','+widget.order.street,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 10.0),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'User',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.order.user,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Worker',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.order.worker,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+
+
+              ],
+            ),
+            Text(
+              'Details',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              widget.order.note,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+
             SizedBox(height: 30.0),
             Text(
               'Total Price: $_price',
@@ -180,19 +291,38 @@ class _OrderOptionsState extends State<OrderOptions> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             SizedBox(height: 30.0),
             Center(
               child: ElevatedButton(
-                onPressed:()  {
+                onPressed: () {
                   if (isVisa) {
-                     _razorpayService.pay(_price.toString());
+                    _razorpayService.pay(_price.toInt().toString());
+                  } else {
+                    _sendOrder();
                   }
-                  else
-                  _sendOrder();
                 },
-                child: Text('Place Order'),
+                child: Text(
+                  'Place Order',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: mainColor,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
               ),
-            ),
+            )
+
           ],
         ),
       ),
