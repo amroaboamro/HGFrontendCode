@@ -48,7 +48,7 @@ class _ServicesState extends State<Services> {
 
   Future<List<Service>> _fetchServices() async {
     final response = await http.get(
-        Uri.parse('https://node-server-wuse.onrender.com' + '/allServices'));
+        Uri.parse(global.ip + '/allServices'));
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
       print(jsonList);

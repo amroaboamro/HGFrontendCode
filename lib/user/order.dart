@@ -9,9 +9,9 @@ import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
- final String serviceType;
- final String workerEmail;
- OrderPage({required this.serviceType,required this.workerEmail});
+  final String serviceName;
+  final String workerEmail;
+  OrderPage({required this.serviceName, required this.workerEmail});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -25,8 +25,9 @@ class _OrderPageState extends State<OrderPage> {
   String? _phone;
   String? _location;
   String? _carModel;
-  String? _serviceType;
+  String? _serviceName;
   String? _note;
+  String? _workerEmail;
 
   void _loadDataFromAPI() {
     _firstName = global.userData['firstName'];
@@ -38,11 +39,50 @@ class _OrderPageState extends State<OrderPage> {
     _note = '';
   }
 
+  Future<void> _submitForm() async {
+    try {
+      final url = Uri.parse(global.ip + '/addOrder');
+      final response = await http.post(url, body: {
+        // 'major': _serviceName,
+        // 'carBrand': _carBrand,
+        // 'bio': _aboutWorker,
+        // 'role': 'worker'
+        // workeremail,useremail,Servicename,note,car model,location,
+        'user': _email,
+        'worker': _workerEmail,
+        'note': _note,
+        'serviceName': _serviceName,
+        'status': 'requested',
+      });
+
+      final responseData = json.decode(response.body);
+      print(responseData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('your order sent successfully'),
+        ),
+      );
+      Navigator.pop(context);
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: 'Failed to send the order',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadDataFromAPI();
-    _serviceType = widget.serviceType;
+    _serviceName = widget.serviceName;
+    _workerEmail = widget.workerEmail;
   }
 
   @override
@@ -207,7 +247,7 @@ class _OrderPageState extends State<OrderPage> {
                   readOnly: true,
                   style: TextStyle(fontSize: 16.0),
                   decoration: InputDecoration(
-                    hintText: _serviceType,
+                    hintText: _serviceName,
                     contentPadding: EdgeInsets.all(12.0),
                     filled: true,
                     fillColor: Colors.grey[100],
@@ -247,7 +287,9 @@ class _OrderPageState extends State<OrderPage> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _submitForm();
+                      },
                       child: Text(
                         'Submit',
                         style: TextStyle(

@@ -109,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(global.ip +'/signup'),
+        Uri.parse(global.ip + '/signup'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'firstName': firstName,
@@ -122,10 +122,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('success,your account has been created'),
+          ),
+        );
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LoginScreen()));
+            context, MaterialPageRoute(builder: (context) => LoginScreen()));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid Information';
@@ -158,8 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isFetchCalled = false;
 
   Future<List<String>> fetchDropdownItems() async {
-    final response =
-        await http.get(Uri.parse(global.ip+'/carModels'));
+    final response = await http.get(Uri.parse(global.ip + '/carModels'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'kk@gmail.com';
+                    _email = 'jamal@gmail.com';
                   },
                 ),
               ),

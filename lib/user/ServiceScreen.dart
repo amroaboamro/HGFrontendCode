@@ -118,7 +118,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
 //   }
 // ]
 
-
 // ''') as List;
 //       List<Worker> workers =
 //           data.map((workerJson) => Worker.fromJson(workerJson)).toList();
