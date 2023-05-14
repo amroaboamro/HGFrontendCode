@@ -1,25 +1,9 @@
 import 'package:flutter/material.dart';
+import '../Classes/Order.dart';
 import '../Widget/background.dart';
 import 'OrderDetails.dart';
 
-class Order {
-  final String name;
-  final String price;
-  final String image;
-  final String details;
-  final String status;
-  final String service;
-  final String date;
 
-  Order(
-      {required this.name,
-      required this.price,
-      required this.image,
-      required this.details,
-      required this.status,
-      required this.service,
-      required this.date});
-}
 
 class MyOrders extends StatefulWidget {
   const MyOrders({Key? key}) : super(key: key);
@@ -37,17 +21,14 @@ class _MyOrdersState extends State<MyOrders> {
     Order(
         name: 'Order 1',
         price: '300',
-        image:
-            'https://img.freepik.com/premium-photo/auto-mechanic-checking-running-gear-automobile-service-station-male-worker-fixing-problem-with-car-vehicle-maintenance-concept_194143-3101.jpg',
-        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         status: 'Finished',
         service: 'Motor',
         date: '05-1-2022'),
     Order(
       name: 'Order 2',
       price: '20',
-      image: 'https://i.ytimg.com/vi/ARAUXc6Cbxw/hqdefault.jpg',
-      details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+       note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       status: 'Processing',
       service: 'Car Wash',
       date: '20-7-2022',
@@ -55,9 +36,7 @@ class _MyOrdersState extends State<MyOrders> {
     Order(
       name: 'Order 3',
       price: '100',
-      image:
-          'https://www.nerdwallet.com/assets/blog/wp-content/uploads/2022/08/GettyImages-1379161182-1920x1152.jpg',
-      details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       status: 'Cancelled',
       service: 'Battery',
       date: '8-4-2023',
@@ -161,9 +140,7 @@ class _MyOrdersState extends State<MyOrders> {
                           Column(
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  order.image,
-                                ),
+                                backgroundImage: AssetImage('assets/images/order.png'),
                                 radius: 30,
                               ),
                               SizedBox(

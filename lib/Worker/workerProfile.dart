@@ -6,7 +6,7 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 import '../user/map.dart';
 
-class WorkerProfilePage extends StatelessWidget {
+class WorkerProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

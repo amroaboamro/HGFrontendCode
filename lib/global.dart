@@ -1,4 +1,5 @@
 class global {
+  static bool payment=false;
   static var token = "";
   static var userEmail = '';
   static Map<String, dynamic> userData = {

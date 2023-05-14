@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../Classes/Order.dart';
 import '../Widget/background.dart';
-import 'package:head_gasket/user/MyOrders.dart';
-
 class OrderDetails extends StatelessWidget {
   final Order order;
 
@@ -22,7 +21,7 @@ class OrderDetails extends StatelessWidget {
               height: 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(order.image),
+                  image:AssetImage('assets/images/StockSnap.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -66,7 +65,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    order.details,
+                    order.note,
                     style: TextStyle(
                       fontSize: 16,
                     ),
