@@ -38,7 +38,7 @@ class OrderDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                       'Order: '+ order.orderNumber,
+                       'Order: '+ order.serviceName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,

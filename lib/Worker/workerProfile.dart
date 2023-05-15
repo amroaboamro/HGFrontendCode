@@ -157,7 +157,7 @@ class WorkerProfile extends StatelessWidget {
                         ),
                       ),
                       SmoothStarRating(
-                        rating:global.userData['rating'] ?? 0.0,
+                        rating:double.parse(global.userData['rating'].toString()) ?? 0.0,
                         size: 24,
                         filledIconData: Icons.star,
                         halfFilledIconData: Icons.star_half,

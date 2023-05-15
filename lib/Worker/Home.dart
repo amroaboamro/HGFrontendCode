@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/Worker/HomePage.dart';
+import 'package:head_gasket/Worker/WMyOrder.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/user/MyOrders.dart';
@@ -25,10 +26,10 @@ class _WorkerHomeState extends State<WorkerHome> {
     WorkerHomePage(),
     Services(),
     StorePage(),
-    MyOrders(),
+    OrdersPage(),
   ];
   Future<Map<String, dynamic>> fetchUserData(String userId) async {
-    /* print(userId);
+     print(userId);
     print(global.token);
 
 
@@ -47,28 +48,28 @@ class _WorkerHomeState extends State<WorkerHome> {
       print(data);
       return data;
     } else {
-      // If unsuccessful, throw an error
-      print("fffffffffffff");
+
+
       throw Exception('Failed to fetch user data');
-    }*/
-    return Future.delayed(Duration(seconds: 2), () {
-      return {
-        "firstName": "Amr",
-        "lastName": "abo Amr",
-        "major": "Plumber",
-        "rating": 4.5,
-        "imageUrl": "assets/images/key.jpg",
-        "phone": "555-1234",
-        "email": "johndoe@example.com",
-        "city": "Miami",
-        "street": "123 Main St",
-        "latitude": 25.7743,
-        "longitude": -80.1937,
-        "bio":
-            "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!",
-        "carBrand":"BMW",
-      };
-    });
+    }
+    // return Future.delayed(Duration(seconds: 2), () {
+    //   return {
+    //     "firstName": "Amr",
+    //     "lastName": "abo Amr",
+    //     "major": "Plumber",
+    //     "rating": 4.5,
+    //     "imageUrl": "assets/images/key.jpg",
+    //     "phone": "555-1234",
+    //     "email": "johndoe@example.com",
+    //     "city": "Miami",
+    //     "street": "123 Main St",
+    //     "latitude": 25.7743,
+    //     "longitude": -80.1937,
+    //     "bio":
+    //         "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!",
+    //     "carBrand":"BMW",
+    //   };
+    // });
   }
 
   @override

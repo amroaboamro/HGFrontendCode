@@ -11,7 +11,6 @@ class Order {
   var carModel;
   var id;
 
-  var orderNumber;
 
   Order(
       {required this.id,required this.serviceName,
@@ -24,12 +23,11 @@ class Order {
       required this.street,
       required this.city,
       required this.carModel,
-      required this.orderNumber});
+     });
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
       id : json['_id'],
-      orderNumber: json['orderNumber'],
       serviceName: json['serviceName'],
       price: json['price'],
       note: json['note'],

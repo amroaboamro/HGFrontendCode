@@ -32,6 +32,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     final response = await http.get(
         Uri.parse(global.ip + '/getWorkers/' + widget.service.serviceName));
     if (response.statusCode == 200) {
+      print('****'+response.body);
       final data = jsonDecode(response.body) as List;
       List<Worker> workers =
           data.map((workerJson) => Worker.fromJson(workerJson)).toList();

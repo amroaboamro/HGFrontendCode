@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:head_gasket/global.dart';
+import 'package:head_gasket/user/RatingDialog.dart';
 import 'package:head_gasket/user/order.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../Classes/Worker.dart';
@@ -57,28 +59,39 @@ class WorkerProfilePage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                SmoothStarRating(
-                                  rating: worker.rating ?? 0.0,
-                                  size: 24,
-                                  filledIconData: Icons.star,
-                                  halfFilledIconData: Icons.star_half,
-                                  defaultIconData: Icons.star_border,
-                                  starCount: 5,
-                                  allowHalfRating: false,
-                                  color: Colors.yellow,
-                                  borderColor: Colors.grey,
-                                ),
-                                SizedBox(width: 8.0),
-                                Text(
-                                  '${worker.rating}',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                            GestureDetector(
+                              onTap: (){
+                                if(worker.email!=global.userData['email'])
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return RatingDialog(workerEmail: worker.email,workerName: worker.firstName+' '+worker.lastName,);
+                                  },
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  SmoothStarRating(
+                                    rating: worker.rating ?? 0.0,
+                                    size: 24,
+                                    filledIconData: Icons.star,
+                                    halfFilledIconData: Icons.star_half,
+                                    defaultIconData: Icons.star_border,
+                                    starCount: 5,
+                                    allowHalfRating: false,
+                                    color: Colors.yellow,
+                                    borderColor: Colors.grey,
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Text(
+                                    '${worker.rating}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(width: 100,),
 
@@ -203,6 +216,7 @@ class WorkerProfilePage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 50.0),
+                    if(worker.email!=global.userData['email'])
                     Center(
                       child: ElevatedButton(
                         onPressed: () {

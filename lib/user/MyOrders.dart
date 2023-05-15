@@ -60,7 +60,10 @@ class _MyOrdersState extends State<MyOrders> {
     final response =
         await http.get(Uri.parse(global.ip+'/orders/'+global.userData['email']+'/'+global.userData['role']));
     if (response.statusCode == 200) {
+
       final jsonList = jsonDecode(response.body) as List<dynamic>;
+      print(response.body);
+
       return jsonList.map((json) => Order.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch orders');

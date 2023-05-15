@@ -52,7 +52,7 @@ class _OrderPageState extends State<OrderPage> {
         'worker': _workerEmail,
         'note': _note,
         'serviceName': _serviceName,
-        'status': 'requested',
+        'status': 'Requested',
       });
 
       final responseData = json.decode(response.body);

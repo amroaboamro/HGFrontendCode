@@ -8,6 +8,8 @@ import 'package:head_gasket/sign_up.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'Worker/Home.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -55,10 +57,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data['token']);
+        print(data);
         global.token = data['token'];
+        if(data['role']=='Basic')
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Home(userId: _email)));
+
+        else if(data['role'] == 'worker')  Navigator.push(context,
+            MaterialPageRoute(builder: (context) => WorkerHome(userId: _email)));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';
@@ -121,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'jamal@gmail.com';
+                    _email = 'kamal@gmail.com';
                   },
                 ),
               ),
@@ -136,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.vpn_key_outlined),
                   ),
                   onChanged: (value) {
-                    _password = '1234'; //ggg134
+                    _password = '123'; //ggg134
                   },
                 ),
               ),
