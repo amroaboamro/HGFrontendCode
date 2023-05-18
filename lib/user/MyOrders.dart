@@ -28,7 +28,7 @@ class _MyOrdersState extends State<MyOrders> {
   Future<void> _updateOrderStatus(String id ,String status) async {
     try {
       final response = await http.post(
-        Uri.parse('https://aasa.com/orders/$id'),
+        Uri.parse(global.ip + '/updateOrder/$id'),
         body: jsonEncode({'status': status}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -58,7 +58,7 @@ class _MyOrdersState extends State<MyOrders> {
 
   Future<List<Order>> _fetchOrders() async {
     final response =
-        await http.get(Uri.parse(global.ip+'/orders/'+global.userData['email']+'/'+global.userData['role']));
+        await http.get(Uri.parse(global.ip+'/userOrders/'+global.userData['email']));
     if (response.statusCode == 200) {
 
       final jsonList = jsonDecode(response.body) as List<dynamic>;

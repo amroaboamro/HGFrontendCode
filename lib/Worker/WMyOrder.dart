@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../Classes/Order.dart';
 import '../user/OrderDetails.dart';
 import 'AcceptWOrderDetailes.dart';
+import 'package:head_gasket/global.dart';
 
 class OrdersPage extends StatefulWidget {
   @override
@@ -14,10 +15,10 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  Future<void> _updateOrderStatus(String id ,String status) async {
+  Future<void> _updateOrderStatus(String id, String status) async {
     try {
-      final response = await http.post(
-        Uri.parse('https://aasa.com/orders/$id'),
+      final response = await http.patch(
+        Uri.parse(global.ip + '/updateOrder/$id'),
         body: jsonEncode({'status': status}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -35,36 +36,33 @@ class _OrdersPageState extends State<OrdersPage> {
           backgroundColor: Colors.red,
         );
       }
-    }
-    catch(e){
+    } catch (e) {
       Fluttertoast.showToast(
         msg: 'Failed to update order status. Please try again later.',
         backgroundColor: Colors.red,
       );
-
     }
   }
 
   Future<List<Order>> _fetchOrders() async {
-    // final response =
-    //     await http.get(Uri.parse('https://your-api-url.com/orders'));
-    // if (response.statusCode == 200) {
-    //   final jsonList = jsonDecode(response.body) as List<dynamic>;
-    //   return jsonList.map((json) => Order.fromJson(json)).toList();
-    // } else {
-    //   throw Exception('Failed to fetch orders');
-    // }
-    return Future.delayed(Duration(seconds: 2),(){
-      final jsonList = jsonDecode('''[  {    "_id": "1",    "orderNumber": "10100",    "serviceName": "Car Wash",    "price": 50.0,    "note": "Please use only eco-friendly products",    "status": "Requested",    "date": "2023-05-13",    "user": "John Doe",    "worker": "Jane Smith",    "street": "123 Main St.",    "city": "Anytown",    "carModel": "Honda Civic"  },  {    "_id": "2",    "orderNumber": "1056",    "serviceName": "Oil Change",    "price": 80.0,    "note": "Please check the brake pads as well",    "status": "Processing",    "date": "2023-05-14",    "user": "Alice Johnson",    "worker": "Bob Brown",    "street": "456 Oak Ave.",    "city": "Somecity",    "carModel": "Toyota Camry"  },  {    "_id": "3",    "orderNumber": "11200",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Completed",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "4",    "orderNumber": "1050",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Waiting",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "5",    "orderNumber": "1000",    "serviceName": "Tire Rotation",    "price": 60.0,    "note": "Please make sure to rotate all 4 tires",    "status": "Canceled",    "date": "2023-05-16",    "user": "Mark Davis",    "worker": "Lisa Kim",    "street": "1010 Elm St.",    "city": "Anothercity",    "carModel": "Nissan Altima"  }]
+    final response = await http.get(
+        Uri.parse(global.ip + '/workerOrders/' + global.userData['email']));
+    if (response.statusCode == 200) {
+      final jsonList = jsonDecode(response.body) as List<dynamic>;
+      return jsonList.map((json) => Order.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch orders');
+    }
+    return Future.delayed(Duration(seconds: 2), () {
+      final jsonList = jsonDecode(
+          '''[  {    "_id": "1",    "orderNumber": "10100",    "serviceName": "Car Wash",    "price": 50.0,    "note": "Please use only eco-friendly products",    "status": "Requested",    "date": "2023-05-13",    "user": "John Doe",    "worker": "Jane Smith",    "street": "123 Main St.",    "city": "Anytown",    "carModel": "Honda Civic"  },  {    "_id": "2",    "orderNumber": "1056",    "serviceName": "Oil Change",    "price": 80.0,    "note": "Please check the brake pads as well",    "status": "Processing",    "date": "2023-05-14",    "user": "Alice Johnson",    "worker": "Bob Brown",    "street": "456 Oak Ave.",    "city": "Somecity",    "carModel": "Toyota Camry"  },  {    "_id": "3",    "orderNumber": "11200",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Completed",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "4",    "orderNumber": "1050",    "serviceName": "Car Detailing",    "price": 120.0,    "note": "Please remove all pet hair",    "status": "Waiting",    "date": "2023-05-15",    "user": "Emily Chen",    "worker": "David Lee",    "street": "789 Pine St.",    "city": "Anycity",    "carModel": "Ford Mustang"  },  {    "_id": "5",    "orderNumber": "1000",    "serviceName": "Tire Rotation",    "price": 60.0,    "note": "Please make sure to rotate all 4 tires",    "status": "Canceled",    "date": "2023-05-16",    "user": "Mark Davis",    "worker": "Lisa Kim",    "street": "1010 Elm St.",    "city": "Anothercity",    "carModel": "Nissan Altima"  }]
 
 ''') as List<dynamic>;
       return jsonList.map((json) => Order.fromJson(json)).toList();
     });
   }
 
-  List<Order> _orders = [
-
-  ];
+  List<Order> _orders = [];
 
   String _selectedStatus = 'All';
 
@@ -105,7 +103,8 @@ class _OrdersPageState extends State<OrdersPage> {
                       itemCount: _orders.length,
                       itemBuilder: (BuildContext context, int index) {
                         final order = _orders[index];
-                        if (_selectedStatus != 'All' && order.status != _selectedStatus) {
+                        if (_selectedStatus != 'All' &&
+                            order.status != _selectedStatus) {
                           return SizedBox.shrink();
                         }
                         return _buildOrderCard(order);
@@ -117,7 +116,6 @@ class _OrdersPageState extends State<OrdersPage> {
                 },
               ),
             ),
-
           ],
         ),
       ),
@@ -176,8 +174,7 @@ class _OrdersPageState extends State<OrdersPage> {
               _selectedStatus = 'Completed';
             });
           },
-            selectedColor: Colors.green.shade200,
-
+          selectedColor: Colors.green.shade200,
         ),
         ChoiceChip(
           label: Text('Canceled'),
@@ -188,12 +185,10 @@ class _OrdersPageState extends State<OrdersPage> {
             });
           },
           selectedColor: Colors.red.shade200,
-
         ),
       ],
     );
   }
-
 
   Widget _buildOrderCard(Order order) {
     final Color statusColor = _getStatusColor(order.status);
@@ -273,7 +268,7 @@ class _OrdersPageState extends State<OrdersPage> {
                                       content: SingleChildScrollView(
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             OrderDetailsWidget(
                                               order: order,
@@ -317,7 +312,8 @@ class _OrdersPageState extends State<OrdersPage> {
                                           child: Text('Confirm'),
                                           onPressed: () async {
                                             // Send status to API and show toast
-                                            await _updateOrderStatus(order.id,'Canceled');
+                                            await _updateOrderStatus(
+                                                order.id, 'Canceled');
                                             setState(() {});
                                           },
                                         ),
@@ -341,46 +337,45 @@ class _OrdersPageState extends State<OrdersPage> {
                     ),
                   SizedBox(height: 8.0),
                   if (order.status == 'Processing')
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: false,
-                        onChanged: (value) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Mark as Completed'),
-                                content: Text(
-                                    'Are you sure the order is completed?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Confirm'),
-                                    onPressed: () async {
-                                      // Send status to API and show toast
-                                      await _updateOrderStatus(order.id,'Completed');
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-
-                        },
-                      ),
-                      Text('Mark as Completed'),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: false,
+                          onChanged: (value) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Mark as Completed'),
+                                  content: Text(
+                                      'Are you sure the order is completed?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Confirm'),
+                                      onPressed: () async {
+                                        // Send status to API and show toast
+                                        await _updateOrderStatus(
+                                            order.id, 'Completed');
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        Text('Mark as Completed'),
+                      ],
+                    ),
                 ],
               ),
-
             ),
           ],
         ),
@@ -399,7 +394,7 @@ class _OrdersPageState extends State<OrdersPage> {
         return Colors.yellow;
       case 'Completed':
         return Colors.green;
-        case 'Canceled':
+      case 'Canceled':
         return Colors.red;
       default:
         return Colors.grey;

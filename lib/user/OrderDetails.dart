@@ -114,7 +114,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.user,
+                            order.userName,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -133,7 +133,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.worker,
+                            order.workerName,
                             style: TextStyle(
                               fontSize: 16,
                             ),

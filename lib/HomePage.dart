@@ -60,18 +60,17 @@ class _HomePageState extends State<HomePage> {
 // ''');
 //     });
   }
-  Future<List<Worker>> _fetchWorkersList() async {
 
-    // final response = await http.get(
-    //     Uri.parse(global.ip + '/getRankingWorkers/'));
-    // if (response.statusCode == 200) {
-    //   final data = jsonDecode(response.body) as List;
-    //   List<Worker> workers =
-    //   data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-    //   return workers;
-    // } else {
-    //   throw Exception('Failed to load workers');
-    // }
+  Future<List<Worker>> _fetchWorkersList() async {
+    final response = await http.get(Uri.parse(global.ip + '/topWorkers'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as List;
+      List<Worker> workers =
+          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+      return workers;
+    } else {
+      throw Exception('Failed to load workers');
+    }
     return Future.delayed(Duration(seconds: 1), () {
       final data = jsonDecode('''[
   {
@@ -150,7 +149,7 @@ class _HomePageState extends State<HomePage> {
 
 ''') as List;
       List<Worker> workers =
-      data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
 
       return workers;
     });
@@ -535,10 +534,9 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else {
                     workers = snapshot.data!;
-
                   }
                   return Container(
-                    height:size.height *0.4 ,
+                    height: size.height * 0.4,
                     child: ListView.builder(
                       padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
                       itemCount: workers?.length,
@@ -551,7 +549,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
                                     pageBuilder: (context, animation,
-                                        secondaryAnimation) =>
+                                            secondaryAnimation) =>
                                         WorkerProfilePage(worker: worker),
                                     transitionsBuilder: (context, animation,
                                         secondaryAnimation, child) {
@@ -581,17 +579,16 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 child: Card(
-
                                   elevation: 4.0,
                                   child: Container(
                                     padding: EdgeInsets.all(10.0),
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         CircleAvatar(
-                                          backgroundImage:
-                                          AssetImage('assets/images/key.jpg'),
+                                          backgroundImage: AssetImage(
+                                              'assets/images/key.jpg'),
                                           radius: 50.0,
                                         ),
                                         Expanded(
@@ -600,9 +597,9 @@ class _HomePageState extends State<HomePage> {
                                                 horizontal: 10.0),
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   worker.name,
@@ -625,9 +622,9 @@ class _HomePageState extends State<HomePage> {
                                                   size: 20,
                                                   filledIconData: Icons.star,
                                                   halfFilledIconData:
-                                                  Icons.star_half,
+                                                      Icons.star_half,
                                                   defaultIconData:
-                                                  Icons.star_border,
+                                                      Icons.star_border,
                                                   starCount: 5,
                                                   allowHalfRating: false,
                                                   color: Colors.yellow,
@@ -648,9 +645,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   );
-                }
-            ),
-
+                }),
           ],
         ),
       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../Classes/Order.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
+import 'package:head_gasket/global.dart';
 
 class OrderDetailsWidget extends StatefulWidget {
   final Order order;
@@ -19,8 +20,8 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final response = await http.post(
-        Uri.parse('https://dfs.com/orders'),
+      final response = await http.patch(
+        Uri.parse(global.ip + '/updateOrder/order.id'),
         body: {
           'price': _price.toString(),
           'status': 'Waiting',
@@ -42,7 +43,6 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -62,12 +62,12 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
         ),
         SizedBox(height: 8.0),
         Text(
-          'Customer Name: ${widget.order.user}',
+          'Customer Name: ${widget.order.userName}',
           style: TextStyle(fontSize: 16.0),
         ),
         SizedBox(height: 8.0),
         Text(
-          'Address: ${widget.order.city} '+',' +'${widget.order.street}',
+          'Address: ${widget.order.city} ' + ',' + '${widget.order.street}',
           style: TextStyle(fontSize: 16.0),
         ),
         SizedBox(height: 8.0),
@@ -76,8 +76,6 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.0),
-
-
         SizedBox(height: 16.0),
         Form(
           key: _formKey,
@@ -106,7 +104,6 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               sendData();
-
             }
           },
           child: Text('Submit'),

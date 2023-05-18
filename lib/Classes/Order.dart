@@ -4,8 +4,8 @@ class Order {
   final String note;
   final String status;
   final String date;
-  var user;
-  var worker;
+  var userName;
+  var workerName;
   var street;
   var city;
   var carModel;
@@ -18,8 +18,8 @@ class Order {
       required this.note,
       required this.status,
       required this.date,
-      required this.user,
-      required this.worker,
+      required this.userName,
+      required this.workerName,
       required this.street,
       required this.city,
       required this.carModel,
@@ -33,8 +33,8 @@ class Order {
       note: json['note'],
       status: json['status'],
       date: json['date'],
-      user: json['user'],
-      worker: json['worker'],
+      userName: json['userName'],
+      workerName: json['workerName'],
       street: json['street'],
       city: json['city'],
       carModel: json['carModel'],
@@ -42,4 +42,4 @@ class Order {
   }
 
 }
-//price,serviceName,status,user,worker,note,city,street,carModel,
+//price,serviceName,status,userName,workerName,note,city,street,carModel,

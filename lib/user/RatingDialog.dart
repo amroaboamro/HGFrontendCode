@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RatingDialog extends StatefulWidget {
-  final workerEmail ,workerName;
+  final workerEmail, workerName;
 
-  RatingDialog({required this.workerEmail ,required this.workerName});
+  RatingDialog({required this.workerEmail, required this.workerName});
 
   @override
   _RatingDialogState createState() => _RatingDialogState();
@@ -17,10 +17,10 @@ class _RatingDialogState extends State<RatingDialog> {
   double _rating = 0.0;
 
   Future<void> _submitRating() async {
-    print(_rating.toString()+"  " + widget.workerEmail);
+    print(_rating.toString() + "  " + widget.workerEmail);
     try {
-      final url = Uri.parse(global.ip + 'xxxxx' + widget.workerEmail);
-      final response = await http.post(
+      final url = Uri.parse(global.ip + '/rateWorker/' + widget.workerEmail);
+      final response = await http.patch(
         url,
         body: {
           'rating': _rating.toString(),
@@ -65,7 +65,7 @@ class _RatingDialogState extends State<RatingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Rate '+widget.workerName),
+      title: Text('Rate ' + widget.workerName),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

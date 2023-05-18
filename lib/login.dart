@@ -59,12 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = jsonDecode(response.body);
         print(data);
         global.token = data['token'];
-        if(data['role']=='Basic')
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Home(userId: _email)));
-
-        else if(data['role'] == 'worker')  Navigator.push(context,
-            MaterialPageRoute(builder: (context) => WorkerHome(userId: _email)));
+        if (data['role'] == 'Basic')
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Home(userId: _email)));
+        else if (data['role'] == 'worker')
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WorkerHome(userId: _email)));
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';
@@ -127,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'kamal@gmail.com';
+                    _email = 'jamal@gmail.com'; //kamal@gmail.com
                   },
                 ),
               ),
@@ -142,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.vpn_key_outlined),
                   ),
                   onChanged: (value) {
-                    _password = '123'; //ggg134
+                    _password = '1234'; //123
                   },
                 ),
               ),

@@ -1,5 +1,5 @@
 class global {
-  static bool payment=false;
+  static bool payment = false;
   static var token = "";
   static var userEmail = '';
   static Map<String, dynamic> userData = {
@@ -15,8 +15,8 @@ class global {
     "latitude": 0.0,
     "longitude": 0.0,
     "bio": "-----------------------------------------",
-    "carBrand":"-----"
+    "carBrand": "-----"
   };
   static var ip =
-      "https://node-server-wuse.onrender.com"; //https://node-server-wuse.onrender.com
+      "http://127.0.0.1:3000"; //https://node-server-wuse.onrender.com //http://127.0.0.1:3000
 }

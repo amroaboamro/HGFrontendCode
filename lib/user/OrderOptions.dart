@@ -6,6 +6,7 @@ import 'package:head_gasket/Classes/Order.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/user/CheckoutOrder.dart';
 import 'package:http/http.dart' as http;
+import 'package:head_gasket/global.dart';
 
 class OrderOptions extends StatefulWidget {
   final Order order;
@@ -22,7 +23,7 @@ class _OrderOptionsState extends State<OrderOptions> {
   String _subject1OptionSelected = 'Recovery vehicle';
 
   String _subject3OptionSelected = 'Visa Card';
-  bool isVisa=true;
+  bool isVisa = true;
 
   // Method to update the price based on the user's selected options
   void _updatePrice(String subject, dynamic option) {
@@ -36,8 +37,10 @@ class _OrderOptionsState extends State<OrderOptions> {
         }
       } else if (subject == 'Subject 3') {
         _subject3OptionSelected = option;
-        if(option == 'Visa Card') isVisa=true;
-        else isVisa=false;
+        if (option == 'Visa Card')
+          isVisa = true;
+        else
+          isVisa = false;
       }
     });
   }
@@ -51,12 +54,12 @@ class _OrderOptionsState extends State<OrderOptions> {
 
   // Method to send the selected options for each subject to an API
   Future<void> _sendOrder() async {
-    final url = Uri.parse(''+widget.order.id);
+    final url = Uri.parse(global.ip + '/updateOrder/' + widget.order.id);
 
     final orderData = {
       'delivery': _subject1OptionSelected,
       'payment': _subject3OptionSelected,
-      'price' : _price,
+      'price': _price,
       'status': 'Processing'
     };
     print(orderData);
@@ -166,7 +169,6 @@ class _OrderOptionsState extends State<OrderOptions> {
                   ),
                 ),
                 SizedBox(width: 10.0),
-
                 Expanded(
                   child: RadioListTile(
                     value: 'On Delivery',
@@ -212,7 +214,7 @@ class _OrderOptionsState extends State<OrderOptions> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      widget.order.city +','+widget.order.street,
+                      widget.order.city + ',' + widget.order.street,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -222,7 +224,6 @@ class _OrderOptionsState extends State<OrderOptions> {
               ],
             ),
             SizedBox(height: 10.0),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -238,7 +239,7 @@ class _OrderOptionsState extends State<OrderOptions> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      widget.order.user,
+                      widget.order.userName,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -257,15 +258,13 @@ class _OrderOptionsState extends State<OrderOptions> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      widget.order.worker,
+                      widget.order.workerName,
                       style: TextStyle(
                         fontSize: 16,
                       ),
                     ),
                   ],
                 ),
-
-
               ],
             ),
             Text(
@@ -282,7 +281,6 @@ class _OrderOptionsState extends State<OrderOptions> {
                 fontSize: 16,
               ),
             ),
-
             SizedBox(height: 30.0),
             Text(
               'Total Price: $_price',
@@ -291,7 +289,6 @@ class _OrderOptionsState extends State<OrderOptions> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             SizedBox(height: 30.0),
             Center(
               child: ElevatedButton(
@@ -322,7 +319,6 @@ class _OrderOptionsState extends State<OrderOptions> {
                 ),
               ),
             )
-
           ],
         ),
       ),

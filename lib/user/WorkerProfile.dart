@@ -223,7 +223,7 @@ class WorkerProfilePage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => OrderPage(serviceName: worker.major,workerEmail: worker.email,)));
+                                  builder: (context) => OrderPage(serviceName: worker.major,workerEmail: worker.email,workerName: worker.firstName+' '+worker.lastName,)));
                         },
                         style: ElevatedButton.styleFrom(
                           // primary: Colors.black, backgroundColor: Colors.white,

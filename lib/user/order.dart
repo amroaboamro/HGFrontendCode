@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 class OrderPage extends StatefulWidget {
   final String serviceName;
   final String workerEmail;
-  OrderPage({required this.serviceName, required this.workerEmail});
+  final String workerName;
+  OrderPage({required this.serviceName, required this.workerEmail,required this.workerName});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -28,6 +29,7 @@ class _OrderPageState extends State<OrderPage> {
   String? _serviceName;
   String? _note;
   String? _workerEmail;
+  String? _workerName;
 
   void _loadDataFromAPI() {
     _firstName = global.userData['firstName'];
@@ -48,8 +50,13 @@ class _OrderPageState extends State<OrderPage> {
         // 'bio': _aboutWorker,
         // 'role': 'worker'
         // workeremail,useremail,Servicename,note,car model,location,
-        'user': _email,
-        'worker': _workerEmail,
+        'userEmail': _email,
+        'userName': global.userData['firstName'] + ' '+ global.userData['lastName'],
+        'carModel':_carModel,
+        'city': global.userData['city'],
+        'street': global.userData['street'],
+        'workerEmail': _workerEmail,
+        'workerName': _workerName,
         'note': _note,
         'serviceName': _serviceName,
         'status': 'Requested',
@@ -83,6 +90,7 @@ class _OrderPageState extends State<OrderPage> {
     _loadDataFromAPI();
     _serviceName = widget.serviceName;
     _workerEmail = widget.workerEmail;
+     _workerName = widget.workerName;
   }
 
   @override
