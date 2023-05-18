@@ -183,17 +183,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
+        backgroundColor: mainColor,
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             Container(
               height: size.height * 0.3,
               decoration: BoxDecoration(
-                color: Color(0XCC318383),
+                color: mainColor,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

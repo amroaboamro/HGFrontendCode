@@ -10,6 +10,8 @@ class Order {
   var city;
   var carModel;
   var id;
+  var delivery;
+  var payment;
 
 
   Order(
@@ -23,21 +25,27 @@ class Order {
       required this.street,
       required this.city,
       required this.carModel,
+        required this.delivery,
+        required this.payment,
      });
 
   factory Order.fromJson(Map<String, dynamic> json) {
+    int indexOfT = json['date'].indexOf("T");
+    String jsonDate = json['date'].substring(0, indexOfT);
     return Order(
       id : json['_id'],
       serviceName: json['serviceName'],
-      price: json['price'],
+      price: json['price'].toDouble(),
       note: json['note'],
       status: json['status'],
-      date: json['date'],
+      date: jsonDate,
       userName: json['userName'],
       workerName: json['workerName'],
       street: json['street'],
       city: json['city'],
       carModel: json['carModel'],
+      delivery: json['delivery'],
+      payment: json['payment'],
     );
   }
 

@@ -19,6 +19,7 @@ class OrderOptions extends StatefulWidget {
 
 class _OrderOptionsState extends State<OrderOptions> {
   final _razorpayService = RazorpayService();
+
   late double _price;
   String _subject1OptionSelected = 'Recovery vehicle';
 
@@ -50,21 +51,26 @@ class _OrderOptionsState extends State<OrderOptions> {
     super.initState();
     _price = widget.order.price + 20;
     _razorpayService.initialize();
+
+
   }
 
-  // Method to send the selected options for each subject to an API
   Future<void> _sendOrder() async {
     final url = Uri.parse(global.ip + '/updateOrder/' + widget.order.id);
 
     final orderData = {
       'delivery': _subject1OptionSelected,
       'payment': _subject3OptionSelected,
-      'price': _price,
+      'price': _price.toString(),
       'status': 'Processing'
     };
     print(orderData);
 
-    final response = await http.post(url, body: json.encode(orderData));
+    final response = await http.patch(url,
+        body: jsonEncode(orderData),
+        headers: {'Content-Type': 'application/json'}
+    );
+    print(response.body);
 
     if (response.statusCode == 200) {
       Fluttertoast.showToast(
@@ -294,6 +300,9 @@ class _OrderOptionsState extends State<OrderOptions> {
               child: ElevatedButton(
                 onPressed: () {
                   if (isVisa) {
+                    _razorpayService.id=widget.order.id;
+                    _razorpayService.delivery=_subject1OptionSelected;
+                    _razorpayService.orderPrice=_price;
                     _razorpayService.pay(_price.toInt().toString());
                   } else {
                     _sendOrder();

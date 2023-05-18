@@ -201,84 +201,24 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
     final response = await http.get(Uri.parse(global.ip + '/carModels'));
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body) as List<dynamic>;
+      final data = json.decode(response.body);
       return List<String>.from(data);
     } else {
       throw Exception('Failed to fetch dropdown items');
     }
-    // return Future.delayed(Duration(seconds: 2), () {
-    //   return [
-    //     'Hyundai accent',
-    //     'Hyundai elantra',
-    //     'Seat leon ',
-    //     'BMW 320i',
-    //     'BMW m4',
-    //     'Skoda octavia',
-    //     'Skoda Combi',
-    //     'Skoda superb',
-    //     'volkswagen golf',
-    //     'volkswagen polo',
-    //     'volkswagen tiguan',
-    //     'Mercedes G-class',
-    //     'Mercedes Benz E350',
-    //     'Mercedes E350',
-    //     'Kia sportage',
-    //     'kia rio',
-    //   ];
-    // });
+
   }
-  List<String> _carBrands = [
-    'Acura',
-    'Alfa Romeo',
-    'Aston Martin',
-    'Audi',
-    'Bentley',
-    'BMW',
-    'Bugatti',
-    'Buick',
-    'Cadillac',
-    'Chevrolet',
-    'Chrysler',
-    'Citroen',
-    'Dodge',
-    'Ferrari',
-    'Fiat',
-    'Ford',
-    'Geely',
-    'General Motors',
-    'GMC',
-    'Honda',
-    'Hyundai',
-    'Infiniti',
-    'Jaguar Land Rover',
-    'Kia',
-    'Koenigsegg',
-    'Lamborghini',
-    'Lancia',
-    'Lexus',
-    'Lincoln',
-    'Lotus',
-    'Maserati',
-    'Mazda',
-    'McLaren',
-    'Mercedes-Benz',
-    'Mini',
-    'Mitsubishi',
-    'Nissan',
-    'Pagani',
-    'Peugeot',
-    'Porsche',
-    'Renault',
-    'Rolls-Royce',
-    'Saab',
-    'Subaru',
-    'Suzuki',
-    'Tata Motors',
-    'Tesla',
-    'Toyota',
-    'Volkswagen',
-    'Volvo',
-  ];
+  List<String> _carBrands = [];
+  Future<List<String>> fetchCarBrands() async {
+    final response = await http.get(Uri.parse(global.ip + '/carMakers'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(response.body);
+      return List<String>.from(data);
+    } else {
+      throw Exception('Failed to fetch car brands');
+    }
+  }
 
   final _formKey = GlobalKey<FormState>();
   List<String> _services = [];
@@ -294,6 +234,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
   @override
   void initState() {
     super.initState();
+    print(_carBrand);
     fetchServices().then((services) {
       setState(() {
         _services = services;
@@ -305,6 +246,11 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
       setState(() {
         imageTest=value['image'];
 
+      });
+    });
+    fetchCarBrands().then((brands) {
+      setState(() {
+        _carBrands = brands;
       });
     });
   }
@@ -486,7 +432,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   margin: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.1,
                     vertical: 10,
-                  ), 
+                  ),
                   child: DropdownButtonFormField(
                     value: _carBrand,
                     decoration: InputDecoration(

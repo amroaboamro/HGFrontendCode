@@ -27,7 +27,7 @@ class _MyOrdersState extends State<MyOrders> {
 
   Future<void> _updateOrderStatus(String id ,String status) async {
     try {
-      final response = await http.post(
+      final response = await http.patch(
         Uri.parse(global.ip + '/updateOrder/$id'),
         body: jsonEncode({'status': status}),
         headers: {'Content-Type': 'application/json'},

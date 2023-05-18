@@ -21,7 +21,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
       _formKey.currentState!.save();
 
       final response = await http.patch(
-        Uri.parse(global.ip + '/updateOrder/order.id'),
+        Uri.parse(global.ip + '/updateOrder/'+widget.order.id),
         body: {
           'price': _price.toString(),
           'status': 'Waiting',
