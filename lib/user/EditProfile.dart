@@ -149,10 +149,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        var selected = File(image.path);
+       // var selected = File(image.path);
 
         setState(() {
-          imagepicker = selected;
+          imagepicker = File(image.path);
           getFileImageString(imagepicker);
 
           Upload(imagepicker);
@@ -406,6 +406,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<String> getFileImageString(File file) async {
     Uint8List fileData = await file.readAsBytes();
     String base64Image = base64Encode(fileData);
+    print(base64Image);
     setState(() {
       imageTest = base64Image;
     });

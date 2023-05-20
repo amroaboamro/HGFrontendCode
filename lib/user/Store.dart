@@ -5,6 +5,7 @@ import '../Classes/Product.dart';
 import 'carDetails.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:head_gasket/global.dart';
 
 class StorePage extends StatefulWidget {
   const StorePage({Key? key}) : super(key: key);
@@ -21,47 +22,45 @@ class _StorePageState extends State<StorePage> {
     'Toyota',
     'Honda',
     'Ford',
-    'Chevrolet',
+    'Skoda',
     'BMW',
     'Mercedes-Benz',
-    'Tesla',
+    'Kia',
   ];
   List<String> _colors = [
-    'Body',//mirrors,door,bonnet,
+    'Body', //mirrors,door,bonnet,
     'Mechanical',
-    'Electrical',//battery ,sensor,cables
-    'accessories',//lights,air condition,steering,wheels,brakes,car seat covers
+    'Electrical', //battery ,sensor,cables
+    'accessories', //lights,air condition,steering,wheels,brakes,car seat covers
     'Oils & Fluids',
-
   ];
   String? _selectedBrand;
   String? _selectedColor;
 
-  List<Product> _products=[];
+  List<Product> _products = [];
   @override
   void initState() {
     super.initState();
-
   }
 
-
   Future<List<Product>> fetchProducts() async {
-    // final response = await http.get(Uri.parse(''));
-    // if (response.statusCode == 200) {
-    //   List<dynamic> data = json.decode(response.body);
-    //   List<Product> products = data.map((json) => Product.fromJson(json)).toList();
-    //   return products;
-    // } else {
-    //   throw Exception('Failed to load products');
-    // }
-    return Future.delayed(Duration(seconds: 1),(){
+    final response = await http.get(Uri.parse(global.ip + '/Products'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      List<Product> products =
+          data.map((json) => Product.fromJson(json)).toList();
+      return products;
+    } else {
+      throw Exception('Failed to load products');
+    }
+    return Future.delayed(Duration(seconds: 1), () {
       List<dynamic> data = json.decode('''
      [
   {
     "id": 1,
     "brand": "WeatherTech",
-    "model": "Floor Mats",
-    "color": "Black",
+    "name": "Floor Mats",
+    "type": "Black",
     "price": 99,
     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
     "quantity": 10
@@ -69,8 +68,8 @@ class _StorePageState extends State<StorePage> {
   {
     "id": 2,
     "brand": "Bosch",
-    "model": "Icon Wiper Blades",
-    "color": "Black",
+    "name": "Icon Wiper Blades",
+    "type": "Black",
     "price": 25,
     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
     "quantity": 15
@@ -78,8 +77,8 @@ class _StorePageState extends State<StorePage> {
   {
     "id": 3,
     "brand": "K&N",
-    "model": "Air Filter",
-    "color": "Red",
+    "name": "Air Filter",
+    "type": "Red",
     "price": 50,
     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
     "quantity": 20
@@ -87,8 +86,8 @@ class _StorePageState extends State<StorePage> {
   {
     "id": 4,
     "brand": "Mobil 1",
-    "model": "Synthetic Motor Oil",
-    "color": "Gold",
+    "name": "Synthetic Motor Oil",
+    "type": "Gold",
     "price": 40,
     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
     "quantity": 25
@@ -96,8 +95,8 @@ class _StorePageState extends State<StorePage> {
   {
     "id": 5,
     "brand": "Meguiar's",
-    "model": "Car Wash and Wax Kit",
-    "color": "Blue",
+    "name": "Car Wash and Wax Kit",
+    "type": "Blue",
     "price": 30,
     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
     "quantity": 30
@@ -106,12 +105,10 @@ class _StorePageState extends State<StorePage> {
 
       
       ''');
-        List<Product> products = data.map((json) => Product.fromJson(json)).toList();
-        return products;
-
-
+      List<Product> products =
+          data.map((json) => Product.fromJson(json)).toList();
+      return products;
     });
-
   }
 
   String _searchQuery = '';
@@ -127,20 +124,24 @@ class _StorePageState extends State<StorePage> {
     List<Product> filteredProducts = [..._products];
 
     if (_selectedBrand != null) {
-      filteredProducts =
-          filteredProducts.where((product) => product.brand == _selectedBrand).toList();
+      filteredProducts = filteredProducts
+          .where((product) => product.brand == _selectedBrand)
+          .toList();
     }
 
     if (_selectedColor != null) {
-      filteredProducts =
-          filteredProducts.where((product) => product.type == _selectedColor).toList();
+      filteredProducts = filteredProducts
+          .where((product) => product.type == _selectedColor)
+          .toList();
     }
 
     if (_searchQuery.isNotEmpty) {
       filteredProducts = filteredProducts
           .where((product) =>
-      product.brand.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          product.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+              product.brand
+                  .toLowerCase()
+                  .contains(_searchQuery.toLowerCase()) ||
+              product.name.toLowerCase().contains(_searchQuery.toLowerCase()))
           .toList();
     }
 
@@ -173,8 +174,7 @@ class _StorePageState extends State<StorePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                     CartPage(),
+                  builder: (context) => CartPage(),
                 ),
               );
             },
@@ -263,99 +263,92 @@ class _StorePageState extends State<StorePage> {
                   },
                 ),
               ),
-    FutureBuilder<List<Product>>(
-    future: _filteredProducts,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      } else {
-        List<Product> products = snapshot.data!;
-        return
-          Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.7,
-            child: GridView.builder(
-              padding: EdgeInsets.all(16),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                childAspectRatio: 0.75,
-              ),
-              itemCount: products?.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CarDetailsPage(product: products[index]),
+            FutureBuilder<List<Product>>(
+                future: _filteredProducts,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<Product> products = snapshot.data!;
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: GridView.builder(
+                        padding: EdgeInsets.all(16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          childAspectRatio: 0.75,
+                        ),
+                        itemCount: products?.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CarDetailsPage(product: products[index]),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: Image.network(
+                                      products[index].imageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Icon(Icons.error),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          products[index].brand,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          products[index].name,
+                                          style: TextStyle(
+                                            color: Colors.grey[500],
+                                          ),
+                                        ),
+                                        Text(
+                                          '\$${products[index].price.toString()}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
                     );
-                  },
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: Image.network(
-                            products[index].imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                products[index].brand,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                products[index].name,
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                              Text(
-                                '\$${products[index].price
-                                    .toString()}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    color: Colors.white,
-                  ),
-                );
-              },
-            ),
-          );
-      }
-    }
-    ),
-
-
+                  }
+                }),
           ],
         ),
       ),
     );
   }
 }
-
