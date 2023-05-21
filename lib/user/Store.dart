@@ -31,8 +31,7 @@ class _StorePageState extends State<StorePage> {
     'Body', //mirrors,door,bonnet,
     'Mechanical',
     'Electrical', //battery ,sensor,cables
-    'accessories', //lights,air condition,steering,wheels,brakes,car seat covers
-    'Oils & Fluids',
+    'Accessories', //lights,air condition,steering,wheels,brakes,car seat covers
   ];
   String? _selectedBrand;
   String? _selectedColor;
@@ -53,62 +52,61 @@ class _StorePageState extends State<StorePage> {
     } else {
       throw Exception('Failed to load products');
     }
-    return Future.delayed(Duration(seconds: 1), () {
-      List<dynamic> data = json.decode('''
-     [
-  {
-    "id": 1,
-    "brand": "WeatherTech",
-    "name": "Floor Mats",
-    "type": "Black",
-    "price": 99,
-    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-    "quantity": 10
-  },
-  {
-    "id": 2,
-    "brand": "Bosch",
-    "name": "Icon Wiper Blades",
-    "type": "Black",
-    "price": 25,
-    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-    "quantity": 15
-  },
-  {
-    "id": 3,
-    "brand": "K&N",
-    "name": "Air Filter",
-    "type": "Red",
-    "price": 50,
-    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-    "quantity": 20
-  },
-  {
-    "id": 4,
-    "brand": "Mobil 1",
-    "name": "Synthetic Motor Oil",
-    "type": "Gold",
-    "price": 40,
-    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-    "quantity": 25
-  },
-  {
-    "id": 5,
-    "brand": "Meguiar's",
-    "name": "Car Wash and Wax Kit",
-    "type": "Blue",
-    "price": 30,
-    "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-    "quantity": 30
-  }
-]
+//     return Future.delayed(Duration(seconds: 1), () {
+//       List<dynamic> data = json.decode('''
+//      [
+//   {
+//     "id": 1,
+//     "brand": "WeatherTech",
+//     "name": "Floor Mats",
+//     "type": "Black",
+//     "price": 99,
+//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+//     "quantity": 10
+//   },
+//   {
+//     "id": 2,
+//     "brand": "Bosch",
+//     "name": "Icon Wiper Blades",
+//     "type": "Black",
+//     "price": 25,
+//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+//     "quantity": 15
+//   },
+//   {
+//     "id": 3,
+//     "brand": "K&N",
+//     "name": "Air Filter",
+//     "type": "Red",
+//     "price": 50,
+//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+//     "quantity": 20
+//   },
+//   {
+//     "id": 4,
+//     "brand": "Mobil 1",
+//     "name": "Synthetic Motor Oil",
+//     "type": "Gold",
+//     "price": 40,
+//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+//     "quantity": 25
+//   },
+//   {
+//     "id": 5,
+//     "brand": "Meguiar's",
+//     "name": "Car Wash and Wax Kit",
+//     "type": "Blue",
+//     "price": 30,
+//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
+//     "quantity": 30
+//   }
+// ]
 
-      
-      ''');
-      List<Product> products =
-          data.map((json) => Product.fromJson(json)).toList();
-      return products;
-    });
+//       ''');
+//       List<Product> products =
+//           data.map((json) => Product.fromJson(json)).toList();
+//       return products;
+//     });
   }
 
   String _searchQuery = '';
