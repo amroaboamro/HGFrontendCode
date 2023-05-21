@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:head_gasket/Widget/background.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -176,142 +177,223 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value){
-                print(value);
-                _filterUsers(value);
-              },
-              decoration: InputDecoration(
-                labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value){
+                  print(value);
+                  _filterUsers(value);
+                },
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
               ),
             ),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                padding: EdgeInsets.all(16.0),
-                child: DataTable(
-                  columnSpacing: 20.0,
-                  horizontalMargin: 10.0,
-                  headingRowHeight: 60.0,
-                  dataRowHeight: 80.0,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'First Name',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Last Name',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Email',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Phone',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Car Model',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'City',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Street',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Actions',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                  rows: _filteredUsers.map((user) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Text(
-                          user.firstName,
-                          style: TextStyle(fontSize: 16.0),
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: DataTable(
+                    columnSpacing: 20.0,
+                    dataRowHeight: 60.0,
+                    columns: [
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.person, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'First Name',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.lastName,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.person, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Last Name',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.email,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.email, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Email',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.phone,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.phone, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Phone',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.carModel,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.car_rental, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Car Model',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.city,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.location_city, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'City',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          user.street,
-                          style: TextStyle(fontSize: 16.0),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.location_on, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Street',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      DataCell(
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () => _showDeleteConfirmationDialog(user),
+                      DataColumn(
+                        label: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.black),
+                            SizedBox(width: 4.0),
+                            Text(
+                              'Actions',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                    ]);
-                  }).toList(),
+
+                    ],
+                    rows: _filteredUsers.map((user) {
+                      final bool isEvenRow = _filteredUsers.indexOf(user) % 2 == 0;
+                      final Color rowColor = isEvenRow ? Colors.grey[200]! : mainColor.withOpacity(0.5);
+
+                      return DataRow(
+                        color: MaterialStateColor.resolveWith((states) => rowColor),
+                        cells: [
+                          DataCell(
+                            Row(
+                              children: [
+                                Container(
+                                  width: 40.0,
+                                  height: 40.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: mainColor,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      user.firstName[0]+ user.lastName[0],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  user.firstName,
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.lastName,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.email,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.phone,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.carModel,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.city,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.street,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          DataCell(
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () => _showDeleteConfirmationDialog(user),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  )
+
+
                 ),
               ),
             ),
-          ),
-        ],
+
+          ],
+        ),
       ),
 
     );

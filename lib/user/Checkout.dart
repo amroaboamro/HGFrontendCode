@@ -1,4 +1,7 @@
-
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:head_gasket/global.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 //rzp_test_59ZFuYiUqxL07G
@@ -6,6 +9,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayService {
   late Razorpay _razorpay;
+  var cartItems;
+var function;
 
   void initialize() {
     _razorpay = Razorpay();
@@ -13,9 +18,41 @@ class RazorpayService {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
+  Future<void> _checkout() async {
+print(cartItems);
+    for (var item in cartItems) {
+      final itemId = item.product.id;
+      final quantity = item.quantity;
+      print(itemId+'****'+quantity.toString());
+
+      final url = global.ip+'/$itemId';
+      final body = {'quantity': quantity.toString()}; // quantity users want to buy (subtract it from product quantity in database)
+
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: 'Your Checkout placed successfully',
+          backgroundColor: Colors.green,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+        function();
+
+      } else {
+
+        print('Failed to update quantity for item $itemId');
+      }
+    }
+  }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-      print("Payment Done");
+    print("Payment Succeed");
+    _checkout();
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {

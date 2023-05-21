@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:head_gasket/Admin/Cars.dart';
 import 'package:head_gasket/Admin/Users.dart';
+import 'package:head_gasket/Admin/ordersPage.dart';
 import 'package:head_gasket/Widget/background.dart';
 
+import 'AddPoduct.dart';
 import 'DashboardPage.dart';
+import 'Workers.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -30,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: mainColor,
             ),
             child: Text(
-              'Drawer Example',
+              'Welcome Admin',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -102,6 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
             tileColor: _currentPage == 'Products' ? mainColor : null,
             shape: _currentPage == 'Products' ? Border.all(color: mainColor, width: 2) : null,
           ),
+          ListTile(
+            leading: Icon(Icons.car_repair_rounded),
+            title: Text(
+              'Cars',
+              style: TextStyle(fontSize: 16),
+            ),
+            selected: _currentPage == 'Cars',
+            onTap: () {
+              _changePage('Cars');
+            },
+            tileColor: _currentPage == 'Cars' ? mainColor : null,
+            shape: _currentPage == 'Cars' ? Border.all(color: mainColor, width: 2) : null,
+          ),
         ],
       ),
     );
@@ -115,9 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case 'Workers':
         return WorkersPage();
       case 'Orders':
-        return OrdersPage();
+        return OrderPage();
       case 'Products':
-        return ProductsPage();
+        return AddProductPage();
+        case 'Cars':
+        return CarPage();
       default:
         return Container();
     }
@@ -127,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Drawer Example'),
+        title: Text('Admin Home'),
         backgroundColor: mainColor,
       ),
       drawer: _buildDrawer(),
@@ -139,29 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-class WorkersPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Workers Page'),
-    );
-  }
-}
 
-class OrdersPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Orders Page'),
-    );
-  }
-}
 
-class ProductsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Products Page'),
-    );
-  }
-}
+
+
+
