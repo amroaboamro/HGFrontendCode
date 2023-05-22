@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/global.dart';
+import 'Chat/MethodsChat.dart';
 import 'Home.dart';
 import 'login.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -101,7 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return true;
   }
 
-  Future<void> _signUp() async {
+  Future _signUp() async {
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -127,16 +128,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             content: Text('success,your account has been created'),
           ),
         );
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        return 'done';
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid Information';
         });
+        return null;
       } else {
-        throw Exception('Unexpected status code: ${response.statusCode}');
+
+        return null;
       }
     } catch (e) {
+
       setState(() {
         _errorMessage = 'An error occurred while signing up';
       });
@@ -342,7 +348,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_validateFields() && !_isLoading) {
-                        _signUp();
+                        _signUp().then((value) =>{
+                          if(value != null) {
+                            createAccount(firstName+lastName, email, '0597633980##Mm')
+                          }
+
+                          else {
+                            print('error')
+                          }
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(

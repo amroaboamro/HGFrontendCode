@@ -22,5 +22,5 @@ class global {
     "carBrand": "-----"
   };
   static var ip =
-      "http://127.0.0.1:3000"; //https://node-server-wuse.onrender.com //http://127.0.0.1:3000
+      "https://node-server-wuse.onrender.com"; //https://node-server-wuse.onrender.com //http://127.0.0.1:3000
 }

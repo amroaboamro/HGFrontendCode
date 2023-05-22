@@ -25,10 +25,11 @@ class _CartPageState extends State<CartPage> {
 
   void _initCartManager() async {
     _cartManager = CartManager();
-    await _cartManager.loadFromSharedPreferences();
     setState(() {
       _isLoading = false;
     });
+    await _cartManager.loadFromSharedPreferences();
+
   }
 
   void _onRemoveItemPressed(CartItem item) {
@@ -124,8 +125,11 @@ class _CartPageState extends State<CartPage> {
                       0, (sum, item) => sum +
                       (item.product.price) * item.quantity).toString();
                   if (int.parse(amount) > 0){
+                    _razorpayService.cartItems=_cartManager.items;
                   _razorpayService.pay(amount);
-                  _onClearCartPressed();
+                  _razorpayService.function=_onClearCartPressed;
+
+
                   }
 
 

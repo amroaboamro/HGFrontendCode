@@ -11,6 +11,7 @@ import 'package:head_gasket/login.dart';
 import 'package:head_gasket/user/ChangePass.dart';
 import 'package:head_gasket/user/Store.dart';
 import 'package:head_gasket/user/WorkerProfile.dart';
+import 'package:head_gasket/user/aboutUs.dart';
 import 'package:head_gasket/user/profilePage.dart';
 import 'package:http/http.dart' as http;
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -255,10 +256,16 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
               title: Row(
                 children: [
                   Icon(Icons.contact_support),
-                  Text(" Contact us"),
+                  Text(" About us"),
                 ],
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AboutUsPage()),
+                );
+              },
             ),
             ListTile(
                 title: Row(
