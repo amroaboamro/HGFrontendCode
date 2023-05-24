@@ -104,7 +104,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 //   },
 //   {
 //     "firstName": "Mark",
-//     "lastName": "Johnson",
+//     "lastName": "Johnson",Mark@gmail.com
 //     "major": "Carpenter",
 //     "rating": 4.2,
 //     "imageUrl": "assets/images/key.jpgg",
@@ -262,8 +262,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => AboutUsPage()),
+                  MaterialPageRoute(builder: (context) => AboutUsPage()),
                 );
               },
             ),

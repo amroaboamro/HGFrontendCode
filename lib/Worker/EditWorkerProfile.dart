@@ -8,14 +8,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'dart:convert';
 
-
 import 'package:image_picker/image_picker.dart';
 import 'dart:io' as file;
 import 'dart:async';
 import 'package:path/path.dart' as Path;
 
 import 'package:http/http.dart' as http;
-
 
 class EditWorkerProfile extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -34,7 +32,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
 
     try {
       var response =
-      await http.patch(Uri.parse(url), headers: headers, body: body);
+          await http.patch(Uri.parse(url), headers: headers, body: body);
       if (response.statusCode == 200) {
         if (_firstName != null) {
           widget.userData['firstName'] = _firstName;
@@ -55,6 +53,9 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
 
         if (_phone != null) {
           widget.userData['phone'] = _phone;
+        }
+        if (_aboutMe != null) {
+          widget.userData['bio'] = _aboutMe;
         }
         print('Data updated successfully');
         Navigator.pop(context);
@@ -96,7 +97,8 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
   }
 
   Future<Map<String, dynamic>> fetchImage() async {
-    final response = await http.get(Uri.parse(global.ip + "/getImage/"+global.userEmail));
+    final response =
+        await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
@@ -117,7 +119,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse(global.ip + '/addImage/'+global.userEmail);
+    var uri = Uri.parse(global.ip + '/addImage/' + global.userEmail);
     var request = new http.MultipartRequest("POST", uri);
 
     var multipartFile = new http.MultipartFile('upload', stream, length,
@@ -142,7 +144,6 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
     }
 
     response.stream.transform(utf8.decoder).listen((value) {});
-
   }
 
   Future getImageFromGallery() async {
@@ -187,6 +188,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
       }
     }
   }
+
   Future<List<String>> fetchServices() async {
     final response = await http.get(Uri.parse(global.ip + "/servicesNames"));
     if (response.statusCode == 200) {
@@ -206,8 +208,8 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
     } else {
       throw Exception('Failed to fetch dropdown items');
     }
-
   }
+
   List<String> _carBrands = [];
   Future<List<String>> fetchCarBrands() async {
     final response = await http.get(Uri.parse(global.ip + '/carMakers'));
@@ -230,6 +232,8 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
   String? _carBrand;
 
   String? _phone;
+  String? _aboutMe;
+
   bool _isFetchCalled = false;
   @override
   void initState() {
@@ -242,10 +246,9 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
     });
     _carModel = widget.userData['carModel'];
     _carBrand = widget.userData['carBrand'];
-    fetchImage().then((value){
+    fetchImage().then((value) {
       setState(() {
-        imageTest=value['image'];
-
+        imageTest = value['image'];
       });
     });
     fetchCarBrands().then((brands) {
@@ -276,7 +279,8 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   'carModel': _carModel,
                   'phone': _phone,
                   'carBrand': _carBrand,
-                  'major':_serviceName,
+                  'major': _serviceName,
+                  'bio': _aboutMe,
                 });
                 print(widget.userData);
               }
@@ -295,14 +299,13 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     CircleAvatar(
                       backgroundImage: imagepicker.path == 'zz'
                           ? AssetImage('assets/images/profile.png')
                           : (kIsWeb)
-                          ? MemoryImage(webImage.buffer.asUint8List())
-                          : MemoryImage(base64Decode(imageTest))
-                      as ImageProvider,
+                              ? MemoryImage(webImage.buffer.asUint8List())
+                              : MemoryImage(base64Decode(imageTest))
+                                  as ImageProvider,
                       radius: 100,
                     ),
                     // imagepicker.path == 'zz' //it means no image selected
@@ -328,8 +331,6 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                     ),
                   ],
                 ),
-
-
                 SizedBox(height: 16.0),
                 TextFormField(
                   decoration: InputDecoration(hintText: 'First Name'),
@@ -359,6 +360,20 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   },
                 ),
                 SizedBox(height: 16.0),
+                TextFormField(
+                  decoration: InputDecoration(hintText: 'About Me'),
+                  initialValue: widget.userData['bio'],
+                  validator: (value) {
+                    if (value?.isEmpty ?? false) {
+                      return 'Please enter your bio';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _aboutMe = value;
+                  },
+                ),
+                SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     labelText: 'Major/Service Name',
@@ -382,7 +397,6 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                     });
                   },
                 ),
-
                 SizedBox(height: 16.0),
                 FutureBuilder<List<String>>(
                   future: _isFetchCalled ? null : fetchDropdownItems(),
@@ -436,11 +450,9 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   child: DropdownButtonFormField(
                     value: _carBrand,
                     decoration: InputDecoration(
-
-                        labelText: 'Car Brand:',
-                        prefixIcon: Icon(Icons.car_rental_rounded),
-                        border: OutlineInputBorder(),
-
+                      labelText: 'Car Brand:',
+                      prefixIcon: Icon(Icons.car_rental_rounded),
+                      border: OutlineInputBorder(),
                     ),
                     items: _carBrands.map((carBrand) {
                       return DropdownMenuItem(
@@ -450,7 +462,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        _carBrand = value as String? ;
+                        _carBrand = value as String?;
                       });
                     },
                   ),

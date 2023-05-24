@@ -29,7 +29,7 @@ class OrderDetails extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -37,7 +37,7 @@ class OrderDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                       'Order: '+ order.serviceName,
+                        'Order: ' + order.serviceName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
@@ -53,10 +53,6 @@ class OrderDetails extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16),
-
-
-
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -70,7 +66,7 @@ class OrderDetails extends StatelessWidget {
                               fontSize: 20,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 15),
                           Text(
                             order.serviceName,
                             style: TextStyle(
@@ -89,7 +85,7 @@ class OrderDetails extends StatelessWidget {
                               fontSize: 20,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 15),
                           Text(
                             order.date,
                             style: TextStyle(
@@ -142,8 +138,6 @@ class OrderDetails extends StatelessWidget {
                           ),
                         ],
                       ),
-
-
                     ],
                   ),
                   SizedBox(height: 16),
@@ -188,11 +182,8 @@ class OrderDetails extends StatelessWidget {
                           ),
                         ],
                       ),
-
-
                     ],
                   ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -205,14 +196,13 @@ class OrderDetails extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        order.city +','+order.street,
+                        order.city + ',' + order.street,
                         style: TextStyle(
                           fontSize: 16,
                         ),
                       ),
                     ],
                   ),
-
                   SizedBox(height: 16),
                   Text(
                     'Status',
@@ -222,19 +212,18 @@ class OrderDetails extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     decoration: BoxDecoration(
                       color: order.status == 'Completed'
                           ? Colors.green
                           : order.status == 'Processing'
-                          ? Colors.yellow
-                          : order.status == 'Waiting'
-                          ? Colors.orange
-                          : order.status == 'Canceled'
-                          ? Colors.red
-                          : Colors.blue,
+                              ? Colors.yellow
+                              : order.status == 'Waiting'
+                                  ? Colors.orange
+                                  : order.status == 'Canceled'
+                                      ? Colors.red
+                                      : Colors.blue,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -262,9 +251,7 @@ class OrderDetails extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16),
-
                 ],
-
               ),
             ),
           ],

@@ -22,7 +22,7 @@ class _AddProductPageState extends State<AddProductPage> {
     'Body',
     'Mechanical',
     'Electrical',
-    'accessories',
+    'Accessories',
     'Oils & Fluids',
   ]; // Locally defined types
 

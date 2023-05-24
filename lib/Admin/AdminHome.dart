@@ -9,12 +9,12 @@ import 'DashboardPage.dart';
 import 'Workers.dart';
 
 
-class MyHomePage extends StatefulWidget {
+class AdminHome extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AdminHomeState createState() => _AdminHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AdminHomeState extends State<AdminHome> {
   String _currentPage = 'Dashboard';
 
   void _changePage(String pageName) {

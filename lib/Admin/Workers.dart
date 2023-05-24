@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../Widget/background.dart';
+import 'package:head_gasket/global.dart';
 
 class Worker {
   final String firstName;
@@ -56,108 +57,106 @@ class _WorkersPageState extends State<WorkersPage> {
       setState(() {
         _filteredWorkers = _workers
             .where((worker) =>
-        worker.firstName.toLowerCase().contains(query.toLowerCase()) ||
-            worker.lastName.toLowerCase().contains(query.toLowerCase()))
+                worker.firstName.toLowerCase().contains(query.toLowerCase()) ||
+                worker.lastName.toLowerCase().contains(query.toLowerCase()))
             .toList();
       });
-
-
     }
-
-
   }
 
   Future<void> fetchData() async {
-    // final response = await http.get(Uri.parse(''));
-    //
-    // if (response.statusCode == 200) {
-    //   final jsonData = jsonDecode(response.body) as List<dynamic>;
-    //
-    //   final List<Worker> workers = jsonData.map((workerJson) {
-    //     return Worker(
-    //       firstName: workerJson['firstName'],
-    //       lastName: workerJson['lastName'],
-    //       email: workerJson['email'],
-    //       phone: workerJson['phone'],
-    //       carModel: workerJson['carModel'],
-    //       city: workerJson['city'],
-    //       street: workerJson['street'],
-    //       serviceName: workerJson['serviceName'],
-    //       carBrand: workerJson['carBrand'],
-    //       rating: workerJson['rating'].toDouble(),
-    //     );
-    //   }).toList();
-    //
-    //   setState(() {
-    //     _workers = workers;
-    //     _filteredWorkers = workers;
-    //   });
-    // } else {
-    //   print('Failed to fetch workers. Status code: ${response.statusCode}');
-    // }
-    Future.delayed(Duration(seconds: 1), () {
-      List<Worker> workers = [];
-      final jsonData = jsonDecode('''
+    final response = await http.get(Uri.parse(global.ip + '/topWorkers'));
 
-[
-  {
-    
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "johndoe@example.com",
-    "phone": "1234567890",
-    "carModel": "Toyota Camry",
-    "city": "New York",
-    "street": "123 Main St",
-    "serviceName": "Mechanic",
-    "carBrand": "Toyota",
-    "rating": 4.5
-  },
-  {
-   
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "email": "janesmith@example.com",
-    "phone": "0987654321",
-    "carModel": "Honda Accord",
-    "city": "Los Angeles",
-    "street": "456 Elm St",
-    "serviceName": "Plumber",
-    "carBrand": "Honda",
-    "rating": 2.0
-  }
-]
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body) as List<dynamic>;
 
-''');
-
-      for (var worker in jsonData) {
-        workers.add(
-          Worker(
-
-            firstName: worker['firstName'],
-            lastName: worker['lastName'],
-            email: worker['email'],
-            phone: worker['phone'],
-            carModel: worker['carModel'],
-            city: worker['city'],
-            street: worker['street'],
-            serviceName: worker['serviceName'],
-            carBrand: worker['carBrand'],
-            rating: worker['rating'].toDouble(),
-          ),
+      final List<Worker> workers = jsonData.map((workerJson) {
+        return Worker(
+          firstName: workerJson['firstName'],
+          lastName: workerJson['lastName'],
+          email: workerJson['email'],
+          phone: workerJson['phone'],
+          carModel: workerJson['carModel'],
+          city: workerJson['city'],
+          street: workerJson['street'],
+          serviceName: workerJson['major'],
+          carBrand: workerJson['carBrand'],
+          rating: workerJson['rating'].toDouble(),
         );
-      }
+      }).toList();
 
       setState(() {
         _workers = workers;
         _filteredWorkers = workers;
       });
-    });
+    } else {
+      print('Failed to fetch workers. Status code: ${response.statusCode}');
+    }
+
+//     Future.delayed(Duration(seconds: 1), () {
+//       List<Worker> workers = [];
+//       final jsonData = jsonDecode('''
+
+// [
+//   {
+
+//     "firstName": "John",
+//     "lastName": "Doe",
+//     "email": "johndoe@example.com",
+//     "phone": "1234567890",
+//     "carModel": "Toyota Camry",
+//     "city": "New York",
+//     "street": "123 Main St",
+//     "serviceName": "Mechanic",
+//     "carBrand": "Toyota",
+//     "rating": 4.5
+//   },
+//   {
+
+//     "firstName": "Jane",
+//     "lastName": "Smith",
+//     "email": "janesmith@example.com",
+//     "phone": "0987654321",
+//     "carModel": "Honda Accord",
+//     "city": "Los Angeles",
+//     "street": "456 Elm St",
+//     "serviceName": "Plumber",
+//     "carBrand": "Honda",
+//     "rating": 2.0
+//   }
+// ]
+
+// ''');
+
+//       for (var worker in jsonData) {
+//         workers.add(
+//           Worker(
+
+//             firstName: worker['firstName'],
+//             lastName: worker['lastName'],
+//             email: worker['email'],
+//             phone: worker['phone'],
+//             carModel: worker['carModel'],
+//             city: worker['city'],
+//             street: worker['street'],
+//             serviceName: worker['serviceName'],
+//             carBrand: worker['carBrand'],
+//             rating: worker['rating'].toDouble(),
+//           ),
+//         );
+//       }
+
+//       setState(() {
+//         _workers = workers;
+//         _filteredWorkers = workers;
+//       });
+//     });
   }
 
   Future<void> deleteWorker(String email) async {
     try {
-      final response = await http.delete(Uri.parse('your_api_url/users/$email'));
+      final response =
+          await http.delete(Uri.parse('your_api_url/users/$email'));
       if (response.statusCode == 200) {
         Navigator.of(context).pop();
         setState(() {
@@ -170,7 +169,6 @@ class _WorkersPageState extends State<WorkersPage> {
     } catch (error) {
       print('Error deleting worker: $error');
     }
-
   }
 
   void _showDeleteConfirmationDialog(Worker worker) {
@@ -204,7 +202,6 @@ class _WorkersPageState extends State<WorkersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Column(
         children: [
           Padding(
@@ -293,7 +290,6 @@ class _WorkersPageState extends State<WorkersPage> {
                       ],
                     ),
                   ),
-
                   DataColumn(
                     label: Row(
                       children: [
@@ -308,7 +304,7 @@ class _WorkersPageState extends State<WorkersPage> {
                   return DataRow(
                     color: MaterialStateColor.resolveWith((states) {
                       return worker.rating >= 4.0
-                          ?mainColor.withOpacity(0.5)!
+                          ? mainColor.withOpacity(0.5)!
                           : Colors.transparent;
                     }),
                     cells: [
@@ -346,7 +342,6 @@ class _WorkersPageState extends State<WorkersPage> {
                         Text('${worker.city}, ${worker.street}'),
                       ),
                       DataCell(Text(worker.serviceName)),
-
                       DataCell(
                         IconButton(
                           icon: Icon(Icons.delete),
@@ -366,5 +361,3 @@ class _WorkersPageState extends State<WorkersPage> {
     );
   }
 }
-
-

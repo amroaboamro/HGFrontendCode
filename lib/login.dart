@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'Worker/Home.dart';
+import 'Admin/AdminHome.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -67,6 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => WorkerHome(userId: _email)));
+        else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AdminHome()));
+        }
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';
@@ -129,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'kamal@gmail.com'; //kamal@gmail.com
+                    _email = 'zaid@gmail.com'; //kamal@gmail.com
                   },
                 ),
               ),

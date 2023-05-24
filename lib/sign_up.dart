@@ -132,17 +132,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
         return 'done';
-      } else if (response.statusCode == 401) {
+      } else if (response.statusCode == 409) {
+        Fluttertoast.showToast(
+          msg: 'This Email is already in use',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return null;
+      } else {
         setState(() {
           _errorMessage = 'Invalid Information';
         });
         return null;
-      } else {
-
-        return null;
       }
     } catch (e) {
-
       setState(() {
         _errorMessage = 'An error occurred while signing up';
       });
@@ -348,15 +355,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_validateFields() && !_isLoading) {
-                        _signUp().then((value) =>{
-                          if(value != null) {
-                            createAccount(firstName+lastName, email, '0597633980##Mm')
-                          }
-
-                          else {
-                            print('error')
-                          }
-                        });
+                        _signUp().then((value) => {
+                              if (value != null)
+                                {
+                                  // createAccount(firstName+lastName, email, '0597633980##Mm')
+                                }
+                              else
+                                {print('error')}
+                            });
                       }
                     },
                     style: ElevatedButton.styleFrom(
