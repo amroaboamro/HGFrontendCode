@@ -112,6 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late File imagepicker;
 
   Future Upload(File imageFile) async {
+    
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();

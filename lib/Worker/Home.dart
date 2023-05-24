@@ -51,7 +51,7 @@ class _WorkerHomeState extends State<WorkerHome> {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      print(data);
+    
       return data;
     } else {
       throw Exception('Failed to fetch user data');

@@ -105,7 +105,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 //   },
 //   {
 //     "firstName": "Mark",
-//     "lastName": "Johnson",
+//     "lastName": "Johnson",Mark@gmail.com
 //     "major": "Carpenter",
 //     "rating": 4.2,
 //     "imageUrl": "assets/images/key.jpgg",
