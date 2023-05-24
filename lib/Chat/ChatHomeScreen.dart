@@ -1,4 +1,3 @@
-
 import './ChatRoom.dart';
 import './FadeAnimation.dart';
 import './MethodsChat.dart';
@@ -19,7 +18,7 @@ class _ChatState extends State<HomeScreen> {
   _ChatState(this.name);
   Map<String, dynamic>? userMap;
   bool isLoading = false;
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _search = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -114,8 +113,8 @@ class _ChatState extends State<HomeScreen> {
 
     return Scaffold(
         appBar: AppBar(
-           backgroundColor: Color.fromARGB(255, 15, 105, 202),
-          shadowColor:   Color(0xff81B2F5),
+          backgroundColor: Color.fromARGB(255, 15, 105, 202),
+          shadowColor: Color(0xff81B2F5),
           title: const Center(
               child: Text('Chats',
                   textDirection: TextDirection.ltr,
@@ -153,8 +152,6 @@ class _ChatState extends State<HomeScreen> {
                   const Padding(
                     padding:
                         EdgeInsets.only(top: 50.0, right: 20.0, left: 20.0),
-
-                   
                   ),
                 ))
               ];
@@ -184,25 +181,24 @@ class _ChatState extends State<HomeScreen> {
                                 (1.0 + index) / 4,
                                 GestureDetector(
                                     onTap: () {
-                                    
                                       setState(() {
                                         email = snapshot.data![index]['email'];
                                         List names = [name, email];
                                         names.sort();
-                                        
-                                          String roomId = chatRoomId(
-                                                  // _auth.currentUser!.displayName!,
-                                                  names[0],
-                                                  names[1]);
-                                             
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => ChatRoom(
-                                                chatRoomId: roomId,
-                                                userMap: snapshot.data![index],
-                                              ),
+
+                                        String roomId = chatRoomId(
+                                            // _auth.currentUser!.displayName!,
+                                            names[0],
+                                            names[1]);
+
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => ChatRoom(
+                                              chatRoomId: roomId,
+                                              userMap: snapshot.data![index],
                                             ),
-                                          );
+                                          ),
+                                        );
 
                                         if (selectedService == index)
                                           selectedService = -1;
@@ -236,11 +232,9 @@ class _ChatState extends State<HomeScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                
                                                 Text(
                                                   snapshot.data![index]['name']
-                                                      .toString().split(" ")[0]+ " " +snapshot.data![index]['name']
-                                                      .toString().split(" ")[3],
+                                                      .toString(),
                                                   // .replaceAll(
                                                   //     '@gmail.com', ""),
                                                   textDirection:
@@ -250,8 +244,7 @@ class _ChatState extends State<HomeScreen> {
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
-
-                                                   const SizedBox(
+                                                const SizedBox(
                                                   width: 50,
                                                 ),
                                                 const Align(
@@ -262,7 +255,6 @@ class _ChatState extends State<HomeScreen> {
                                                       size: 20,
                                                       color: Colors.black,
                                                     )),
-                                               
                                                 const SizedBox(
                                                   width: 20,
                                                 ),
@@ -277,7 +269,6 @@ class _ChatState extends State<HomeScreen> {
                                                   width: 35,
                                                   height: 35,
                                                 ),*/
-                                                
                                               ]),
                                         ],
                                       ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/Worker/EditWorkerProfile.dart';
@@ -16,21 +18,21 @@ class WorkerProfile extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height *1.5,
+          height: MediaQuery.of(context).size.height * 1.5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               SizedBox(height: 24.0),
-
               Stack(
                 alignment: Alignment.topRight,
                 children: [
                   Center(
                     child: CircleAvatar(
-                      radius: 60.0,
-                      backgroundImage: AssetImage(
-                          'assets/images/profile.png'),
+                      backgroundImage: global.Imagetest != ""
+                          ? MemoryImage(base64Decode(global.Imagetest))
+                          : AssetImage('assets/images/profile.png')
+                              as ImageProvider,
+                      radius: 60,
                     ),
                   ),
                   Padding(
@@ -42,16 +44,23 @@ class WorkerProfile extends StatelessWidget {
                             Icons.edit,
                             color: mainColor,
                           ),
-                          onPressed: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => EditWorkerProfile(userData: global.userData,))),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditWorkerProfile(
+                                        userData: global.userData,
+                                      ))),
                         ),
                         IconButton(
                           icon: Icon(
                             Icons.location_on,
                             color: mainColor,
                           ),
-                          onPressed: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => MapScreen())), ),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MapScreen())),
+                        ),
                       ],
                     ),
                   ),
@@ -60,7 +69,9 @@ class WorkerProfile extends StatelessWidget {
               SizedBox(height: 16.0),
               Center(
                 child: Text(
-                 global.userData['firstName']+' '+global.userData['lastName'] ,
+                  global.userData['firstName'] +
+                      ' ' +
+                      global.userData['lastName'],
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -101,10 +112,10 @@ class WorkerProfile extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               Container(
-
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(24.0)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -140,7 +151,7 @@ class WorkerProfile extends StatelessWidget {
                           SizedBox(width: 8.0),
                           Chip(
                             label: Text(global.userData['carBrand']),
-                            backgroundColor:mainColor,
+                            backgroundColor: mainColor,
                             labelStyle: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -157,7 +168,9 @@ class WorkerProfile extends StatelessWidget {
                         ),
                       ),
                       SmoothStarRating(
-                        rating:double.parse(global.userData['rating'].toString()) ?? 0.0,
+                        rating: double.parse(
+                                global.userData['rating'].toString()) ??
+                            0.0,
                         size: 24,
                         filledIconData: Icons.star,
                         halfFilledIconData: Icons.star_half,
@@ -183,10 +196,8 @@ class WorkerProfile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle:Text(global.userData['street']),
-
+                        subtitle: Text(global.userData['street']),
                       ),
-
                       SizedBox(height: 16.0),
                       Text(
                         'Contact',

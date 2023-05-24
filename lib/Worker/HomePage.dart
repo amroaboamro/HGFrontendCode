@@ -13,6 +13,7 @@ import 'package:head_gasket/user/Store.dart';
 import 'package:head_gasket/user/WorkerProfile.dart';
 import 'package:head_gasket/user/aboutUs.dart';
 import 'package:head_gasket/user/profilePage.dart';
+import 'package:head_gasket/Home.dart';
 import 'package:http/http.dart' as http;
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'dart:convert';
@@ -156,11 +157,27 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 
   late Future<List<Worker>> _workers;
   List<Worker>? workers;
+  Future<Map<String, dynamic>> fetchImage() async {
+    final response =
+        await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Failed to fetch image');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _workers = _fetchWorkersList();
+    fetchImage().then((value) {
+      setState(() {
+        global.Imagetest = value['image'];
+      });
+    });
   }
 
   @override
@@ -191,7 +208,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                   global.userData['lastName']),
               accountEmail: Text(global.userData['email']),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage(global.userData['imageUrl']),
+                backgroundImage: global.Imagetest != ""
+                    ? MemoryImage(base64Decode(global.Imagetest))
+                    : AssetImage('assets/images/profile.png') as ImageProvider,
               ),
             ),
             ListTile(
@@ -262,8 +281,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => AboutUsPage()),
+                  MaterialPageRoute(builder: (context) => AboutUsPage()),
                 );
               },
             ),
@@ -292,9 +310,11 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage:
-                          NetworkImage('https://picsum.photos/200'),
-                      radius: 30.0,
+                      backgroundImage: global.Imagetest != ""
+                          ? MemoryImage(base64Decode(global.Imagetest))
+                          : AssetImage('assets/images/profile.png')
+                              as ImageProvider,
+                      radius: 30,
                     ),
                     SizedBox(
                       width: 10,

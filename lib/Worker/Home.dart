@@ -7,9 +7,16 @@ import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/user/MyOrders.dart';
 import 'package:head_gasket/user/Store.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../main.dart';
 
 class WorkerHome extends StatefulWidget {
   final userId;
@@ -29,12 +36,11 @@ class _WorkerHomeState extends State<WorkerHome> {
     OrdersPage(),
   ];
   Future<Map<String, dynamic>> fetchUserData(String userId) async {
-     print(userId);
+    print(userId);
     print(global.token);
 
-
     final response = await http.get(
-      Uri.parse(global.ip + '/userInfo/'+global.userEmail),
+      Uri.parse(global.ip + '/userInfo/' + global.userEmail),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${global.token}'
@@ -48,30 +54,11 @@ class _WorkerHomeState extends State<WorkerHome> {
       print(data);
       return data;
     } else {
-
-
       throw Exception('Failed to fetch user data');
     }
-    // return Future.delayed(Duration(seconds: 2), () {
-    //   return {
-    //     "firstName": "Amr",
-    //     "lastName": "abo Amr",
-    //     "major": "Plumber",
-    //     "rating": 4.5,
-    //     "imageUrl": "assets/images/key.jpg",
-    //     "phone": "555-1234",
-    //     "email": "johndoe@example.com",
-    //     "city": "Miami",
-    //     "street": "123 Main St",
-    //     "latitude": 25.7743,
-    //     "longitude": -80.1937,
-    //     "bio":
-    //         "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!",
-    //     "carBrand":"BMW",
-    //   };
-    // });
   }
 
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     global.userEmail = widget.userId;

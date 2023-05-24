@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:head_gasket/user/EditProfile.dart';
+import 'package:head_gasket/global.dart';
 
 import '../Widget/background.dart';
 
@@ -68,9 +71,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage:
-                            NetworkImage('https://picsum.photos/200'),
-                        radius: 40.0,
+                        backgroundImage: global.Imagetest != ""
+                            ? MemoryImage(base64Decode(global.Imagetest))
+                            : AssetImage('assets/images/profile.png')
+                                as ImageProvider,
+                        radius: 40,
                       ),
                       SizedBox(width: 16.0),
                       Column(
@@ -106,7 +111,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Text(
-                        'Location: '+ widget.userData['city']+','+ widget.userData['street'],
+                        'Location: ' +
+                            widget.userData['city'] +
+                            ',' +
+                            widget.userData['street'],
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 16.0,

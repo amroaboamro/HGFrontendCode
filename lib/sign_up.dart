@@ -138,11 +138,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
         return null;
       } else {
-
         return null;
       }
     } catch (e) {
-
       setState(() {
         _errorMessage = 'An error occurred while signing up';
       });
@@ -348,15 +346,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_validateFields() && !_isLoading) {
-                        _signUp().then((value) =>{
-                          if(value != null) {
-                            createAccount(firstName+lastName, email, '0597633980##Mm')
-                          }
-
-                          else {
-                            print('error')
-                          }
-                        });
+                        _signUp().then((value) => {
+                              if (value != null)
+                                {
+                                  createAccount(firstName + " " + lastName,
+                                      email, '0597633980##Mm')
+                                }
+                              else
+                                {print('error')}
+                            });
                       }
                     },
                     style: ElevatedButton.styleFrom(

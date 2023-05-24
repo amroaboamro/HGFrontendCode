@@ -4,7 +4,7 @@ class global {
   static bool payment = false;
   static var token = "";
   static var userEmail = '';
-  late  Order order;
+  late Order order;
 
   static Map<String, dynamic> userData = {
     "firstName": "---",
@@ -23,4 +23,5 @@ class global {
   };
   static var ip =
       "https://node-server-wuse.onrender.com"; //https://node-server-wuse.onrender.com //http://127.0.0.1:3000
+  static var Imagetest = "";
 }

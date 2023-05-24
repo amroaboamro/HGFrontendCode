@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'dart:convert';
 
+import 'Chat/ChatHomeScreen.dart';
+import 'Chat/MethodsChat.dart';
 import 'Classes/Worker.dart';
 
 class HomePage extends StatefulWidget {
@@ -155,12 +157,29 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<Map<String, dynamic>> fetchImage() async {
+    final response =
+        await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Failed to fetch image');
+    }
+  }
+
   late Future<List<Worker>> _workers;
   List<Worker>? workers;
   @override
   void initState() {
     super.initState();
     _workers = _fetchWorkersList();
+    fetchImage().then((value) {
+      setState(() {
+        global.Imagetest = value['image'];
+      });
+    });
   }
 
   @override
@@ -176,7 +195,11 @@ class _HomePageState extends State<HomePage> {
                 Icons.notifications,
               )),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        HomeScreen(global.userData['email'])));
+              },
               icon: Icon(
                 Icons.chat,
               )),
@@ -196,10 +219,11 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    // backgroundImage:"${global.userImage}"!=""?MemoryImage(base64Decode("${global.userImage}")):AssetImage('assets/images/profile.png') as ImageProvider,
-
-                    backgroundImage: NetworkImage('https://picsum.photos/200'),
-                    radius: size.height * .08,
+                    backgroundImage: global.Imagetest != ""
+                        ? MemoryImage(base64Decode(global.Imagetest))
+                        : AssetImage('assets/images/profile.png')
+                            as ImageProvider,
+                    radius: size.height * 0.08,
                   ),
                   Text(
                     widget.userData['email'],
@@ -214,8 +238,11 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Row(
                 children: [
-                  Icon(Icons.person),
-                  Text(" Profile"),
+                  Icon(Icons.person, color: Colors.white),
+                  Text(
+                    " Profile",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ],
               ),
               onTap: () {
@@ -246,8 +273,14 @@ class _HomePageState extends State<HomePage> {
             ListTile(
                 title: Row(
                   children: [
-                    Icon(Icons.vpn_key),
-                    Text(" Change Password"),
+                    Icon(
+                      Icons.vpn_key,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      " Change Password",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
                 onTap: () {
@@ -259,8 +292,11 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Row(
                 children: [
-                  Icon(Icons.car_repair),
-                  Text(" Join as Service Provider"),
+                  Icon(Icons.car_repair, color: Colors.white),
+                  Text(
+                    " Join as Service Provider",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ],
               ),
               onTap: () {
@@ -271,8 +307,11 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Row(
                 children: [
-                  Icon(Icons.contact_support),
-                  Text(" Contact us"),
+                  Icon(Icons.contact_support, color: Colors.white),
+                  Text(
+                    " Contact us",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ],
               ),
               onTap: () {},
@@ -280,14 +319,21 @@ class _HomePageState extends State<HomePage> {
             ListTile(
                 title: Row(
                   children: [
-                    Icon(Icons.logout),
-                    Text(" Logout"),
+                    Icon(Icons.logout, color: Colors.white),
+                    Text(
+                      " Logout",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  signOut(context).then((value) => {
+                        Navigator.pop(context),
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()))
+                      });
                 }),
           ],
         ),
@@ -302,9 +348,11 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage:
-                          NetworkImage('https://picsum.photos/200'),
-                      radius: 30.0,
+                      backgroundImage: global.Imagetest != ""
+                          ? MemoryImage(base64Decode(global.Imagetest))
+                          : AssetImage('assets/images/profile.png')
+                              as ImageProvider,
+                      radius: 30,
                     ),
                     SizedBox(
                       width: 10,

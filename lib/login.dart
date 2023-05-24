@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:head_gasket/ForgetPassword.dart';
 import 'package:head_gasket/Home.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -8,7 +10,9 @@ import 'package:head_gasket/sign_up.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'Chat/MethodsChat.dart';
 import 'Worker/Home.dart';
+import 'main.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -21,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
   String _password = '';
 
-  Future<void> _signIn() async {
+  Future _signIn() async {
     if (_email.isEmpty || _password.isEmpty) {
       setState(() {
         _errorMessage = 'Email and password are required fields';
@@ -67,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => WorkerHome(userId: _email)));
+        logIn(_email, '0597633980##Mm');
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';
@@ -94,6 +99,31 @@ class _LoginScreenState extends State<LoginScreen> {
         fontSize: 16.0,
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                color: Colors.pink,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ));
+      }
+    });
   }
 
   @override

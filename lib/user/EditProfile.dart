@@ -94,7 +94,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<Map<String, dynamic>> fetchImage() async {
-    final response = await http.get(Uri.parse(global.ip + "/getImage/"+global.userEmail));
+    final response =
+        await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
@@ -108,14 +109,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Uint8List webImage = Uint8List(8);
   String imageTest = "";
-  late File imagepicker = File('zz');
+  late File imagepicker;
 
   Future Upload(File imageFile) async {
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse(global.ip + '/addImage/'+global.userEmail);
+    var uri = Uri.parse(global.ip + '/addImage/' + global.userEmail);
     var request = new http.MultipartRequest("POST", uri);
 
     var multipartFile = new http.MultipartFile('upload', stream, length,
@@ -132,6 +133,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     request.files.add(multipartFile);
     var response = await request.send();
+    print('***********' + response.toString());
 
     if (response.statusCode == 200) {
       print("Image Uploaded");
@@ -140,50 +142,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     response.stream.transform(utf8.decoder).listen((value) {});
-
   }
 
   Future getImageFromGallery() async {
     //mobile
-    if (!kIsWeb) {
-      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      if (image != null) {
-       // var selected = File(image.path);
+    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-        setState(() {
-          imagepicker = File(image.path);
-          getFileImageString(imagepicker);
+    if (image != null) {
+      // var selected = File(image.path);
 
-          Upload(imagepicker);
-        });
-      } else {
-        print("No file selected");
-      }
-      // setState(() {
-      //   imagepicker = File(image!.path);
-      //   print('hhhttthhhh99999999999999999');
-      //   print(imagepicker);
+      setState(() {
+        imagepicker = File(image.path);
+        getFileImageString(imagepicker);
 
-      //   getFileImageString(imagepicker);
-
-      //   // Upload(imagepicker);
-      // });
+        Upload(imagepicker);
+      });
+    } else {
+      print("No file selected");
     }
+    // setState(() {
+    //   imagepicker = File(image!.path);
+    //   print('hhhttthhhh99999999999999999');
+    //   print(imagepicker);
+
+    //   getFileImageString(imagepicker);
+
+    //   // Upload(imagepicker);
+    // });
+
     // WEB
-    else if (kIsWeb) {
-      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        print(image);
-        var f = await image.readAsBytes();
-        setState(() {
-          webImage = f;
-          imagepicker = File(image.path);
-        });
-      } else {
-        print("No file selected");
-      }
-    }
   }
 
   Future<List<String>> fetchDropdownItems() async {
@@ -227,11 +215,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     _carModel = widget.userData['carModel'];
-    fetchImage().then((value){
-    setState(() {
-      imageTest=value['image'];
-
-    });
+    fetchImage().then((value) {
+      setState(() {
+        imageTest = value['image'];
+      });
     });
   }
 
@@ -273,28 +260,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-                    CircleAvatar(
-                      backgroundImage: imagepicker.path == 'zz'
-                          ? AssetImage('assets/images/profile.png')
-                          : (kIsWeb)
-                              ? MemoryImage(webImage.buffer.asUint8List())
-                              : MemoryImage(base64Decode(imageTest))
-                                  as ImageProvider,
-                      radius: 100,
-                    ),
                     // imagepicker.path == 'zz' //it means no image selected
                     //     ? Image.asset('assets/images/profile.png')
                     //     : (kIsWeb)
                     //         ? Image.memory(webImage.buffer.asUint8List())
                     //         : Image.file(imagepicker),
-                    // CircleAvatar(
-                    //   backgroundImage: imageTest != ""
-                    //       ? MemoryImage(base64Decode(imageTest))
-                    //       : AssetImage('assets/images/profile.png')
-                    //           as ImageProvider,
-                    //   radius: 100,
-                    // ),
+                    CircleAvatar(
+                      backgroundImage: imageTest != ""
+                          ? MemoryImage(base64Decode(imageTest))
+                          : AssetImage('assets/images/profile.png')
+                              as ImageProvider,
+                      radius: 100,
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.edit,
@@ -334,7 +311,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _lastName = value;
                   },
                 ),
-
                 SizedBox(height: 16.0),
                 FutureBuilder<List<String>>(
                   future: _isFetchCalled ? null : fetchDropdownItems(),
