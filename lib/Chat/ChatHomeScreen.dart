@@ -1,3 +1,5 @@
+import 'package:head_gasket/Widget/background.dart';
+
 import './ChatRoom.dart';
 import './FadeAnimation.dart';
 import './MethodsChat.dart';
@@ -113,7 +115,7 @@ class _ChatState extends State<HomeScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 15, 105, 202),
+          backgroundColor: mainColor,
           shadowColor: Color(0xff81B2F5),
           title: const Center(
               child: Text('Chats',

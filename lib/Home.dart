@@ -1,5 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
@@ -9,6 +11,8 @@ import 'package:head_gasket/user/Store.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'main.dart';
 
 class Home extends StatefulWidget {
   final userId;
@@ -20,6 +24,67 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future checkIfNotify() async{
+
+    var res= await http.get(Uri.parse(global.ip+"/users/notify"),headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+
+    if(true) {
+      //  Map<String, dynamic> DB = jsonDecode(res.body);
+      if (true) {
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          RemoteNotification? notification = message.notification;
+          AndroidNotification? android = message.notification?.android;
+          if (notification != null && android != null) {
+            flutterLocalNotificationsPlugin.show(
+                notification.hashCode,
+                notification.title,
+                notification.body,
+                NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    color: Colors.pink,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher',
+                  ),
+                ));
+          }
+        });
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          print('A new onMessageOpenedApp event was published!');
+          RemoteNotification? notification = message.notification;
+          AndroidNotification? android = message.notification?.android;
+          if (notification != null && android != null) {
+            showDialog(
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: Text("${notification.title}"),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [Text("${notification.body}")],
+                      ),
+                    ),
+                  );
+                });
+          }
+        });
+        flutterLocalNotificationsPlugin.show(
+            0,
+            "Imprtant Meassge!",
+             "marked your class as completed",
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    importance: Importance.high,
+                    color: Colors.blue,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher')));
+      }
+    }
+  }
   var _userData;
   int _page = 0;
   final List<Widget> _children = [
@@ -83,6 +148,8 @@ class _HomeState extends State<Home> {
     }).catchError((error) {
       print(error);
     });
+    checkIfNotify();
+
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -47,7 +49,12 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                       bottomLeft: Radius.circular(40),
                       bottomRight: Radius.circular(40),
                     ),
-                    child: Image.network(
+                    child: widget.product.imageUrl != ""
+                        ? Image.memory(
+                      base64Decode(widget.product.imageUrl),
+                      fit: BoxFit.cover,
+                    )
+                        :  Image.asset(
                       widget.product.imageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>

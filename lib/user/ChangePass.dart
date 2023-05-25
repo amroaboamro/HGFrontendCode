@@ -32,7 +32,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   Future<void> changePassword(String currentPassword, String newPassword,
       String confirmPassword) async {
-    final url = Uri.parse(global.ip + '/changePassword/mostafa234567@com');
+    final url = Uri.parse(global.ip + '/changePassword/'+global.userEmail);
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${global.token}'

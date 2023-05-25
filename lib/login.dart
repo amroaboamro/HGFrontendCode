@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:head_gasket/ForgetPassword.dart';
 import 'package:head_gasket/Home.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -12,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'Chat/MethodsChat.dart';
 import 'Worker/Home.dart';
-import 'main.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -105,25 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                color: Colors.pink,
-                playSound: true,
-                icon: '@mipmap/ic_launcher',
-              ),
-            ));
-      }
-    });
+
   }
 
   @override
@@ -159,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   onChanged: (value) {
-                    _email = 'kamal@gmail.com'; //kamal@gmail.com
+                    _email = value; //kamal@gmail.com
                   },
                 ),
               ),
@@ -174,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.vpn_key_outlined),
                   ),
                   onChanged: (value) {
-                    _password = '123'; //123
+                    _password = value; //123
                   },
                 ),
               ),

@@ -44,89 +44,16 @@ class _ServiceScreenState extends State<ServiceScreen> {
     } else {
       throw Exception('Failed to load workers');
     }
-//     return Future.delayed(Duration(seconds: 1), () {
-//       final data = jsonDecode('''[
-//   {
-//     "firstName": "John",
-//     "lastName": "Doe",
 
-//     "major": "Plumber",
-//     "rating": 4.5,
-//     "imageUrl": "assets/images/key.jpg",
-//     "phone": "555-1234",
-//     "email": "johndoe@example.com",
-//     "city": "Miami",
-//     "street": "123 Main St",
-//     "latitude": 25.7743,
-//     "longitude": -80.1937,
-//     "bio": "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!"
-//   },
-//   {
-//     "firstName": "Jane",
-//     "lastName": "Smith",
-//     "major": "Electrician",
-//     "rating": 4.8,
-//     "imageUrl": "assets/images/key.jpg",
-//     "phone": "555-5678",
-//     "email": "janesmith@example.com",
-//     "city": "Miami",
-//     "street": "456 Oak Ave",
-//     "latitude": 25.7821,
-//     "longitude": -80.2395,
-//     "bio": "Need an electrician? Look no further! I'm here to help with all your electrical needs."
-//   },
-//   {
-//     "firstName": "Mark",
-//     "lastName": "Johnson",
-//     "major": "Carpenter",
-//     "rating": 4.2,
-//     "imageUrl": "assets/images/key.jpgg",
-//     "phone": "555-9012",
-//     "email": "markjohnson@example.com",
-//     "city": "Miami",
-//     "street": "789 Elm St",
-//     "latitude": 25.7617,
-//     "longitude": -80.1918,
-//     "bio": "I'm a skilled carpenter with a passion for building things. Let me help bring your vision to life!"
-//   },
-//   {
-//     "firstName": "Sarah",
-//     "lastName": "Lee",
-//     "major": "Handyman",
-//     "rating": 4.1,
-//     "imageUrl": "assets/images/key.jpg",
-//     "phone": "555-3456",
-//     "email": "sarahlee@example.com",
-//     "city": "Miami",
-//     "street": "321 Pine St",
-//     "latitude": 25.7751,
-//     "longitude": -80.1937,
-//     "bio": "Need help with odd jobs around the house? I'm your gal! From painting to plumbing, I can do it all."
-//   },
-//   {
-//     "firstName": "David",
-//     "lastName": "Brown",
-//     "major": "Gardener",
-//     "rating": 4.6,
-//     "imageUrl": "assets/images/key.jpg",
-//     "phone": "555-6789",
-//     "email": "davidbrown@example.com",
-//     "city": "Miami",
-//     "street": "543 Maple Ave",
-//     "latitude": 25.7528,
-//     "longitude": -80.2229,
-//     "bio": "Love your lawn and garden again! I'll make sure your yard looks beautiful year-round."
-//   }
-// ]
-
-// ''') as List;
-//       List<Worker> workers =
-//           data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-//       workers.sort((a, b) => a
-//           .distanceTo(userLat, userLng)
-//           .compareTo(b.distanceTo(userLat, userLng)));
-//       return workers;
-//     });
+  }
+  Future<dynamic> fetchImageForWorker(Worker worker) async {
+    final response = await http.get(Uri.parse(global.ip + '/getImage/' + worker.email));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to fetch image for worker');
+    }
   }
 
   @override
@@ -326,17 +253,14 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             onTap: () {
                               Navigator.of(context).push(
                                 PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
+                                  pageBuilder: (context, animation, secondaryAnimation) =>
                                       WorkerProfilePage(worker: worker),
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     var begin = Offset(0.0, 1.0);
                                     var end = Offset.zero;
                                     var curve = Curves.ease;
 
-                                    var tween = Tween(begin: begin, end: end)
-                                        .chain(CurveTween(curve: curve));
+                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
                                     return SlideTransition(
                                       position: animation.drive(tween),
@@ -354,23 +278,33 @@ class _ServiceScreenState extends State<ServiceScreen> {
                               child: Container(
                                 padding: EdgeInsets.all(15.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
-                                    CircleAvatar(
-                                      backgroundImage:
-                                          AssetImage('assets/images/key.jpg'),
-                                      radius: 50.0,
+                                    FutureBuilder<dynamic>(
+                                      future: fetchImageForWorker(worker),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        } else if (snapshot.hasError) {
+                                          return Icon(Icons.error);
+                                        } else {
+                                          String imageUrl = snapshot.data['image'] ?? '';
+
+                                          return CircleAvatar(
+                                            backgroundImage:
+                                                 MemoryImage(base64Decode(imageUrl)),
+
+                                            radius: 50.0,
+                                          );
+                                        }
+                                      },
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.0),
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               worker.name,
@@ -392,10 +326,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
                                               rating: worker.rating ?? 0.0,
                                               size: 20,
                                               filledIconData: Icons.star,
-                                              halfFilledIconData:
-                                                  Icons.star_half,
-                                              defaultIconData:
-                                                  Icons.star_border,
+                                              halfFilledIconData: Icons.star_half,
+                                              defaultIconData: Icons.star_border,
                                               starCount: 5,
                                               allowHalfRating: false,
                                               color: Colors.yellow,
@@ -414,6 +346,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       );
                     },
                   ),
+
                 );
               }
             },

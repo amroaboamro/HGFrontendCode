@@ -37,6 +37,7 @@ class _StorePageState extends State<StorePage> {
   String? _selectedColor;
 
   List<Product> _products = [];
+
   @override
   void initState() {
     super.initState();
@@ -52,61 +53,6 @@ class _StorePageState extends State<StorePage> {
     } else {
       throw Exception('Failed to load products');
     }
-//     return Future.delayed(Duration(seconds: 1), () {
-//       List<dynamic> data = json.decode('''
-//      [
-//   {
-//     "id": 1,
-//     "brand": "WeatherTech",
-//     "name": "Floor Mats",
-//     "type": "Black",
-//     "price": 99,
-//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-//     "quantity": 10
-//   },
-//   {
-//     "id": 2,
-//     "brand": "Bosch",
-//     "name": "Icon Wiper Blades",
-//     "type": "Black",
-//     "price": 25,
-//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-//     "quantity": 15
-//   },
-//   {
-//     "id": 3,
-//     "brand": "K&N",
-//     "name": "Air Filter",
-//     "type": "Red",
-//     "price": 50,
-//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-//     "quantity": 20
-//   },
-//   {
-//     "id": 4,
-//     "brand": "Mobil 1",
-//     "name": "Synthetic Motor Oil",
-//     "type": "Gold",
-//     "price": 40,
-//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-//     "quantity": 25
-//   },
-//   {
-//     "id": 5,
-//     "brand": "Meguiar's",
-//     "name": "Car Wash and Wax Kit",
-//     "type": "Blue",
-//     "price": 30,
-//     "imageUrl": "https://m.media-amazon.com/images/I/613XKKGaKXL._SL1050_.jpg",
-//     "quantity": 30
-//   }
-// ]
-
-//       ''');
-//       List<Product> products =
-//           data.map((json) => Product.fromJson(json)).toList();
-//       return products;
-//     });
   }
 
   String _searchQuery = '';
@@ -146,6 +92,17 @@ class _StorePageState extends State<StorePage> {
     return filteredProducts;
   }
 
+  Future<dynamic> fetchImageForProduct(Product product) async {
+    final response = await http.get(Uri.parse(global.ip + '/getProductImage/' + product.id));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to fetch image for product');
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -157,6 +114,8 @@ class _StorePageState extends State<StorePage> {
         title: Text('Store'),
         centerTitle: true,
         backgroundColor: mainColor,
+        automaticallyImplyLeading: false,
+
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -262,88 +221,109 @@ class _StorePageState extends State<StorePage> {
                 ),
               ),
             FutureBuilder<List<Product>>(
-                future: _filteredProducts,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    List<Product> products = snapshot.data!;
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          childAspectRatio: 0.75,
-                        ),
-                        itemCount: products?.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CarDetailsPage(product: products[index]),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: Image.network(
-                                      products[index].imageUrl,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Icon(Icons.error),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          products[index].brand,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          products[index].name,
-                                          style: TextStyle(
-                                            color: Colors.grey[500],
-                                          ),
-                                        ),
-                                        Text(
-                                          '\$${products[index].price.toString()}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              color: Colors.white,
-                            ),
-                          );
-                        },
+              future: _filteredProducts,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<Product> products = snapshot.data!;
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: GridView.builder(
+                      padding: EdgeInsets.all(16),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: 0.75,
                       ),
-                    );
-                  }
-                }),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        Product product = products[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CarDetailsPage(product: product),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                FutureBuilder<dynamic>(
+                                  future: fetchImageForProduct(product),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Icon(Icons.error);
+                                    } else {
+                                      String imageUrl =
+                                          snapshot.data['image'] ?? '';
+                                      product.imageUrl=imageUrl;
+
+                                      return Container(
+                                        width: 200,
+                                        height: 170.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          image: DecorationImage(
+                                            image:MemoryImage(base64Decode(imageUrl)),
+
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product.brand,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        product.name,
+                                        style: TextStyle(
+                                          color: Colors.grey[500],
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${product.price.toString()}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

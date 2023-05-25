@@ -234,7 +234,6 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
   String? _phone;
   String? _aboutMe;
 
-  bool _isFetchCalled = false;
   @override
   void initState() {
     super.initState();
@@ -256,6 +255,12 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
         _carBrands = brands;
       });
     });
+    fetchDropdownItems().then((value) {
+      setState(() {
+        _dropdownItems = value;
+      });
+    });
+
   }
 
   @override
@@ -300,26 +305,12 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundImage: imagepicker.path == 'zz'
-                          ? AssetImage('assets/images/profile.png')
-                          : (kIsWeb)
-                              ? MemoryImage(webImage.buffer.asUint8List())
-                              : MemoryImage(base64Decode(imageTest))
-                                  as ImageProvider,
+                      backgroundImage: global.Imagetest != ""
+                          ? MemoryImage(base64Decode(global.Imagetest))
+                          : AssetImage('assets/images/profile.png')
+                      as ImageProvider,
                       radius: 100,
                     ),
-                    // imagepicker.path == 'zz' //it means no image selected
-                    //     ? Image.asset('assets/images/profile.png')
-                    //     : (kIsWeb)
-                    //         ? Image.memory(webImage.buffer.asUint8List())
-                    //         : Image.file(imagepicker),
-                    // CircleAvatar(
-                    //   backgroundImage: imageTest != ""
-                    //       ? MemoryImage(base64Decode(imageTest))
-                    //       : AssetImage('assets/images/profile.png')
-                    //           as ImageProvider,
-                    //   radius: 100,
-                    // ),
                     IconButton(
                       icon: Icon(
                         Icons.edit,
@@ -398,19 +389,7 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                   },
                 ),
                 SizedBox(height: 16.0),
-                FutureBuilder<List<String>>(
-                  future: _isFetchCalled ? null : fetchDropdownItems(),
-                  builder: (context, snapshot) {
-                    if (!_isFetchCalled) {
-                      _isFetchCalled = true;
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      _dropdownItems = snapshot.data!;
-                      return Container(
+                Container(
                         alignment: Alignment.center,
                         margin: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.1,
@@ -437,10 +416,8 @@ class _EditWorkerProfileState extends State<EditWorkerProfile> {
                             }).toList(),
                           ),
                         ),
-                      );
-                    }
-                  },
-                ),
+                      ),
+
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(

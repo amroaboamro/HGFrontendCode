@@ -60,9 +60,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return false;
     }
 
-    if (password == null || password!.isEmpty) {
+    if (password == null || password!.isEmpty||password.length<8) {
       Fluttertoast.showToast(
-        msg: 'Please enter your password',
+        msg: 'Please enter at least 8 digits  password',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
@@ -199,7 +199,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+fetchDropdownItems().then((value) {
+  setState(() {
+    _dropdownItems=value;
 
+  });
+});
     //  About = GetAbout();
   }
 
@@ -297,19 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
-                FutureBuilder<List<String>>(
-                  future: _isFetchCalled ? null : fetchDropdownItems(),
-                  builder: (context, snapshot) {
-                    if (!_isFetchCalled) {
-                      _isFetchCalled = true;
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      _dropdownItems = snapshot.data!;
-                      return Container(
+                Container(
                         alignment: Alignment.center,
                         margin: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.1,
@@ -336,10 +329,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }).toList(),
                           ),
                         ),
-                      );
-                    }
-                  },
                 ),
+
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(0, 40, 0, 10),

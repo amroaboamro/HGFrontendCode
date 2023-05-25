@@ -4,7 +4,7 @@ class Product {
   final String name;
   final String type;
   final int price;
-  final String imageUrl;
+  late String imageUrl;
   int quantity;
 
   Product({required this.id, required this.brand, required this.name, required this.type, required this.price, required this.imageUrl, this.quantity = 1,});

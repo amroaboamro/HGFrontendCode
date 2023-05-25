@@ -40,121 +40,32 @@ class _HomePageState extends State<HomePage> {
       throw Exception('Failed to fetch user data');
     }
 
-    //[
-
-    //]
-
-//     return Future.delayed(Duration(seconds: 3), () {
-//       return json.decode('''
-// {
-//   "0": {
-//     "name": "Battery",
-//     "img": "assets/images/battery.jpg",
-//     "type": "Emergency"
-
-//   },
-//   "1": {
-//     "name": "Key",
-//     "img": "assets/images/key.jpg",
-//     "type": "care"
-//   }
-// }
-// ''');
-//     });
   }
 
   Future<List<Worker>> _fetchWorkersList() async {
     final response = await http.get(Uri.parse(global.ip + '/topWorkers'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List;
-      List<Worker> workers =
-          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+      List<Worker> workers = data.map((workerJson) {
+        Worker worker = Worker.fromJson(workerJson);
+
+        return worker;
+      }).toList();
+
       return workers;
     } else {
       throw Exception('Failed to load workers');
     }
-    return Future.delayed(Duration(seconds: 1), () {
-      final data = jsonDecode('''[
-  {
-    "firstName": "John",
-    "lastName": "Doe",
 
-    "major": "Plumber",
-    "rating": 4.5,
-    "imageUrl": "assets/images/key.jpg",
-    "phone": "555-1234",
-    "email": "johndoe@example.com",
-    "city": "Miami",
-    "street": "123 Main St",
-    "latitude": 25.7743,
-    "longitude": -80.1937,
-    "bio": "I'm a plumber with over 10 years of experience. Call me for all your plumbing needs!"
-  },
-  {
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "major": "Electrician",
-    "rating": 4.8,
-    "imageUrl": "assets/images/key.jpg",
-    "phone": "555-5678",
-    "email": "janesmith@example.com",
-    "city": "Miami",
-    "street": "456 Oak Ave",
-    "latitude": 25.7821,
-    "longitude": -80.2395,
-    "bio": "Need an electrician? Look no further! I'm here to help with all your electrical needs."
-  },
-  {
-    "firstName": "Mark",
-    "lastName": "Johnson",
-    "major": "Carpenter",
-    "rating": 4.2,
-    "imageUrl": "assets/images/key.jpgg",
-    "phone": "555-9012",
-    "email": "markjohnson@example.com",
-    "city": "Miami",
-    "street": "789 Elm St",
-    "latitude": 25.7617,
-    "longitude": -80.1918,
-    "bio": "I'm a skilled carpenter with a passion for building things. Let me help bring your vision to life!"
-  },
-  {
-    "firstName": "Sarah",
-    "lastName": "Lee",
-    "major": "Handyman",
-    "rating": 4.1,
-    "imageUrl": "assets/images/key.jpg",
-    "phone": "555-3456",
-    "email": "sarahlee@example.com",
-    "city": "Miami",
-    "street": "321 Pine St",
-    "latitude": 25.7751,
-    "longitude": -80.1937,
-    "bio": "Need help with odd jobs around the house? I'm your gal! From painting to plumbing, I can do it all."
-  },
-  {
-    "firstName": "David",
-    "lastName": "Brown",
-    "major": "Gardener",
-    "rating": 4.6,
-    "imageUrl": "assets/images/key.jpg",
-    "phone": "555-6789",
-    "email": "davidbrown@example.com",
-    "city": "Miami",
-    "street": "543 Maple Ave",
-    "latitude": 25.7528,
-    "longitude": -80.2229,
-    "bio": "Love your lawn and garden again! I'll make sure your yard looks beautiful year-round."
   }
-]
-
-
-''') as List;
-      List<Worker> workers =
-          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-
-      return workers;
-    });
+  Future<dynamic> fetchImageForWorker(Worker worker) async {
+    final response = await http.get(Uri.parse(global.ip + '/getImage/' + worker.email));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to fetch image for worker');
+    }
   }
 
   Future<Map<String, dynamic>> fetchImage() async {
@@ -180,6 +91,7 @@ class _HomePageState extends State<HomePage> {
         global.Imagetest = value['image'];
       });
     });
+
   }
 
   @override
@@ -482,7 +394,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Stack(
                                     children: <Widget>[
                                       Hero(
-                                        tag: 'destination.imageUrl',
+                                        tag: services[index]['imgUrl'],
                                         child: CircleAvatar(
                                           radius: 50,
                                           backgroundImage: AssetImage(services[
@@ -490,40 +402,7 @@ class _HomePageState extends State<HomePage> {
                                               'imgUrl']), //services[index]['serviceImage']
                                         ),
                                       ),
-                                      // Positioned(
-                                      //   left: 10.0,
-                                      //   bottom: 10.0,
-                                      //   child: Column(
-                                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                                      //     children: <Widget>[
-                                      //       // Text(
-                                      //       //   'destination.city',
-                                      //       //   style: TextStyle(
-                                      //       //     color: Colors.black,
-                                      //       //     fontSize: 18.0,
-                                      //       //     fontWeight: FontWeight.w600,
-                                      //       //     letterSpacing: 1.2,
-                                      //       //   ),
-                                      //       // ),
-                                      //       // Row(
-                                      //       //   children: <Widget>[
-                                      //       //     Icon(
-                                      //       //       Icons.location_on_outlined,
-                                      //       //       size: 10.0,
-                                      //       //       color: Colors.black,
-                                      //       //     ),
-                                      //       //     SizedBox(width: 5.0),
-                                      //       //     Text(
-                                      //       //       'destination.country',
-                                      //       //       style: TextStyle(
-                                      //       //         color: Colors.black,
-                                      //       //       ),
-                                      //       //     ),
-                                      //       //   ],
-                                      //       // ),
-                                      //     ],
-                                      //   ),
-                                      // ),
+
                                     ],
                                   ),
                                 )
@@ -566,132 +445,145 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 15),
-            FutureBuilder<List<Worker>>(
-                future: _workers,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    workers = snapshot.data!;
-                  }
-                  return Container(
-                    height: size.height * 0.4,
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
-                      itemCount: workers?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Worker worker = workers![index];
-                        return Stack(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        WorkerProfilePage(worker: worker),
-                                    transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) {
-                                      var begin = Offset(0.0, 1.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.ease;
+      FutureBuilder<List<Worker>>(
+        future: _fetchWorkersList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (snapshot.hasData) {
+            List<Worker> workers = snapshot.data!;
 
-                                      var tween = Tween(begin: begin, end: end)
-                                          .chain(CurveTween(curve: curve));
+            return Container(
+              height: size.height * 0.4,
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                itemCount: workers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Worker worker = workers[index];
 
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Theme(
-                                data: ThemeData(
-                                  cardTheme: CardTheme(
-                                    color: Colors.blueGrey.shade50,
-                                    elevation: 4.0, // Set the card elevation
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                  ),
-                                ),
-                                child: Card(
-                                  elevation: 4.0,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: AssetImage(
-                                              'assets/images/key.jpg'),
-                                          radius: 50.0,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) =>
+                              WorkerProfilePage(worker: worker),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            var begin = Offset(0.0, 1.0);
+                            var end = Offset.zero;
+                            var curve = Curves.ease;
+
+                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Theme(
+                      data: ThemeData(
+                        cardTheme: CardTheme(
+                          color: Colors.blueGrey.shade50,
+                          elevation: 4.0, // Set the card elevation
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                      ),
+                      child: Card(
+                        elevation: 4.0,
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              FutureBuilder<dynamic>(
+                                future: fetchImageForWorker(worker),
+                                builder: (context, imageSnapshot) {
+                                  if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (imageSnapshot.hasError) {
+                                    return CircleAvatar(
+                                      backgroundImage: AssetImage('assets/images/profile.png'),
+                                      radius: 50,
+                                    );
+                                  } else if (imageSnapshot.hasData) {
+                                    dynamic imageData = imageSnapshot.data;
+                                    String imageUrl = imageData['image'];
+
+                                    return CircleAvatar(
+                                      backgroundImage:
+                                           MemoryImage(base64Decode(imageUrl)),
+
+                                      radius: 50,
+                                    );
+                                  }
+
+                                  return SizedBox();
+                                },
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        worker.name,
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  worker.name,
-                                                  style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 5.0),
-                                                Text(
-                                                  worker.major,
-                                                  style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10.0),
-                                                SmoothStarRating(
-                                                  rating: worker.rating ?? 0.0,
-                                                  size: 20,
-                                                  filledIconData: Icons.star,
-                                                  halfFilledIconData:
-                                                      Icons.star_half,
-                                                  defaultIconData:
-                                                      Icons.star_border,
-                                                  starCount: 5,
-                                                  allowHalfRating: false,
-                                                  color: Colors.yellow,
-                                                  borderColor: Colors.grey,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text(
+                                        worker.major,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.grey[600],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      SmoothStarRating(
+                                        rating: worker.rating ?? 0.0,
+                                        size: 20,
+                                        filledIconData: Icons.star,
+                                        halfFilledIconData: Icons.star_half,
+                                        defaultIconData: Icons.star_border,
+                                        starCount: 5,
+                                        allowHalfRating: false,
+                                        color: Colors.yellow,
+                                        borderColor: Colors.grey,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   );
-                }),
-          ],
+                },
+              ),
+            );
+          }
+
+          return SizedBox();
+        },
+      ),
+
+      ],
         ),
       ),
     );

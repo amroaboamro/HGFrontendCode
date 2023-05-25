@@ -84,6 +84,8 @@ class _ServicesState extends State<Services> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text('Services'),

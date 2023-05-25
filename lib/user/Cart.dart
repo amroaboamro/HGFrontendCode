@@ -1,5 +1,7 @@
 //import 'dart:ffi';
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/user/Checkout.dart';
@@ -25,10 +27,11 @@ class _CartPageState extends State<CartPage> {
 
   void _initCartManager() async {
     _cartManager = CartManager();
+
+    await _cartManager.loadFromSharedPreferences();
     setState(() {
       _isLoading = false;
     });
-    await _cartManager.loadFromSharedPreferences();
 
   }
 
@@ -50,6 +53,7 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         title: Text('My Cart'),
         backgroundColor: mainColor,
+
       ),
       body: _isLoading
           ? Center(
@@ -66,7 +70,17 @@ class _CartPageState extends State<CartPage> {
           return Card(
             elevation: 2.0,
             child: ListTile(
-              leading: Image.network(item.product.imageUrl),
+              leading:  item.product.imageUrl != ""
+                  ? Image.memory(
+                base64Decode(item.product.imageUrl),
+                fit: BoxFit.cover,
+              )
+                  :  Image.asset(
+                item.product.imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Icon(Icons.error),
+              ),
               title: Text(
                 item.product.description,
                 style: TextStyle(

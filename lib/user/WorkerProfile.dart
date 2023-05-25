@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/RatingDialog.dart';
@@ -22,8 +24,13 @@ class WorkerProfilePage extends StatelessWidget {
               background: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image.asset(
-                      worker.imageUrl,
+                    child: worker.imageUrl != ""
+                        ? Image.memory(
+                      base64Decode(worker.imageUrl),
+                      fit: BoxFit.cover,
+                    )
+                        : Image.asset(
+                      'assets/images/profile.png',
                       fit: BoxFit.cover,
                     ),
                   ),
