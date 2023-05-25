@@ -28,8 +28,7 @@ class _CarPageState extends State<CarPage> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        carModels= List<String>.from(data);
-
+        carModels = List<String>.from(data);
       });
     } else {
       throw Exception('Failed to fetch dropdown items');
@@ -40,19 +39,16 @@ class _CarPageState extends State<CarPage> {
       final data = json.decode(response1.body);
       print(response1.body);
       setState(() {
-       carBrands  =  List<String>.from(data);
+        carBrands = List<String>.from(data);
       });
-
     } else {
       throw Exception('Failed to fetch car brands');
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -82,15 +78,12 @@ class _CarPageState extends State<CarPage> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    
-
                     onPressed: () {
                       _showCarModelDialog();
                     },
                     icon: Icon(Icons.add),
                     label: Text('Add Car Model'),
                   ),
-
                 ),
                 SizedBox(width: 16.0),
                 Expanded(
@@ -113,18 +106,17 @@ class _CarPageState extends State<CarPage> {
   Widget _buildCarBrandsTable() {
     return SingleChildScrollView(
       child: DataTable(
-
         columns: [
           DataColumn(label: Text('Brand')),
         ],
         rows: carBrands
             .map(
               (brand) => DataRow(
-            cells: [
-              DataCell(Text(brand)),
-            ],
-          ),
-        )
+                cells: [
+                  DataCell(Text(brand)),
+                ],
+              ),
+            )
             .toList(),
       ),
     );
@@ -139,11 +131,11 @@ class _CarPageState extends State<CarPage> {
         rows: carModels
             .map(
               (model) => DataRow(
-            cells: [
-              DataCell(Text(model)),
-            ],
-          ),
-        )
+                cells: [
+                  DataCell(Text(model)),
+                ],
+              ),
+            )
             .toList(),
       ),
     );
@@ -171,7 +163,6 @@ class _CarPageState extends State<CarPage> {
               onPressed: () {
                 setState(() {
                   carModels.add(_carModelController.text);
-                  _carModelController.clear();
                 });
                 _addCarModelToApi();
                 Navigator.of(context).pop();
@@ -205,7 +196,6 @@ class _CarPageState extends State<CarPage> {
               onPressed: () {
                 setState(() {
                   carBrands.add(_carBrandController.text);
-                  _carBrandController.clear();
                 });
                 _addCarBrandToApi();
                 Navigator.of(context).pop();
@@ -219,8 +209,9 @@ class _CarPageState extends State<CarPage> {
 
   Future<void> _addCarModelToApi() async {
     final carModel = _carModelController.text;
+    _carModelController.clear();
 
-    final url = 'https://your-api-url.com/car-models';
+    final url = global.ip + '/addCarModel';
     final body = {'carModel': carModel};
     final response = await http.post(
       Uri.parse(url),
@@ -234,7 +225,6 @@ class _CarPageState extends State<CarPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
-
     } else {
       Fluttertoast.showToast(
         msg: 'Failed to add car model',
@@ -247,9 +237,10 @@ class _CarPageState extends State<CarPage> {
 
   Future<void> _addCarBrandToApi() async {
     final carBrand = _carBrandController.text;
+    _carBrandController.clear();
 
-    final url = 'https://your-api-url.com/car-brands';
-    final body = {'brand': carBrand};
+    final url = global.ip + '/addCarMaker';
+    final body = {'carMaker': carBrand};
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},

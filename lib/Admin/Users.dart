@@ -134,11 +134,11 @@ class _UsersPageState extends State<UsersPage> {
   Future<void> deleteUser(String userId) async {
     try {
       final response =
-          await http.delete(Uri.parse('your_api_url/users/$userId'));
+          await http.delete(Uri.parse(global.ip + '/removeUser/$userId'));
       if (response.statusCode == 200) {
         Navigator.of(context).pop();
         setState(() {
-          _users.removeWhere((user) => user.id == userId);
+          _users.removeWhere((user) => user.email == userId);
         });
       } else {
         print('Error deleting user: ${response.statusCode}');
@@ -166,7 +166,7 @@ class _UsersPageState extends State<UsersPage> {
             TextButton(
               child: Text('Delete'),
               onPressed: () {
-                deleteUser(user.id);
+                deleteUser(user.email);
               },
             ),
           ],

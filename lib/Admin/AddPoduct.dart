@@ -166,13 +166,14 @@ class _AddProductPageState extends State<AddProductPage> {
 
     final Map<String, dynamic> productData = {
       'brand': brand,
-      'color': _selecteType,
+      'type': _selecteType,
       'name': name,
       'price': price,
       'quantity': quantity,
     };
 
-    final response = await http.post(Uri.parse(''), body: productData);
+    final response = await http.post(Uri.parse(global.ip + '/addProduct'),
+        body: productData);
 
     if (response.statusCode == 200) {
       showDialog(
