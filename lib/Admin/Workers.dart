@@ -156,7 +156,7 @@ class _WorkersPageState extends State<WorkersPage> {
   Future<void> deleteWorker(String email) async {
     try {
       final response =
-          await http.delete(Uri.parse('your_api_url/users/$email'));
+          await http.delete(Uri.parse(global.ip + '/removeUser/$email'));
       if (response.statusCode == 200) {
         Navigator.of(context).pop();
         setState(() {

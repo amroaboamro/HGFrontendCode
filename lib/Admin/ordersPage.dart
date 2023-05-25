@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../Classes/Order.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:head_gasket/global.dart';
 
 class OrderPage extends StatefulWidget {
   @override
@@ -10,89 +11,98 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  List<Order> orders = [
-
-  ];
+  List<Order> orders = [];
   List<Order> filteredOrders = [];
-  List<String> statuses = ['Requested', 'Processing', 'Waiting', 'Completed', 'Canceled', 'All'];
+  List<String> statuses = [
+    'Requested',
+    'Processing',
+    'Waiting',
+    'Completed',
+    'Canceled',
+    'All'
+  ];
   String selectedStatus = 'All';
   Future<void> fetchOrders() async {
-    // final response = await http.get(Uri.parse('YOUR_API_ENDPOINT'));
-    // if (response.statusCode == 200) {
-    //   final jsonData = json.decode(response.body);
-    //   List<Order> fetchedOrders = [];
-    //   for (var orderData in jsonData) {
-    //     Order order = Order.fromJson(orderData);
-    //     fetchedOrders.add(order);
-    //   }
-    //   setState(() {
-    //     orders = fetchedOrders;
-    //     filterOrdersByStatus();
-    //   });
-    // } else {
-    // }
-         Future.delayed(Duration(seconds: 1),(){
-      final jsonList = jsonDecode('''[
-  {
-    "_id": "1",
-    "serviceName": "Service 1",
-    "price": 29.99,
-    "note": "Order note 1",
-    "status": "Completed",
-    "date": "2023-05-20T12:30:00",
-    "userName": "John Doe",
-    "workerName": "Jane Smith",
-    "street": "123 Main Street",
-    "city": "New York",
-    "carModel": "Toyota Camry",
-    "delivery": "Express",
-    "payment": "Credit Card"
-  },
-  {
-    "_id": "2",
-    "serviceName": "Service 2",
-    "price": 49.99,
-    "note": "Order note 2",
-    "status": "Requested",
-    "date": "2023-05-21T09:45:00",
-    "userName": "Alice Johnson",
-    "workerName": "Mike Anderson",
-    "street": "456 Elm Street",
-    "city": "Los Angeles",
-    "carModel": "Honda Civic",
-    "delivery": "Standard",
-    "payment": "Cash"
-  }
-  
-]''') as List<dynamic>;
+    final response = await http.get(Uri.parse(global.ip + '/allOrders'));
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
       List<Order> fetchedOrders = [];
-             for (var orderData in jsonList) {
-               Order order = Order.fromJson(orderData);
-               fetchedOrders.add(order);
-             }
-             setState(() {
-               orders = fetchedOrders;
-               filterOrdersByStatus();
-             });
-             });
+      for (var orderData in jsonData) {
+        Order order = Order.fromJson(orderData);
+        fetchedOrders.add(order);
+      }
+      setState(() {
+        orders = fetchedOrders;
+        filterOrdersByStatus();
+      });
+    } else {
+      print('Error fetching orders: ${response.statusCode}');
+    }
+
+//          Future.delayed(Duration(seconds: 1),(){
+//       final jsonList = jsonDecode('''[
+//   {
+//     "_id": "1",
+//     "serviceName": "Service 1",
+//     "price": 29.99,
+//     "note": "Order note 1",
+//     "status": "Completed",
+//     "date": "2023-05-20T12:30:00",
+//     "userName": "John Doe",
+//     "workerName": "Jane Smith",
+//     "street": "123 Main Street",
+//     "city": "New York",
+//     "carModel": "Toyota Camry",
+//     "delivery": "Express",
+//     "payment": "Credit Card"
+//   },
+//   {
+//     "_id": "2",
+//     "serviceName": "Service 2",
+//     "price": 49.99,
+//     "note": "Order note 2",
+//     "status": "Requested",
+//     "date": "2023-05-21T09:45:00",
+//     "userName": "Alice Johnson",
+//     "workerName": "Mike Anderson",
+//     "street": "456 Elm Street",
+//     "city": "Los Angeles",
+//     "carModel": "Honda Civic",
+//     "delivery": "Standard",
+//     "payment": "Cash"
+//   }
+
+// ]''') as List<dynamic>;
+//       List<Order> fetchedOrders = [];
+//              for (var orderData in jsonList) {
+//                Order order = Order.fromJson(orderData);
+//                fetchedOrders.add(order);
+//              }
+//              setState(() {
+//                orders = fetchedOrders;
+//                filterOrdersByStatus();
+//              });
+//              });
   }
 
   void filterOrdersByStatus() {
     if (selectedStatus == 'All') {
       filteredOrders = List.from(orders);
     } else {
-      filteredOrders = orders.where((order) => order.status == selectedStatus).toList();
+      filteredOrders =
+          orders.where((order) => order.status == selectedStatus).toList();
     }
   }
+
   @override
   void initState() {
     super.initState();
     fetchOrders();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -187,11 +197,10 @@ class _OrderPageState extends State<OrderPage> {
                       ],
                     ),
                   ),
-
                 ],
                 rows: List<DataRow>.generate(
                   filteredOrders.length,
-                      (index) {
+                  (index) {
                     Color statusColor;
                     switch (filteredOrders[index].status) {
                       case 'Requested':
@@ -229,11 +238,12 @@ class _OrderPageState extends State<OrderPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         )),
-                        DataCell(Text(filteredOrders[index].city +',' +filteredOrders[index].street)),
+                        DataCell(Text(filteredOrders[index].city +
+                            ',' +
+                            filteredOrders[index].street)),
                         DataCell(Text(filteredOrders[index].date)),
                         DataCell(Text(filteredOrders[index].payment)),
                         DataCell(Text('\$${filteredOrders[index].price}')),
-
                       ],
                     );
                   },
@@ -246,8 +256,6 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 }
-
-
 
 void main() {
   runApp(MaterialApp(
