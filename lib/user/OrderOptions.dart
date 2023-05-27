@@ -54,7 +54,24 @@ class _OrderOptionsState extends State<OrderOptions> {
 
 
   }
+  void notify() async {
 
+    final response = await http.patch(
+      Uri.parse(global.ip + '/userUpdate/'+widget.order.workerEmail),
+      body: {
+        'workerNotify': 'You could now start working on '+widget.order.userName+' car',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: 'We will notify '+widget.order.workerName+' with changes',
+        backgroundColor: Colors.green,
+      );
+      Navigator.pop(context);
+    }
+
+  }
   Future<void> _sendOrder() async {
     final url = Uri.parse(global.ip + '/updateOrder/' + widget.order.id);
 
@@ -83,6 +100,7 @@ class _OrderOptionsState extends State<OrderOptions> {
         fontSize: 16.0,
       );
       Navigator.of(context).pop();
+      notify();
     } else {
       Fluttertoast.showToast(
         msg: 'Error sending order',

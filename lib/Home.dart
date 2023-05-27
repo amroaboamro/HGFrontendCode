@@ -26,13 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Future checkIfNotify() async{
 
-    var res= await http.get(Uri.parse(global.ip+"/users/notify"),headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-
-    if(true) {
-      //  Map<String, dynamic> DB = jsonDecode(res.body);
-      if (true) {
+      if (global.userData['userNotify']!="n") {
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           RemoteNotification? notification = message.notification;
           AndroidNotification? android = message.notification?.android;
@@ -53,7 +47,6 @@ class _HomeState extends State<Home> {
           }
         });
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-          print('A new onMessageOpenedApp event was published!');
           RemoteNotification? notification = message.notification;
           AndroidNotification? android = message.notification?.android;
           if (notification != null && android != null) {
@@ -74,16 +67,24 @@ class _HomeState extends State<Home> {
         });
         flutterLocalNotificationsPlugin.show(
             0,
-            "Imprtant Meassge!",
-             "marked your class as completed",
+            "News!",
+            global.userData['userNotify'],
             NotificationDetails(
                 android: AndroidNotificationDetails(channel.id, channel.name,
                     importance: Importance.high,
                     color: Colors.blue,
                     playSound: true,
                     icon: '@mipmap/ic_launcher')));
+        final response = await http.patch(
+          Uri.parse(global.ip + '/userUpdate/'+global.userEmail),
+          body: {
+            'userNotify': "n",
+          },
+        );
+        if(response.statusCode==200)print('user notified successfully');
       }
-    }
+
+
   }
   var _userData;
   int _page = 0;
@@ -141,6 +142,7 @@ class _HomeState extends State<Home> {
     fetchUserData(widget.userId).then((data) {
       global.userData = data;
       print(global.userData);
+      checkIfNotify();
       setState(() {
         _userData = data;
         _children[0] = HomePage(userData: _userData);
@@ -148,7 +150,7 @@ class _HomeState extends State<Home> {
     }).catchError((error) {
       print(error);
     });
-    checkIfNotify();
+
 
   }
 

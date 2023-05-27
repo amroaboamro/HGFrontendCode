@@ -11,14 +11,18 @@ import 'package:path/path.dart' as Path;
 
 import 'dart:io';
 
+import '../Classes/Product.dart';
 
 
-class AddProductPage extends StatefulWidget {
+
+class EditProductPage extends StatefulWidget {
+ final Product product;
+  EditProductPage({required this.product});
   @override
-  _AddProductPageState createState() => _AddProductPageState();
+  _EditProductPageState createState() => _EditProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
+class _EditProductPageState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -27,13 +31,13 @@ class _AddProductPageState extends State<AddProductPage> {
   String productImage = "";
   late File imagepicker;
 
-  Future uploadImage(File imageFile,String id) async {
+  Future uploadImage(File imageFile) async {
 
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse(global.ip + '/addProductImage/'+id);
+    var uri = Uri.parse(global.ip + '/addProductImage/${widget.product.id}' );
     var request = new http.MultipartRequest("POST", uri);
 
     var multipartFile = new http.MultipartFile('upload', stream, length,
@@ -78,8 +82,8 @@ class _AddProductPageState extends State<AddProductPage> {
 
   }
 
-  String _selectedBrand = 'BMW';
-  String _selecteType = 'Body';
+  String? _selectedBrand ;
+  String ?_selecteType ;
   List<String> _brands = [];
   List<String> _types = [
     'Body',
@@ -98,11 +102,17 @@ class _AddProductPageState extends State<AddProductPage> {
         _brands = brands;
       });
     });
+    _selecteType=widget.product.type;
+    _selectedBrand=widget.product.brand;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Product'),
+        backgroundColor: mainColor,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -122,7 +132,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     children: [
 
 
-                productImage == ""? Image.asset(
+                      productImage == ""? Image.asset(
                         'assets/images/logo.png',
                         height: 200,
                         width: double.infinity,
@@ -176,16 +186,11 @@ class _AddProductPageState extends State<AddProductPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(labelText: 'Name'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter the name';
-                    }
-                    return null;
-                  },
+
                 ),
                 SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
-                  value: _types[0],
+                  value: _selecteType,
                   onChanged: (newValue) {
                     _selecteType = newValue!;
                   },
@@ -212,33 +217,23 @@ class _AddProductPageState extends State<AddProductPage> {
                   controller: _priceController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Price'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter the price';
-                    }
-                    return null;
-                  },
+
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Quantity'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter the quantity';
-                    }
-                    return null;
-                  },
+
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      addProduct();
+                      UpdateProduct();
                     }
                   },
-                  child: Text('Add Product'),
+                  child: Text('Edit'),
                 ),
               ],
             ),
@@ -258,8 +253,8 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-  Future<void> addProduct() async {
-    final String brand = _selectedBrand;
+  Future<void> UpdateProduct() async {
+    final String? brand = _selectedBrand;
     final String name = _nameController.text;
     final String price = _priceController.text;
     final String quantity = _quantityController.text;
@@ -267,23 +262,22 @@ class _AddProductPageState extends State<AddProductPage> {
     final Map<String, dynamic> productData = {
       'brand': brand,
       'type': _selecteType,
-      'name': name,
-      'price': price,
-      'quantity': quantity,
+      'name': name.isEmpty ? widget.product.name : name,
+      'price': price.isEmpty ? widget.product.price.toString() : price,
+      'quantity': quantity.isEmpty ? widget.product.quantity.toString() : quantity,
     };
-
-    final response = await http.post(Uri.parse(global.ip + '/addProduct'),
+print(productData.toString() +"*******"+widget.product.id);
+    final response = await http.patch(Uri.parse(global.ip +'/updateProduct/'+widget.product.id),
         body: productData);
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      uploadImage(imagepicker,data['id']);
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Success'),
-            content: Text('Product added successfully'),
+            content: Text('Product updated successfully'),
             actions: [
               TextButton(
                 child: Text('OK'),
@@ -305,7 +299,7 @@ class _AddProductPageState extends State<AddProductPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Failed to add the product'),
+            content: Text('Failed to update the product'),
             actions: [
               TextButton(
                 child: Text('OK'),
@@ -318,6 +312,7 @@ class _AddProductPageState extends State<AddProductPage> {
         },
       );
     }
+    uploadImage(imagepicker);
   }
   Future<String> getFileImageString(File file) async {
     Uint8List fileData = await file.readAsBytes();

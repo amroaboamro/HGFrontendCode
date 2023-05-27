@@ -13,6 +13,10 @@ class Order {
   var delivery;
   var payment;
 
+  var userEmail;
+
+  var workerEmail;
+
 
   Order(
       {required this.id,required this.serviceName,
@@ -26,7 +30,7 @@ class Order {
       required this.city,
       required this.carModel,
         required this.delivery,
-        required this.payment,
+        required this.payment,this.userEmail,this.workerEmail
      });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -46,6 +50,8 @@ class Order {
       carModel: json['carModel'],
       delivery: json['delivery'],
       payment: json['payment'],
+      userEmail: json['userEmail'],
+      workerEmail: json['workerEmail'],
     );
   }
 

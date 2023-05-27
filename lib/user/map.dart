@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:head_gasket/Classes/Worker.dart';
 import 'package:head_gasket/global.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +12,7 @@ import 'dart:convert';
 import 'WorkerProfile.dart';
 
 class MapScreen extends StatefulWidget {
-final  List<dynamic>? users ;
+final  List<Worker>? users ;
   MapScreen({this.users});
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -69,8 +70,15 @@ class _MapScreenState extends State<MapScreen> {
 
       _mapController.move(_currentLocation!, 13.0);
   }
-
-  // Send the user's location, city and street to the API
+  Future<dynamic> fetchImageForWorker(String email) async {
+    final response = await http.get(Uri.parse(global.ip + '/getImage/' +email));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to fetch image for worker');
+    }
+  }
   void _sendUserLocation() async {
 
     try {
@@ -212,7 +220,26 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                           );
                         },
-                          child: Icon(Icons.person,size: 30,color: Colors.deepOrange,) ),
+                          child:   FutureBuilder<dynamic>(
+                            future: fetchImageForWorker(user.email),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Icon(Icons.error);
+                              } else {
+                                String imageUrl = snapshot.data['image'] ?? '';
+
+                                return CircleAvatar(
+                                  backgroundImage:
+                                  MemoryImage(base64Decode(imageUrl)),
+
+                                  radius: 15.0,
+                                );
+                              }
+                            },
+                          ),
+                      ),
                     ))
                 .toList(),
           ),

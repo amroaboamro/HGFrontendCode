@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:head_gasket/Admin/Cars.dart';
 import 'package:head_gasket/Admin/Users.dart';
 import 'package:head_gasket/Admin/ordersPage.dart';
+import 'package:head_gasket/Admin/product.dart';
 import 'package:head_gasket/Widget/background.dart';
 
 import 'AddPoduct.dart';
@@ -99,9 +100,15 @@ class _AdminHomeState extends State<AdminHome> {
               'Products',
               style: TextStyle(fontSize: 16),
             ),
-            selected: _currentPage == 'Products',
+
             onTap: () {
-              _changePage('Products');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProductPage(),
+                ),
+              );
             },
             tileColor: _currentPage == 'Products' ? mainColor : null,
             shape: _currentPage == 'Products' ? Border.all(color: mainColor, width: 2) : null,
@@ -134,7 +141,7 @@ class _AdminHomeState extends State<AdminHome> {
       case 'Orders':
         return OrderPage();
       case 'Products':
-        return AddProductPage();
+        return ProductPage();
         case 'Cars':
         return CarPage();
       default:

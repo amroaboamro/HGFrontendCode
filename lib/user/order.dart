@@ -110,7 +110,7 @@ class _OrderPageState extends State<OrderPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage('https://picsum.photos/200'),
+                  backgroundImage: AssetImage('assets/images/order.png'),
                   radius: 50.0,
                 ),
                 SizedBox(height: 16.0),

@@ -15,7 +15,30 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  Future<void> _updateOrderStatus(String id, String status) async {
+  void notify(String userEmail) async {
+
+    final response = await http.patch(
+      Uri.parse(global.ip + '/userUpdate/'+userEmail),
+      body: {
+        'userNotify': 'Your order has new changes',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: 'We will notify user with changes',
+        backgroundColor: Colors.green,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Error sending notification to the user',
+        backgroundColor: Colors.red,
+      );
+    }
+
+  }
+
+  Future<void> _updateOrderStatus(String id, String status,notifyFunc) async {
     try {
       final response = await http.patch(
         Uri.parse(global.ip + '/updateOrder/$id'),
@@ -30,6 +53,7 @@ class _OrdersPageState extends State<OrdersPage> {
           backgroundColor: Colors.green,
         );
         Navigator.of(context).pop();
+        notifyFunc();
       } else {
         Fluttertoast.showToast(
           msg: 'Failed to update order status. Please try again later.',
@@ -315,7 +339,9 @@ class _OrdersPageState extends State<OrdersPage> {
                                           onPressed: () async {
                                             // Send status to API and show toast
                                             await _updateOrderStatus(
-                                                order.id, 'Canceled');
+                                                order.id, 'Canceled',(){
+                                                  notify(order.userEmail);
+                                            });
                                             setState(() {});
                                           },
                                         ),
@@ -361,9 +387,10 @@ class _OrdersPageState extends State<OrdersPage> {
                                     TextButton(
                                       child: Text('Confirm'),
                                       onPressed: () async {
-                                        // Send status to API and show toast
                                         await _updateOrderStatus(
-                                            order.id, 'Completed');
+                                            order.id, 'Completed',(){
+                                          notify(order.userEmail);
+                                        });
                                         setState(() {});
                                       },
                                     ),

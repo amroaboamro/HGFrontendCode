@@ -158,7 +158,6 @@ class _WorkersPageState extends State<WorkersPage> {
       final response =
           await http.delete(Uri.parse(global.ip + '/removeUser/$email'));
       if (response.statusCode == 200) {
-        Navigator.of(context).pop();
         setState(() {
           _workers.removeWhere((worker) => worker.email == email);
           _filteredWorkers.removeWhere((worker) => worker.email == email);

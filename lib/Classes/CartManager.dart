@@ -28,6 +28,7 @@ class CartManager {
     bool itemFound = false;
     for (CartItem cartItem in _items) {
       if (cartItem.product.id == product.id) {
+
         cartItem.quantity += quantity;
         itemFound = true;
         break;
@@ -35,6 +36,8 @@ class CartManager {
     }
     if (!itemFound) {
       final cartItem = CartItem(product: product, quantity: quantity);
+      print(product.id.toString()+'*************');
+
       _items.add(cartItem);
     }
     _saveToSharedPreferences();
@@ -63,6 +66,7 @@ class CartManager {
       _items = jsonList.map((e) {
         Product product = Product.fromJson(e['product']);
         int quantity = e['quantity'];
+        print('adsadassadas'+product.id.toString());
         return CartItem(product: product, quantity: quantity);
       }).toList();
     }

@@ -162,6 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+
   bool _isFetchCalled = false;
 
   Future<List<String>> fetchDropdownItems() async {

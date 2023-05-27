@@ -19,13 +19,12 @@ var function;
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
   Future<void> _checkout() async {
-print(cartItems);
     for (var item in cartItems) {
       final itemId = item.product.id;
       final quantity = item.quantity;
-      print(itemId+'****'+quantity.toString());
 
-      final url = global.ip+'/$itemId';
+
+      final url = global.ip+'/updateProductQuantity/$itemId';
       final body = {'quantity': quantity.toString()}; // quantity users want to buy (subtract it from product quantity in database)
 
       final response = await http.patch(
@@ -44,8 +43,12 @@ print(cartItems);
         function();
 
       } else {
-
-        print('Failed to update quantity for item $itemId');
+        Fluttertoast.showToast(
+          msg: 'Failed to update quantity for item $itemId',
+          backgroundColor: Colors.red,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../Classes/Order.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,40 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  Future<void> _updateOrderStatus(String id ,String status) async {
+    try {
+      final response = await http.patch(
+        Uri.parse(global.ip + '/updateOrder/$id'),
+        body: jsonEncode({'status': status}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          fetchOrders();
+
+        });
+        Fluttertoast.showToast(
+          msg: 'Order status canceled successfully!',
+          backgroundColor: Colors.green,
+        );
+        Navigator.of(context).pop();
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Failed to update order status. Please try again later.',
+          backgroundColor: Colors.red,
+        );
+      }
+    }
+    catch(e){
+      Fluttertoast.showToast(
+        msg: 'Failed to update order status. Please try again later.',
+        backgroundColor: Colors.red,
+      );
+
+    }
+  }
+
   List<Order> orders = [];
   List<Order> filteredOrders = [];
   List<String> statuses = [
@@ -39,50 +74,6 @@ class _OrderPageState extends State<OrderPage> {
       print('Error fetching orders: ${response.statusCode}');
     }
 
-//          Future.delayed(Duration(seconds: 1),(){
-//       final jsonList = jsonDecode('''[
-//   {
-//     "_id": "1",
-//     "serviceName": "Service 1",
-//     "price": 29.99,
-//     "note": "Order note 1",
-//     "status": "Completed",
-//     "date": "2023-05-20T12:30:00",
-//     "userName": "John Doe",
-//     "workerName": "Jane Smith",
-//     "street": "123 Main Street",
-//     "city": "New York",
-//     "carModel": "Toyota Camry",
-//     "delivery": "Express",
-//     "payment": "Credit Card"
-//   },
-//   {
-//     "_id": "2",
-//     "serviceName": "Service 2",
-//     "price": 49.99,
-//     "note": "Order note 2",
-//     "status": "Requested",
-//     "date": "2023-05-21T09:45:00",
-//     "userName": "Alice Johnson",
-//     "workerName": "Mike Anderson",
-//     "street": "456 Elm Street",
-//     "city": "Los Angeles",
-//     "carModel": "Honda Civic",
-//     "delivery": "Standard",
-//     "payment": "Cash"
-//   }
-
-// ]''') as List<dynamic>;
-//       List<Order> fetchedOrders = [];
-//              for (var orderData in jsonList) {
-//                Order order = Order.fromJson(orderData);
-//                fetchedOrders.add(order);
-//              }
-//              setState(() {
-//                orders = fetchedOrders;
-//                filterOrdersByStatus();
-//              });
-//              });
   }
 
   void filterOrdersByStatus() {
@@ -224,7 +215,45 @@ class _OrderPageState extends State<OrderPage> {
 
                     return DataRow(
                       cells: <DataCell>[
-                        DataCell(Text(filteredOrders[index].serviceName)),
+                        DataCell(Row(
+                          children: [
+                            Text(filteredOrders[index].serviceName),
+                            if(orders[index].status!='Canceled')
+
+                              IconButton(onPressed: (){
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirm Cancel'),
+                                    content: Text(
+                                        'Are you sure you want to cancel this order?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Confirm'),
+                                        onPressed: () async {
+                                          // Send status to API and show toast
+                                          await _updateOrderStatus(orders[index].id,'Canceled');
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+
+                            }, icon: Icon(Icons.cancel) ,color: Colors.red,),
+
+                          ],
+                        ),
+                        ),
                         DataCell(Text(filteredOrders[index].userName)),
                         DataCell(Text(filteredOrders[index].workerName)),
                         DataCell(Container(

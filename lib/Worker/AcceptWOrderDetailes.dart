@@ -21,7 +21,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
       _formKey.currentState!.save();
 
       final response = await http.patch(
-        Uri.parse(global.ip + '/updateOrder/'+widget.order.id),
+        Uri.parse(global.ip + '/updateOrder/' + widget.order.id),
         body: {
           'price': _price.toString(),
           'status': 'Waiting',
@@ -30,10 +30,11 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
 
       if (response.statusCode == 200) {
         Fluttertoast.showToast(
-          msg: 'Order placed successfully , now lets start Working!',
+          msg: 'Order price placed successfully !',
           backgroundColor: Colors.green,
         );
         Navigator.pop(context);
+        notify();
       } else {
         Fluttertoast.showToast(
           msg: 'Error accepting the order. Please try again later',
@@ -42,6 +43,30 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
       }
     }
   }
+  void notify() async {
+
+      final response = await http.patch(
+        Uri.parse(global.ip + '/userUpdate/'+widget.order.userEmail),
+        body: {
+          'userNotify': 'Your order has been accepted from worker:'+widget.order.workerName,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: 'We will notify user with changes',
+          backgroundColor: Colors.green,
+        );
+        Navigator.pop(context);
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Error sending notification to the user',
+          backgroundColor: Colors.red,
+        );
+      }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

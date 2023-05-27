@@ -8,6 +8,7 @@ import 'package:head_gasket/sign_up.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'Admin/AdminHome.dart';
 import 'Chat/MethodsChat.dart';
 import 'Worker/Home.dart';
 
@@ -68,6 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => WorkerHome(userId: _email)));
+        else    Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>AdminHome()));
         logIn(_email, '0597633980##Mm');
       } else if (response.statusCode == 401) {
         setState(() {

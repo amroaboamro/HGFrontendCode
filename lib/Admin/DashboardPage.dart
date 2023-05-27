@@ -207,7 +207,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-
         setState(() {
           usersCount = responseData['users'];
           workersCount = responseData['workers'];
