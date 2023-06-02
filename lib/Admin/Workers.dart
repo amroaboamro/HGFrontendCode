@@ -65,7 +65,7 @@ class _WorkersPageState extends State<WorkersPage> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse(global.ip + '/topWorkers'));
+    final response = await http.get(Uri.parse(global.ip + '/allWorkers'));
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body) as List<dynamic>;
@@ -93,64 +93,7 @@ class _WorkersPageState extends State<WorkersPage> {
       print('Failed to fetch workers. Status code: ${response.statusCode}');
     }
 
-//     Future.delayed(Duration(seconds: 1), () {
-//       List<Worker> workers = [];
-//       final jsonData = jsonDecode('''
 
-// [
-//   {
-
-//     "firstName": "John",
-//     "lastName": "Doe",
-//     "email": "johndoe@example.com",
-//     "phone": "1234567890",
-//     "carModel": "Toyota Camry",
-//     "city": "New York",
-//     "street": "123 Main St",
-//     "serviceName": "Mechanic",
-//     "carBrand": "Toyota",
-//     "rating": 4.5
-//   },
-//   {
-
-//     "firstName": "Jane",
-//     "lastName": "Smith",
-//     "email": "janesmith@example.com",
-//     "phone": "0987654321",
-//     "carModel": "Honda Accord",
-//     "city": "Los Angeles",
-//     "street": "456 Elm St",
-//     "serviceName": "Plumber",
-//     "carBrand": "Honda",
-//     "rating": 2.0
-//   }
-// ]
-
-// ''');
-
-//       for (var worker in jsonData) {
-//         workers.add(
-//           Worker(
-
-//             firstName: worker['firstName'],
-//             lastName: worker['lastName'],
-//             email: worker['email'],
-//             phone: worker['phone'],
-//             carModel: worker['carModel'],
-//             city: worker['city'],
-//             street: worker['street'],
-//             serviceName: worker['serviceName'],
-//             carBrand: worker['carBrand'],
-//             rating: worker['rating'].toDouble(),
-//           ),
-//         );
-//       }
-
-//       setState(() {
-//         _workers = workers;
-//         _filteredWorkers = workers;
-//       });
-//     });
   }
 
   Future<void> deleteWorker(String email) async {

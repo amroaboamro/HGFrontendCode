@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:head_gasket/user/EditProfile.dart';
 import 'package:head_gasket/global.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 
 import '../Widget/background.dart';
@@ -32,29 +33,21 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchServiceHistory() async {
-    // final url = Uri.parse(global.ip + '/history/' +global.userEmail);
-    // final response = await http.get(url);
-    // final data = jsonDecode(response.body);
-    // final List<dynamic> serviceData = data;
-    // setState(() {
-    //   serviceHistory = serviceData
-    //       .map((item) =>
-    //       ServiceHistoryItem(
-    //         date: item['date'],
-    //         description: item['serviceName'],
-    //       ))
-    //       .toList();
-    // });
-    await Future.delayed(Duration(seconds: 2));
-
+    final url = Uri.parse(global.ip + '/userHistoryOrders/'+global.userEmail);
+    final response = await http.get(url);
+    final data = jsonDecode(response.body);
+    print(data.toString());
+    final List<dynamic> serviceData = data;
     setState(() {
-
-      serviceHistory = [
-        ServiceHistoryItem(date: '2022-01-01', description: 'Oil change'),
-        ServiceHistoryItem(date: '2022-03-15', description: 'Tire rotation'),
-        ServiceHistoryItem(date: '2022-06-10', description: 'Brake inspection'),
-      ];
+      serviceHistory = serviceData
+          .map((item) =>
+          ServiceHistoryItem(
+            date: item['date'],
+            description: item['serviceName'],
+          ))
+          .toList();
     });
+
   }
 
   @override
@@ -191,7 +184,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       title: Text(
-                                        item.date,
+                                        DateFormat('EEEE, MMMM d, yyyy - hh:mm a')
+                                            .format(
+                                            DateTime.parse( item.date))
+                                       ,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),

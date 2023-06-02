@@ -19,13 +19,7 @@ class _StorePageState extends State<StorePage> {
   bool _showSearchBar = false;
 
   List<String> _brands = [
-    'Toyota',
-    'Honda',
-    'Ford',
-    'Skoda',
-    'BMW',
-    'Mercedes-Benz',
-    'Kia',
+   global.userData['carModel'],
   ];
   List<String> _colors = [
     'Body', //mirrors,door,bonnet,
@@ -204,7 +198,7 @@ class _StorePageState extends State<StorePage> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search for a car',
+                    hintText: 'Search by name, brand or type ...',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -293,15 +287,15 @@ class _StorePageState extends State<StorePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        product.brand,
+                                        product.name,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        product.name,
+                                        product.brand,
                                         style: TextStyle(
-                                          color: Colors.grey[500],
+                                          color: Colors.grey[800],
                                         ),
                                       ),
                                       Text(

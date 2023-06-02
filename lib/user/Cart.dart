@@ -28,10 +28,12 @@ class _CartPageState extends State<CartPage> {
   void _initCartManager() async {
     _cartManager = CartManager();
 
-    await _cartManager.loadFromSharedPreferences();
-    setState(() {
-      _isLoading = false;
+     _cartManager.loadFromSharedPreferences().then((value) {
+       setState(() {
+         _isLoading = false;
+       });
     });
+
 
   }
 

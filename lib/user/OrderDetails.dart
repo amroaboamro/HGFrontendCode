@@ -1,29 +1,94 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:head_gasket/global.dart';
 import '../Classes/Order.dart';
 import '../Widget/background.dart';
+import 'package:http/http.dart' as http;
 
-class OrderDetails extends StatelessWidget {
+
+class OrderDetails extends StatefulWidget {
   final Order order;
 
   const OrderDetails({required this.order});
 
   @override
+  State<OrderDetails> createState() => _OrderDetailsState();
+}
+
+class _OrderDetailsState extends State<OrderDetails> {
+  var orderImage;
+  Future<dynamic> fetchImageForOrder(Order order) async {
+    final response = await http.get(Uri.parse(global.ip + '/getOrderImage/' + order.id));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to fetch image for order');
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    fetchImageForOrder(widget.order).then((value) {
+      setState(() {
+        orderImage = value['image'];
+      });
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Details'),
+        title: Text('Testing my Car'),
         backgroundColor: mainColor,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/StockSnap.jpg'),
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                // Open a dialog or navigate to a new screen to show the larger view of the image
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: orderImage != null
+                              ? Image.memory(
+                            base64Decode(orderImage),
+                            fit: BoxFit.cover,
+                          ).image
+                              : Image.asset(
+                            'assets/images/order.png',
+                            fit: BoxFit.cover,
+                          ).image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: orderImage != null
+                        ? Image.memory(
+                      base64Decode(orderImage),
+                      fit: BoxFit.cover,
+                    ).image
+                        : Image.asset(
+                      'assets/images/order.png',
+                      fit: BoxFit.cover,
+                    ).image,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -37,14 +102,14 @@ class OrderDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Order: ' + order.serviceName,
+                        'Order: ' + widget.order.serviceName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
                         ),
                       ),
                       Text(
-                        '\$ ' + order.price.toString(),
+                        '\$ ' + widget.order.price.toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -68,7 +133,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            order.serviceName,
+                            widget.order.serviceName,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -87,7 +152,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            order.date,
+                            widget.order.date,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -112,7 +177,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.userName,
+                            widget.order.userName,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -131,7 +196,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.workerName,
+                            widget.order.workerName,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -156,7 +221,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.delivery,
+                            widget.order.delivery,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -175,7 +240,7 @@ class OrderDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            order.payment,
+                            widget.order.payment,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -196,7 +261,7 @@ class OrderDetails extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        order.city + ',' + order.street,
+                        widget.order.city + ',' + widget.order.street,
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -215,19 +280,19 @@ class OrderDetails extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: order.status == 'Completed'
+                      color: widget.order.status == 'Completed'
                           ? Colors.green
-                          : order.status == 'Processing'
+                          : widget.order.status == 'Processing'
                               ? Colors.yellow
-                              : order.status == 'Waiting'
+                              : widget.order.status == 'Waiting'
                                   ? Colors.orange
-                                  : order.status == 'Canceled'
+                                  : widget.order.status == 'Canceled'
                                       ? Colors.red
                                       : Colors.blue,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      order.status,
+                      widget.order.status,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -245,7 +310,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    order.note,
+                    widget.order.note,
                     style: TextStyle(
                       fontSize: 16,
                     ),

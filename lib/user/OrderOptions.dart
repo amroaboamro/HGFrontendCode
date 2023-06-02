@@ -68,7 +68,6 @@ class _OrderOptionsState extends State<OrderOptions> {
         msg: 'We will notify '+widget.order.workerName+' with changes',
         backgroundColor: Colors.green,
       );
-      Navigator.pop(context);
     }
 
   }

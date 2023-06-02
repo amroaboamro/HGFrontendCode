@@ -3,16 +3,19 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 //import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:image_picker/image_picker.dart';
+
 //import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatRoom extends StatelessWidget {
   late final Map<String, dynamic> userMap;
   late final String chatRoomId;
+
   ChatRoom({required this.chatRoomId, required this.userMap});
 
   //ChatRoom({required this.chatRoomId, required this.userMap});
@@ -132,8 +135,8 @@ class ChatRoom extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-         backgroundColor: mainColor,
-          shadowColor:   Color(0xff81B2F5),
+          backgroundColor: mainColor,
+          shadowColor: Color(0xff81B2F5),
           title:
               Text(userMap['email'].toString().replaceAll('@gmail.com', ""))),
       body: SingleChildScrollView(
@@ -216,7 +219,14 @@ class ChatRoom extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Color.fromARGB(255, 75, 75, 75),
+                color: Colors.blueGrey,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
               child: Text(
                 map['message'],

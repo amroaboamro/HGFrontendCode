@@ -18,7 +18,7 @@ class CartManager {
   factory CartManager() => _instance;
   CartManager._internal();
 
-  static const String _cartKey = 'cart';
+  static const String _cartKey = 'cartt';
 
   List<CartItem> _items = [];
 
@@ -36,7 +36,6 @@ class CartManager {
     }
     if (!itemFound) {
       final cartItem = CartItem(product: product, quantity: quantity);
-      print(product.id.toString()+'*************');
 
       _items.add(cartItem);
     }
@@ -63,10 +62,11 @@ class CartManager {
     String? cartData = prefs.getString(_cartKey);
     if (cartData != null) {
       List<dynamic> jsonList = jsonDecode(cartData);
+
       _items = jsonList.map((e) {
         Product product = Product.fromJson(e['product']);
+        print('***********'+product.id);
         int quantity = e['quantity'];
-        print('adsadassadas'+product.id.toString());
         return CartItem(product: product, quantity: quantity);
       }).toList();
     }

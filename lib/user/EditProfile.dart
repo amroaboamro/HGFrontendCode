@@ -162,17 +162,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } else {
       print("No file selected");
     }
-    // setState(() {
-    //   imagepicker = File(image!.path);
-    //   print('hhhttthhhh99999999999999999');
-    //   print(imagepicker);
 
-    //   getFileImageString(imagepicker);
-
-    //   // Upload(imagepicker);
-    // });
-
-    // WEB
   }
 
   Future<List<String>> fetchDropdownItems() async {
@@ -184,26 +174,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } else {
       throw Exception('Failed to fetch dropdown items');
     }
-    // return Future.delayed(Duration(seconds: 2), () {
-    //   return [
-    //     'Hyundai accent',
-    //     'Hyundai elantra',
-    //     'Seat leon ',
-    //     'BMW 320i',
-    //     'BMW m4',
-    //     'Skoda octavia',
-    //     'Skoda Combi',
-    //     'Skoda superb',
-    //     'volkswagen golf',
-    //     'volkswagen polo',
-    //     'volkswagen tiguan',
-    //     'Mercedes G-class',
-    //     'Mercedes Benz E350',
-    //     'Mercedes E350',
-    //     'Kia sportage',
-    //     'kia rio',
-    //   ];
-    // });
+
   }
 
   final _formKey = GlobalKey<FormState>();

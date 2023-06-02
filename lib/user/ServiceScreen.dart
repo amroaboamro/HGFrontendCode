@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/map.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -10,6 +11,10 @@ import 'package:http/http.dart' as http;
 
 import 'WorkerProfile.dart';
 
+enum SortingOption {
+  Rating,
+  Location,
+}
 class ServiceScreen extends StatefulWidget {
   final Service service;
 
@@ -24,21 +29,22 @@ class _ServiceScreenState extends State<ServiceScreen> {
   List<Worker>? workers;
   String _searchQuery = '';
   bool _showSearchBar = false;
-  var userLat = global.userData['latitude']; // User's latitude
-  var userLng = global.userData['longitude']; // User's longitude
+  SortingOption _sortingOption = SortingOption.Rating;
+  List<Worker> _filteredWorkers = [];
+
+  var userLat = global.userData['latitude'];
+  var userLng = global.userData['longitude'];
 
   Future<List<Worker>> _fetchWorkersList() async {
     print(widget.service.serviceName);
     final response = await http.get(
-        Uri.parse(global.ip + '/getWorkers/' + widget.service.serviceName));
+        Uri.parse(global.ip + '/getWorkers/' + widget.service.serviceName+'/'+global.userData['carModel']));
     if (response.statusCode == 200) {
       print('****'+response.body);
       final data = jsonDecode(response.body) as List;
       List<Worker> workers =
           data.map((workerJson) => Worker.fromJson(workerJson)).toList();
-      workers.sort((a, b) => a
-          .distanceTo(userLat, userLng)
-          .compareTo(b.distanceTo(userLat, userLng)));
+
       print(workers);
       return workers;
     } else {
@@ -71,7 +77,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Stack(
             children: <Widget>[
@@ -176,6 +184,17 @@ class _ServiceScreenState extends State<ServiceScreen> {
             ],
           ),
           SizedBox(
+            height: 5,
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            color: mainColor,
+
+            onPressed: () {
+              _showSortingDialog();
+            },
+          ),
+          SizedBox(
             height: 10,
           ),
           if (_showSearchBar)
@@ -231,7 +250,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 );
               } else {
                 workers = snapshot.data!;
-                List<Worker> _filteredWorkers = [];
+
                 if (_searchQuery.isNotEmpty) {
                   _filteredWorkers = workers!
                       .where((worker) => worker.name
@@ -290,10 +309,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
                                         } else {
                                           String imageUrl = snapshot.data['image'] ?? '';
 
-                                          return CircleAvatar(
-                                            backgroundImage:
-                                                 MemoryImage(base64Decode(imageUrl)),
-
+                                          return  CircleAvatar(
+                                            backgroundImage: MemoryImage(base64Decode(imageUrl)),
                                             radius: 50.0,
                                           );
                                         }
@@ -315,7 +332,16 @@ class _ServiceScreenState extends State<ServiceScreen> {
                                             ),
                                             SizedBox(height: 5.0),
                                             Text(
-                                              worker.major,
+                                              worker.city+','+worker.street,
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.grey[700],
+
+                                              ),
+                                            ),
+                                            SizedBox(height: 5.0),
+                                            Text(
+                                              worker.major+'/'+worker.carBrand,
                                               style: TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.grey[600],
@@ -355,4 +381,59 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
     );
   }
+  void _showSortingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sort Workers By'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+
+                RadioListTile<SortingOption>(
+                  title: Text('Rating'),
+                  value: SortingOption.Rating,
+                  groupValue: _sortingOption,
+                  onChanged: (SortingOption? value) {
+                    setState(() {
+                      _sortingOption = value!;
+                      _sortWorkers();
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+                RadioListTile<SortingOption>(
+                  title: Text('Location'),
+                  value: SortingOption.Location,
+                  groupValue: _sortingOption,
+                  onChanged: (SortingOption? value) {
+                    setState(() {
+                      _sortingOption = value!;
+                      _sortWorkers();
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _sortWorkers() {
+    setState(() {
+      if (_sortingOption == SortingOption.Rating) {
+        _filteredWorkers.sort((a, b) => (b.rating ?? 0.0).compareTo(a.rating ?? 0.0));
+      } else if (_sortingOption == SortingOption.Location) {
+        _filteredWorkers.sort((a, b) => a
+            .distanceTo(userLat, userLng)
+            .compareTo(b.distanceTo(userLat, userLng)));
+      }
+
+    });
+  }
+
 }

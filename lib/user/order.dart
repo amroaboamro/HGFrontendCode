@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
-import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
+
+
 
 class OrderPage extends StatefulWidget {
   final String serviceName;
@@ -19,6 +22,57 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  File? _selectedImage;
+  Future _getImageFromGallery() async {
+    //mobile
+
+    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+
+      setState(() {
+        _selectedImage = File(image.path);
+
+      });
+    } else {
+      print("No file selected");
+    }
+
+  }
+  Future uploadImage(File imageFile,String id) async {
+
+    var stream = new http.ByteStream(imageFile.openRead());
+    stream.cast();
+    var length = await imageFile.length();
+
+    var uri = Uri.parse(global.ip + '/addOrderImage/'+ id);
+    var request = new http.MultipartRequest("POST", uri);
+
+    var multipartFile = new http.MultipartFile('upload', stream, length,
+        filename: Path.basename(imageFile.path));
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'token': global.token
+    };
+    // request.headers["token"] = global.token;
+    request.headers["Content-Type"] = 'application/json; charset=UTF-8';
+
+    request.headers.addAll(headers);
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print("Image Uploaded");
+    } else {
+      print("Upload Failed");
+    }
+
+    response.stream.transform(utf8.decoder).listen((value) {});
+  }
+
+
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
   String? _lastName;
@@ -45,11 +99,7 @@ class _OrderPageState extends State<OrderPage> {
     try {
       final url = Uri.parse(global.ip + '/addOrder');
       final response = await http.post(url, body: {
-        // 'major': _serviceName,
-        // 'carBrand': _carBrand,
-        // 'bio': _aboutWorker,
-        // 'role': 'worker'
-        // workeremail,useremail,Servicename,note,car model,location,
+
         'userEmail': _email,
         'userName': global.userData['firstName'] + ' '+ global.userData['lastName'],
         'carModel':_carModel,
@@ -61,16 +111,22 @@ class _OrderPageState extends State<OrderPage> {
         'serviceName': _serviceName,
         'status': 'Requested',
       });
+      print(response.body + "********************************");
 
-      final responseData = json.decode(response.body);
-      print(responseData);
+      if(response.statusCode==200){
+        final responseData = json.decode(response.body);
+        print(responseData.toString() + "********************************");
+        uploadImage(_selectedImage!,responseData['id']);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('your order sent successfully'),
-        ),
-      );
-      Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('your order sent successfully'),
+          ),
+        );
+        Navigator.pop(context);
+      }
+
+
     } catch (error) {
       Fluttertoast.showToast(
         msg: 'Failed to send the order',
@@ -265,6 +321,43 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _getImageFromGallery();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: mainColor, // Set the background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0), // Set the border radius
+                      ),
+                      elevation: 3.0, // Set the elevation
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.image,
+                          color: Colors.white, // Set the icon color
+                        ),
+                        SizedBox(width: 8.0),
+                        Text(
+                          'Add Image',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                ),
+                SizedBox(height: 16.0),
+                _selectedImage != null
+                    ? Center(child: Image.file(_selectedImage!))
+                    : SizedBox.shrink(),
                 SizedBox(height: 16.0),
                 Text(
                   'Note',

@@ -40,7 +40,6 @@ var function;
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
-        function();
 
       } else {
         Fluttertoast.showToast(
@@ -51,6 +50,8 @@ var function;
         );
       }
     }
+    function();
+
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {

@@ -78,7 +78,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
   }
 
-  String _selectedBrand = 'BMW';
+  String _selectedBrand = 'Skoda octavia';
   String _selecteType = 'Body';
   List<String> _brands = [];
   List<String> _types = [
@@ -161,8 +161,8 @@ class _AddProductPageState extends State<AddProductPage> {
                     );
                   }).toList(),
                   decoration: InputDecoration(
-                    labelText: 'Brand',
-                    hintText: 'Select a brand',
+                    labelText: 'Model',
+                    hintText: 'Select a Model',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -249,7 +249,7 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   Future<List<String>> fetchCarBrands() async {
-    final response = await http.get(Uri.parse(global.ip + '/carMakers'));
+    final response = await http.get(Uri.parse(global.ip + '/carModels'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return List<String>.from(data);

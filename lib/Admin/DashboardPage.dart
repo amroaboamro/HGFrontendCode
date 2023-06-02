@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:charts_flutter_new/flutter.dart' as charts;
@@ -54,116 +55,14 @@ class _DashboardPageState extends State<DashboardPage> {
   List<dynamic> orders = [];
 
   Future<void> fetchDataUsersAndOrders() async {
-//     try {
-//       final usersResponse = await http.get(Uri.parse(''));
-//       final ordersResponse = await http.get(Uri.parse(''));
-//
-//       if (usersResponse.statusCode == 200 && ordersResponse.statusCode == 200) {
-//        // final usersJson = json.decode(usersResponse.body)
-//        // final ordersJson = json.decode(ordersResponse.body)
-//         final usersJson=json.decode('''[
-//   {
-//     "firstName": "John",
-//     "lastName": "Doe",
-//     "email": "john.doe@example.com",
-//     "phone": "1234567890",
-//     "carModel": "Toyota Camry"
-//   },
-//   {
-//     "firstName": "Jane",
-//     "lastName": "Smith",
-//     "email": "jane.smith@example.com",
-//     "phone": "9876543210",
-//     "carModel": "Honda Accord"
-//   }
-// ]
-// ''');
-//         final ordersJson=json.decode('''[
-//   {
-//     "serviceName": "Car Wash",
-//     "clientName": "John Doe",
-//     "workerName": "Mike Johnson",
-//     "city": "New York",
-//     "street": "123 Main St",
-//     "price": 25.0,
-//     "paymentMethod": "Credit Card"
-//   },
-//   {
-//     "serviceName": "Oil Change",
-//     "clientName": "Jane Smith",
-//     "workerName": "Sarah Davis",
-//     "city": "Los Angeles",
-//     "street": "456 Elm St",
-//     "price": 40.0,
-//     "paymentMethod": "Cash"
-//   }
-// ]''');
-//         setState(() {
-//           users = usersJson
-//               .map((userJson) => User(
-//             firstName: userJson['firstName'],
-//             lastName: userJson['lastName'],
-//             email: userJson['email'],
-//             phone: userJson['phone'],
-//             carModel: userJson['carModel'],
-//           ))
-//               .toList();
-//
-//           orders = ordersJson
-//               .map((orderJson) => Order(
-//             serviceName: orderJson['serviceName'],
-//             clientName: orderJson['clientName'],
-//             workerName: orderJson['workerName'],
-//             location: '${orderJson['city']}, ${orderJson['street']}',
-//             price: orderJson['price'],
-//             paymentMethod: orderJson['payment'],
-//           ))
-//               .toList();
-//         });
-//       } else {
-//         print('Failed to fetch data');
-//       }
-//     } catch (error) {
-//       print('Error: $error');
-//     }
-  Future.delayed(Duration(seconds: 1),(){
-    final usersJson=json.decode('''[
-   {
-     "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "phone": "1234567890",
-    "carModel": "Toyota Camry"
-  },
-  {
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "email": "jane.smith@example.com",
-    "phone": "9876543210",
-    "carModel": "Honda Accord"
-   }
-]
-''');
-        final ordersJson=json.decode('''[
-  {
-    "serviceName": "Car Wash",
-    "clientName": "John Doe",
-    "workerName": "Mike Johnson",
-    "city": "New York",
-    "street": "123 Main St",
-    "price": 25.0,
-    "payment": "Credit Card"
-  },
-  {
-    "serviceName": "Oil Change",
-    "clientName": "Jane Smith",
-    "workerName": "Sarah Davis",
-    "city": "Los Angeles",
-    "street": "456 Elm St",
-    "price": 40.0,
-    "payment": "Cash"
-  }
-]''');
+    try {
+      final usersResponse = await http.get(Uri.parse(global.ip+'/getRecentUsers'));
+      final ordersResponse = await http.get(Uri.parse(global.ip+'/getRecentOrders'));
+
+      if (usersResponse.statusCode == 200 && ordersResponse.statusCode == 200) {
+        final usersJson = json.decode(usersResponse.body);
+        final ordersJson = json.decode(ordersResponse.body);
+
         setState(() {
           users = usersJson
               .map((userJson) => User(
@@ -178,16 +77,21 @@ class _DashboardPageState extends State<DashboardPage> {
           orders = ordersJson
               .map((orderJson) => Order(
             serviceName: orderJson['serviceName'],
-            clientName: orderJson['clientName'],
+            clientName: orderJson['userName'],
             workerName: orderJson['workerName'],
             location: '${orderJson['city']}, ${orderJson['street']}',
-            price: orderJson['price'],
+            price: orderJson['price'].toDouble(),
             paymentMethod: orderJson['payment'],
           ))
               .toList();
         });
+      } else {
+        print('Failed to fetch data');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
 
-  });
   }
 
   late List<charts.Series<Data, String>> _chartData = [];
@@ -203,7 +107,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('your_api_url/all_data'));
+      final response = await http.get(Uri.parse(global.ip +'/getNumbers'));
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);

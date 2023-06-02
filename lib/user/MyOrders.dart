@@ -9,6 +9,8 @@ import '../Widget/background.dart';
 import 'OrderDetails.dart';
 import 'package:http/http.dart' as http;
 
+import 'ReportReview.dart';
+
 
 
 class MyOrders extends StatefulWidget {
@@ -269,12 +271,21 @@ class _MyOrdersState extends State<MyOrders> {
                                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                                 ),
                                 onPressed: () {
+                                  if(order.status!='Completed')
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => OrderDetails(order: order),
                                     ),
                                   );
+                                  if(order.status=='Completed')
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReportReviewPage(order: order),
+                                      ),
+                                    );
+
                                 },
                               ),
                             ],

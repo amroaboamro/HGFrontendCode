@@ -3,6 +3,7 @@ import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/JoinASProvider.dart';
+import 'package:head_gasket/user/ServiceScreen.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/Classes/service.dart';
 import 'package:head_gasket/login.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Worker>> _fetchWorkersList() async {
-    final response = await http.get(Uri.parse(global.ip + '/topWorkers'));
+    final response = await http.get(Uri.parse(global.ip + '/topWorkers'+'/'+global.userData['carModel']));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List;
       List<Worker> workers = data.map((workerJson) {
@@ -339,14 +340,14 @@ class _HomePageState extends State<HomePage> {
                       itemCount: services.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          // onTap: () => Navigator.push(
-                          //   context,
-                          //   // MaterialPageRoute(
-                          //   //   builder: (_) => DestinationScreen(
-                          //   //     destination: destination,
-                          //   //   ),
-                          //   // ),
-                          // ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ServiceScreen(
+                                service:Service(services[index]['imgUrl'],services[index]['serviceName'],services[index]['serviceType']) ,
+                              ),
+                            ),
+                          ),
                           child: Container(
                             margin: EdgeInsets.all(15.0),
                             child: Stack(
@@ -548,7 +549,15 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       SizedBox(height: 5.0),
                                       Text(
-                                        worker.major,
+                                        worker.major+'/'+worker.carBrand,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        worker.city+','+worker.street,
                                         style: TextStyle(
                                           fontSize: 16.0,
                                           color: Colors.grey[600],

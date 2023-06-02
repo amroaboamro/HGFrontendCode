@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:head_gasket/Widget/background.dart';
 import 'package:head_gasket/Worker/HomePage.dart';
 import 'package:head_gasket/Worker/WMyOrder.dart';
+import 'package:head_gasket/Worker/timePlanning.dart';
 import 'package:head_gasket/global.dart';
 import 'package:head_gasket/user/ServicesScreen.dart';
 import 'package:head_gasket/user/MyOrders.dart';
@@ -34,6 +35,7 @@ class _WorkerHomeState extends State<WorkerHome> {
     Services(),
     StorePage(),
     OrdersPage(),
+    EventCalendarPage(),
   ];
   Future<Map<String, dynamic>> fetchUserData(String userId) async {
     print(userId);
@@ -170,6 +172,11 @@ class _WorkerHomeState extends State<WorkerHome> {
           ),
           Icon(
             Icons.local_offer_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
+          Icon(
+            Icons.calendar_today,
             color: Colors.white,
             size: 20,
           ),

@@ -171,8 +171,8 @@ class _EditProductPageState extends State<EditProductPage> {
                     );
                   }).toList(),
                   decoration: InputDecoration(
-                    labelText: 'Brand',
-                    hintText: 'Select a brand',
+                    labelText: 'Model',
+                    hintText: 'Select a Model',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -244,7 +244,7 @@ class _EditProductPageState extends State<EditProductPage> {
   }
 
   Future<List<String>> fetchCarBrands() async {
-    final response = await http.get(Uri.parse(global.ip + '/carMakers'));
+    final response = await http.get(Uri.parse(global.ip + '/carModels'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return List<String>.from(data);

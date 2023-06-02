@@ -18,6 +18,7 @@ import '../Chat/ChatHomeScreen.dart';
 import '../Chat/MethodsChat.dart';
 import '../Classes/Worker.dart';
 import '../Classes/Order.dart';
+import '../user/ServiceScreen.dart';
 
 class WorkerHomePage extends StatefulWidget {
   @override
@@ -84,7 +85,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List;
       List<Worker> workers =
-          data.map((workerJson) => Worker.fromJson(workerJson)).toList();
+      data.map((workerJson) => Worker.fromJson(workerJson)).toList();
       return workers;
     } else {
       throw Exception('Failed to load workers');
@@ -93,7 +94,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 
   Future<dynamic> fetchImageForWorker(Worker worker) async {
     final response =
-        await http.get(Uri.parse(global.ip + '/getImage/' + worker.email));
+    await http.get(Uri.parse(global.ip + '/getImage/' + worker.email));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data;
@@ -107,7 +108,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 
   Future<Map<String, dynamic>> fetchImage() async {
     final response =
-        await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
+    await http.get(Uri.parse(global.ip + "/getImage/" + global.userEmail));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
@@ -130,7 +131,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -245,14 +248,15 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                   ],
                 ),
                 onTap: () {
-                  signOut(context).then((value) => {
-                        Navigator.pop(context),
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen())),
-                        global.Imagetest = ""
-                      });
+                  signOut(context).then((value) =>
+                  {
+                    Navigator.pop(context),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginScreen())),
+                    global.Imagetest = ""
+                  });
                 }),
           ],
         ),
@@ -270,7 +274,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                       backgroundImage: global.Imagetest != ""
                           ? MemoryImage(base64Decode(global.Imagetest))
                           : AssetImage('assets/images/profile.png')
-                              as ImageProvider,
+                      as ImageProvider,
                       radius: 30,
                     ),
                     SizedBox(
@@ -314,12 +318,16 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Services())),
+                    onTap: () =>
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => Services())),
                     child: Text(
                       'See All',
                       style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.0,
@@ -346,14 +354,20 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                       itemCount: services.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          // onTap: () => Navigator.push(
-                          //   context,
-                          //   // MaterialPageRoute(
-                          //   //   builder: (_) => DestinationScreen(
-                          //   //     destination: destination,
-                          //   //   ),
-                          //   // ),
-                          // ),
+                          onTap: () =>
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ServiceScreen(
+                                          service: Service(
+                                              services[index]['imgUrl'],
+                                              services[index]['serviceName'],
+                                              services[index]['serviceType']),
+
+                                      ),
+                                ),
+                              ),
                           child: Container(
                             margin: EdgeInsets.all(15.0),
                             child: Stack(
@@ -365,9 +379,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                                     padding: EdgeInsets.all(5.0),
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Center(
                                           child: Text(
@@ -401,8 +415,8 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                                         child: CircleAvatar(
                                           radius: 50,
                                           backgroundImage: AssetImage(services[
-                                                  index][
-                                              'imgUrl']), //services[index]['serviceImage']
+                                          index][
+                                          'imgUrl']), //services[index]['serviceImage']
                                         ),
                                       ),
                                     ],
@@ -424,7 +438,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Processing orders',
+                    'Processing Tests',
                     style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
@@ -485,7 +499,7 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                             child: ListTile(
                               leading: CircleAvatar(
                                 backgroundImage:
-                                    AssetImage('assets/images/order.png'),
+                                AssetImage('assets/images/order.png'),
                                 radius: 30,
                               ),
                               title: Text(

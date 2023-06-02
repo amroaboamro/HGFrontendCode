@@ -57,7 +57,6 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
           msg: 'We will notify user with changes',
           backgroundColor: Colors.green,
         );
-        Navigator.pop(context);
       } else {
         Fluttertoast.showToast(
           msg: 'Error sending notification to the user',

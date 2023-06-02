@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/Admin/Cars.dart';
 import 'package:head_gasket/Admin/Users.dart';
+import 'package:head_gasket/Admin/joinAsService.dart';
 import 'package:head_gasket/Admin/ordersPage.dart';
 import 'package:head_gasket/Admin/product.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/login.dart';
 
 import 'AddPoduct.dart';
 import 'DashboardPage.dart';
@@ -126,6 +128,23 @@ class _AdminHomeState extends State<AdminHome> {
             tileColor: _currentPage == 'Cars' ? mainColor : null,
             shape: _currentPage == 'Cars' ? Border.all(color: mainColor, width: 2) : null,
           ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text(
+              'Logout',
+              style: TextStyle(fontSize: 16),
+            ),
+
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+            },
+
+          ),
         ],
       ),
     );
@@ -155,7 +174,19 @@ class _AdminHomeState extends State<AdminHome> {
       appBar: AppBar(
         title: Text('Admin Home'),
         backgroundColor: mainColor,
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    RequestAdminPage(),
+              ),
+            );
+          }, icon: Icon(Icons.person_add))
+        ],
       ),
+
       drawer: _buildDrawer(),
       body: _buildBody(),
     );

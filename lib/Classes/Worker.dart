@@ -17,6 +17,10 @@ class Worker {
 
   var longitude;
 
+  var carBrand;
+
+  var availabelTime;
+
   Worker({
     required this.firstName,
     required this.lastName,
@@ -26,7 +30,7 @@ class Worker {
     required this.phone,
     required this.email,
     required this.city,
-    required this.bio, required this.street, required this.latitude, required this.longitude,
+    required this.bio, required this.street, required this.latitude, required this.longitude,this.carBrand,this.availabelTime
   }) : name = '$firstName $lastName';
 
   factory Worker.fromJson(Map<String, dynamic> json) {
@@ -44,6 +48,8 @@ class Worker {
       longitude:json['longitude'],
 
       bio: json['bio'],
+      carBrand: json['carBrand'],
+      availabelTime: json['availableTime'],
     );
   }
 

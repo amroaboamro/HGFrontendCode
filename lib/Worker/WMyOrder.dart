@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:head_gasket/Widget/background.dart';
+import 'package:head_gasket/Worker/CarReport.dart';
+import 'package:head_gasket/Worker/reportView.dart';
 import 'package:http/http.dart' as http;
 import '../Classes/Order.dart';
 import '../user/OrderDetails.dart';
@@ -231,11 +233,20 @@ class _OrdersPageState extends State<OrdersPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
+                if(order.status!='Completed')
+
+                  Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => OrderDetails(order: order)),
                 );
+                if(order.status=='Completed')
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportReviewPage(order: order),
+                    ),
+                  );
               },
               child: CircleAvatar(
                 radius: 32.0,
@@ -370,37 +381,14 @@ class _OrdersPageState extends State<OrdersPage> {
                         Checkbox(
                           value: false,
                           onChanged: (value) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Mark as Completed'),
-                                  content: Text(
-                                      'Are you sure the order is completed?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text('Confirm'),
-                                      onPressed: () async {
-                                        await _updateOrderStatus(
-                                            order.id, 'Completed',(){
-                                          notify(order.userEmail);
-                                        });
-                                        setState(() {});
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WorkerReport(order: order)),
                             );
                           },
                         ),
-                        Text('Mark as Completed'),
+                        Text('Complete Report'),
                       ],
                     ),
                 ],

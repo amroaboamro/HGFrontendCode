@@ -17,6 +17,20 @@ class Order {
 
   var workerEmail;
 
+  var estimatedTime;
+  var price1;
+  var price2;
+  var problem;
+
+  var status2;
+
+  var startingTime;
+
+  var endingTime;
+
+  var remainTime;
+
+
 
   Order(
       {required this.id,required this.serviceName,
@@ -30,7 +44,8 @@ class Order {
       required this.city,
       required this.carModel,
         required this.delivery,
-        required this.payment,this.userEmail,this.workerEmail
+        required this.payment,this.userEmail,this.workerEmail,this.estimatedTime,this.price1,this.price2,this.problem,this.status2
+        ,this.startingTime,this.endingTime,this.remainTime
      });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -52,6 +67,15 @@ class Order {
       payment: json['payment'],
       userEmail: json['userEmail'],
       workerEmail: json['workerEmail'],
+      estimatedTime:  json['estimatedTime'],
+      price1: json['price1'].toDouble(),
+      price2: json['price2'].toDouble(),
+      problem: json['problem'],
+      status2: json['status2'],
+      startingTime:json['startingTime'],
+      endingTime: json['endingTime'],
+      remainTime: json['remainTime'],
+
     );
   }
 

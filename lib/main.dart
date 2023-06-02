@@ -3,10 +3,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:head_gasket/Admin/AdminHome.dart';
+import 'package:head_gasket/Classes/Order.dart';
+import 'package:head_gasket/Worker/CarReport.dart';
 import 'package:head_gasket/Worker/WMyOrder.dart';
 import 'package:head_gasket/login.dart';
 import 'package:head_gasket/user/MyOrders.dart';
 import 'package:head_gasket/user/OrderOptions.dart';
+import 'package:head_gasket/user/ReportReview.dart';
+
+import 'Worker/timePlanning.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', //id
@@ -53,10 +58,31 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  Order order = Order.fromJson({
+    '_id': '123456789',
+    'serviceName': 'Car Repair',
+    'price': 100.0,
+    'note': 'Please check the engine.',
+    'status': 'Pending',
+    'date': '2023-05-14T66',
+    'userName': 'John Doe',
+    'workerName': 'Mike Smith',
+    'street': '123 Main Street',
+    'city': 'Cityville',
+    'carModel': 'Toyota Camry',
+    'delivery': 'Pickup',
+    'payment': 'Credit Card',
+    'userEmail': 'john.doe@example.com',
+    'workerEmail': 'mike.smith@example.com',
+    'estimatedTime': '2 days',
+    'price1': 50.0,
+    'price2': 150.0,
+    'problem': 'Engine misfiring',
+  });
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Head Gasket',
+      title: 'GARAGY',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
