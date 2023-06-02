@@ -11,8 +11,6 @@ import 'package:path/path.dart' as Path;
 
 import 'dart:io';
 
-
-
 class AddProductPage extends StatefulWidget {
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -27,13 +25,12 @@ class _AddProductPageState extends State<AddProductPage> {
   String productImage = "";
   late File imagepicker;
 
-  Future uploadImage(File imageFile,String id) async {
-
+  Future uploadImage(File imageFile, String id) async {
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
 
-    var uri = Uri.parse(global.ip + '/addProductImage/'+id);
+    var uri = Uri.parse(global.ip + '/addProductImage/' + id);
     var request = new http.MultipartRequest("POST", uri);
 
     var multipartFile = new http.MultipartFile('upload', stream, length,
@@ -61,24 +58,19 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   Future getImageFromGallery() async {
-
     XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-
       setState(() {
         imagepicker = File(image.path);
         getFileImageString(imagepicker);
-
-
       });
     } else {
       print("No file selected");
     }
-
   }
 
-  String _selectedBrand = 'Skoda octavia';
+  String _selectedBrand = 'Skoda Octavia';
   String _selecteType = 'Body';
   List<String> _brands = [];
   List<String> _types = [
@@ -109,7 +101,6 @@ class _AddProductPageState extends State<AddProductPage> {
           child: Form(
             key: _formKey,
             child: Column(
-
               children: [
                 Container(
                   padding: EdgeInsets.all(16.0),
@@ -120,14 +111,14 @@ class _AddProductPageState extends State<AddProductPage> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-
-
-                productImage == ""? Image.asset(
-                        'assets/images/logo.png',
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ):Image.memory(base64Decode(productImage)) ,
+                      productImage == ""
+                          ? Image.asset(
+                              'assets/images/logo.png',
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.memory(base64Decode(productImage)),
                       Positioned(
                         top: 0,
                         right: 0,
@@ -138,7 +129,6 @@ class _AddProductPageState extends State<AddProductPage> {
                           ),
                           onPressed: () {
                             getImageFromGallery();
-
                           },
                         ),
                       ),
@@ -146,7 +136,6 @@ class _AddProductPageState extends State<AddProductPage> {
                   ),
                 ),
                 SizedBox(height: 16.0),
-
                 DropdownButtonFormField<String>(
                   value: _selectedBrand,
                   onChanged: (newValue) {
@@ -277,7 +266,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      uploadImage(imagepicker,data['id']);
+      uploadImage(imagepicker, data['id']);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -319,6 +308,7 @@ class _AddProductPageState extends State<AddProductPage> {
       );
     }
   }
+
   Future<String> getFileImageString(File file) async {
     Uint8List fileData = await file.readAsBytes();
     String base64Image = base64Encode(fileData);
@@ -328,5 +318,4 @@ class _AddProductPageState extends State<AddProductPage> {
     });
     return "data:image/png;base64,$base64Image";
   }
-
 }
