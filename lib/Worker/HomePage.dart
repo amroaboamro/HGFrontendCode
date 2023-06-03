@@ -145,9 +145,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
               )),
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        HomeScreen(global.userData['email'])));
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (BuildContext context) =>
+                //         HomeScreen(global.userData['email'])));
               },
               icon: Icon(
                 Icons.chat,
@@ -248,15 +248,22 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
                   ],
                 ),
                 onTap: () {
-                  signOut(context).then((value) =>
-                  {
-                    Navigator.pop(context),
+                  // //signOut(context).then((value) =>
+                  // {
+                  //   Navigator.pop(context),
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => LoginScreen())),
+                  //   global.Imagetest = ""
+                  // });
+
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => LoginScreen())),
-                    global.Imagetest = ""
-                  });
+                            builder: (context) => LoginScreen()));
+                    global.Imagetest = "";
                 }),
           ],
         ),

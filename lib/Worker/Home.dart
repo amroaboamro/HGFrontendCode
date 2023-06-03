@@ -59,69 +59,69 @@ class _WorkerHomeState extends State<WorkerHome> {
       throw Exception('Failed to fetch user data');
     }
   }
-  Future checkIfNotify() async{
-
-    if (global.userData['workerNotify']!="n") {
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-        if (notification != null && android != null) {
-          flutterLocalNotificationsPlugin.show(
-              notification.hashCode,
-              notification.title,
-              notification.body,
-              NotificationDetails(
-                android: AndroidNotificationDetails(
-                  channel.id,
-                  channel.name,
-                  color: Colors.pink,
-                  playSound: true,
-                  icon: '@mipmap/ic_launcher',
-                ),
-              ));
-        }
-      });
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-        if (notification != null && android != null) {
-          showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  title: Text("${notification.title}"),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text("${notification.body}")],
-                    ),
-                  ),
-                );
-              });
-        }
-      });
-      flutterLocalNotificationsPlugin.show(
-          0,
-          "News!",
-          global.userData['workerNotify'],
-          NotificationDetails(
-              android: AndroidNotificationDetails(channel.id, channel.name,
-                  importance: Importance.high,
-                  color: Colors.blue,
-                  playSound: true,
-                  icon: '@mipmap/ic_launcher')));
-      final response = await http.patch(
-        Uri.parse(global.ip + '/userUpdate/'+global.userEmail),
-        body: {
-          'workerNotify': "n",
-        },
-      );
-      if(response.statusCode==200)print('user notified successfully');
-    }
-
-
-  }
+  // Future checkIfNotify() async{
+  //
+  //   if (global.userData['workerNotify']!="n") {
+  //     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //       RemoteNotification? notification = message.notification;
+  //       AndroidNotification? android = message.notification?.android;
+  //       if (notification != null && android != null) {
+  //         flutterLocalNotificationsPlugin.show(
+  //             notification.hashCode,
+  //             notification.title,
+  //             notification.body,
+  //             NotificationDetails(
+  //               android: AndroidNotificationDetails(
+  //                 channel.id,
+  //                 channel.name,
+  //                 color: Colors.pink,
+  //                 playSound: true,
+  //                 icon: '@mipmap/ic_launcher',
+  //               ),
+  //             ));
+  //       }
+  //     });
+  //     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //
+  //       RemoteNotification? notification = message.notification;
+  //       AndroidNotification? android = message.notification?.android;
+  //       if (notification != null && android != null) {
+  //         showDialog(
+  //             context: context,
+  //             builder: (_) {
+  //               return AlertDialog(
+  //                 title: Text("${notification.title}"),
+  //                 content: SingleChildScrollView(
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [Text("${notification.body}")],
+  //                   ),
+  //                 ),
+  //               );
+  //             });
+  //       }
+  //     });
+  //     flutterLocalNotificationsPlugin.show(
+  //         0,
+  //         "News!",
+  //         global.userData['workerNotify'],
+  //         NotificationDetails(
+  //             android: AndroidNotificationDetails(channel.id, channel.name,
+  //                 importance: Importance.high,
+  //                 color: Colors.blue,
+  //                 playSound: true,
+  //                 icon: '@mipmap/ic_launcher')));
+  //     final response = await http.patch(
+  //       Uri.parse(global.ip + '/userUpdate/'+global.userEmail),
+  //       body: {
+  //         'workerNotify': "n",
+  //       },
+  //     );
+  //     if(response.statusCode==200)print('user notified successfully');
+  //   }
+  //
+  //
+  // }
 
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
@@ -134,7 +134,7 @@ class _WorkerHomeState extends State<WorkerHome> {
 
       });
 
-      checkIfNotify();
+      //checkIfNotify();
     }).catchError((error) {
       print(error);
     });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:head_gasket/global.dart';
-import 'Chat/MethodsChat.dart';
+//import 'Chat/MethodsChat.dart';
 import 'Home.dart';
 import 'login.dart';
 import 'package:head_gasket/Widget/background.dart';
@@ -341,8 +341,8 @@ fetchDropdownItems().then((value) {
                         _signUp().then((value) => {
                               if (value != null)
                                 {
-                                  createAccount(firstName + " " + lastName,
-                                      email, '0597633980##Mm')
+                                  //createAccount(firstName + " " + lastName,
+                                   //   email, '0597633980##Mm')
                                 }
                               else
                                 {print('error')}

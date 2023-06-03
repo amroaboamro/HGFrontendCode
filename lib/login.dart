@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'Admin/AdminHome.dart';
-import 'Chat/MethodsChat.dart';
+//import 'Chat/MethodsChat.dart';
 import 'Worker/Home.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) =>AdminHome()));
-        logIn(_email, '0597633980##Mm');
+       // logIn(_email, '0597633980##Mm');
       } else if (response.statusCode == 401) {
         setState(() {
           _errorMessage = 'Invalid email or password';
